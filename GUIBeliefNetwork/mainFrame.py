@@ -38,9 +38,7 @@ def CreateNode(event):
     canvas.bind("<Button-1>",drawNode)
 # listen to second click and draw the line on the canvas
 def ArcPoint2(e):
-   point= canvas.create_oval(e.x-2,e.y-2,e.x+2,e.y+2)
-   arcList.insert(0,point)
-   arc = canvas.create_line(x,y,e.x,e.y)
+   arc = canvas.create_line(x,y,e.x,e.y,arrow="last")
    arcList.insert(0,arc)
    nodeList.insert(0,arcList[0])
    canvas.bind("<Button-1>",ArcPoint1)
@@ -67,7 +65,7 @@ def Delete(event):
             nodeList.remove(nodeList[0])
         else:
             nodeList.remove(nodeList[0])
-            for num in range(0,3):
+            for num in range(0,2):
                 canvas.delete(arcList[0])
                 arcList.remove(arcList[0])
 
