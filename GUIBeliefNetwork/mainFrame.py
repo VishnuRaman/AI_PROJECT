@@ -24,9 +24,8 @@ button5.pack(side=LEFT)
 button6.pack(side=LEFT)
 button7.pack(side=BOTTOM)
 
-# Two global variables used to store the operations
+# Used to store the operations
 nodeList=[]
-arcList=[]
 # methods called by buttons
 
 # draw on the canvas
@@ -39,9 +38,8 @@ def CreateNode(event):
 # listen to second click and draw the line on the canvas
 def ArcPoint2(e):
     root.config(cursor="")
-    arc = canvas.create_line(x,y,e.x,e.y,arrow="last")
-    arcList.insert(0,arc)
-    nodeList.insert(0,arcList[0])
+    arrow = canvas.create_line(x,y,e.x,e.y,arrow="last")
+    nodeList.insert(0,arrow)
     canvas.bind("<Button-1>",ArcPoint1)
 # listen to the first click for the line
 def ArcPoint1(e):
@@ -60,13 +58,9 @@ def Move(event):
 # Delete the previous operation
 def Delete(event):
     if nodeList.__len__()>0:
-        if arcList.__len__()==0 or nodeList[0] != arcList[0]:
-            canvas.delete(nodeList[0])
-            nodeList.remove(nodeList[0])
-        else:
-            nodeList.remove(nodeList[0])
-            canvas.delete(arcList[0])
-            arcList.remove(arcList[0])
+        canvas.delete(nodeList[0])
+        nodeList.remove(nodeList[0])
+
 
 
 def SetProperty(event):
