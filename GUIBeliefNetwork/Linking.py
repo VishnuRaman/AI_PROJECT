@@ -11,3 +11,8 @@ class Linking(object):
         for i in range(self.size):
             self.dataLinking[node][i]=math.inf
             self.dataLinking[i][node]=math.inf
+    def checkLinking(self,thisNode,tarNode):
+        if self.dataLinking[thisNode][tarNode] != math.inf:
+            return True
+        else:
+            return False

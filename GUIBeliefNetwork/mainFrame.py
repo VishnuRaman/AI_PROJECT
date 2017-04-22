@@ -22,7 +22,7 @@ MN=ManageNode.manageNode(size)
 # create buttons
 button1 = Button(topFrame,text="Create Node ")
 button2 = Button(topFrame,text="Create Arc")
-button3 = Button(topFrame,text="Select")
+button3 = Button(topFrame,text="Move")
 button4 = Button(topFrame,text="Delete")
 button5 = Button(topFrame,text="Set Property")
 button6 = Button(topFrame,text="Modify Probability Table",bg="light green")
@@ -44,18 +44,8 @@ nodeDic={}
 # methods called by buttons
 
 # draw on the canvas
-def overlaps(x1, y1, x2, y2):
-    '''returns overlapping object ids in ovals dict'''
-    over_list = [] # make a list to hold overlap objects
-    c_object = canvas.find_overlapping(x1, y1, x2, y2)
-    if nodeList().__len__()!=0:
-        for i in range(nodeList().__len__()):  # iterate over over dict
-            for j in range(len(nodeList()[i])):
-                if nodeList()[i][j] in c_object:      # if the node is in the overlap tuple
-                    over_list.append(nodeList()[i][j])# add the node to the list
-    return over_list
 def drawNode(e):
-    if len(overlaps(e.x-25,e.y-15,e.x+25,e.y+15))==0:
+    if not canvas.find_enclosed(e.x-50,e.y-50,e.x+50,e.y+50):
         node=canvas.create_oval(e.x-20,e.y-10,e.x+20,e.y+10)
         nodeID=MN.inc()
         num=canvas.create_text(e.x,e.y,text=str(nodeID))
@@ -69,9 +59,9 @@ def CreateNode(event):
     canvas.bind("<Button-1>",drawNode)
 # listen to second click and draw the line on the canvas
 def ArcPoint2(e):
-    if (len(overlaps(e.x-5,e.y-5,e.x+5,e.y+5))==1):
-        toNode=nodeDic[overlaps(e.x-5,e.y-5,e.x+5,e.y+5)[0]]
-        if fromNode is not toNode:
+    if len(canvas.find_enclosed(e.x-50,e.y-50,e.x+50,e.y+50))==2:
+        toNode=nodeDic[canvas.find_enclosed(e.x-50,e.y-50,e.x+50,e.y+50)[0]]#the node is created before num so it is at [0]
+        if (fromNode is not toNode)and(LK.checkLinking(fromNode,toNode)==False):
             root.config(cursor="")
             arrow = canvas.create_line(x,y,e.x,e.y,arrow="last")
             GA.addArrow(fromNode,toNode,arrow)
@@ -80,10 +70,10 @@ def ArcPoint2(e):
             print(LK.dataLinking)
 # listen to the first click for the line
 def ArcPoint1(e):
-    if len(overlaps(e.x-5,e.y-5,e.x+5,e.y+5))==1:
+    if len(canvas.find_enclosed(e.x-50,e.y-50,e.x+50,e.y+50))==2:
         global x,y,fromNode
         x,y=e.x,e.y
-        fromNode=nodeDic[overlaps(e.x-5,e.y-5,e.x+5,e.y+5)[0]]
+        fromNode=nodeDic[canvas.find_enclosed(e.x-50,e.y-50,e.x+50,e.y+50)[0]]
         root.config(cursor="cross")
         canvas.bind("<Button-1>",ArcPoint2)
 # listen to the mouse action
@@ -93,15 +83,21 @@ def CreateArc(event):
 
 
 def moveTo(e):
-
-    nodeList[moveTheNode]=canvas.create_oval(e.x-20,e.y-10,e.x+20,e.y+10)
-    num=canvas.create_text(e.x,e.y,text=str(MN.get_n()))
+    canvas.move(moveTheNode,e.x-x,e.y-y)
+    canvas.move(moveTheNode+1,e.x-x,e.y-y)
+    root.config(cursor="")
+    canvas.bind("<Button-1>",Move)
 # select the node
 def select(e):
-    if len(overlaps(e.x-5,e.y-5,e.x+5,e.y+5))==1:
-        print(nodeDic[overlaps(e.x-5,e.y-5,e.x+5,e.y+5)[0]])
+    global x,y
+    x,y=e.x,e.y
+    n=canvas.find_enclosed(e.x-50,e.y-50,e.x+50,e.y+50)
+    if len(n)==2:
+        root.config(cursor="exchange")
         global moveTheNode
-        moveTheNode=nodeDic[overlaps(e.x-5,e.y-5,e.x+5,e.y+5)[0]]
+        moveTheNode=n[0]
+        canvas.bind("<Button-1>",moveTo)
+    else:
         canvas.bind("<Button-1>",moveTo)
 
 # Move the object
@@ -111,13 +107,13 @@ def Move(event):
 
 
 def removeFromCanvas(e):
-    if len(overlaps(e.x-5,e.y-5,e.x+5,e.y+5))==1:
-        selectedNode=nodeDic[overlaps(e.x-5,e.y-5,e.x+5,e.y+5)[0]]
-        print(selectedNode)
+    if len(canvas.find_enclosed(e.x-50,e.y-50,e.x+50,e.y+50))==2:
+        selectedNode=nodeDic[canvas.find_enclosed(e.x-50,e.y-50,e.x+50,e.y+50)[0]]
         GA.deleteNode(selectedNode)
         GA.deleteArrow(selectedNode)
-        MN.remove(selectedNode)
         LK.deleteNode(selectedNode)
+        MN.remove(selectedNode)
+
         Delete
 
 # Delete the node
