@@ -1,4 +1,6 @@
 import  math,numpy
+
+#this class stores everything thats shown on the gui
 class guiArray:
     def __init__(self,size,canvas):
         self.size=size
@@ -11,6 +13,9 @@ class guiArray:
         self.nodeList[node]=set
         print(self.nodeList)
     def addArrow(self,fromNode,toNode,arrow):
+
+        #so print will say node you are travelling FROM, it travels DOWN the grid to that node
+        #then travels ACROSS to find the node you're travelling TO
         self.arrowArray[fromNode][toNode]=arrow
         print(self.arrowArray)
     def deleteNode(self,node):
