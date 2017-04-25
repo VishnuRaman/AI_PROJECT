@@ -3,7 +3,7 @@
 import ManageNode,Linking,GuiArray
 from tkinter import *
 
-size=6 #how many nodes  allowed
+size=6 #how many nodes allowed
 root = Tk()
 topFrame = Frame(root)
 topFrame.pack(fill=X)
