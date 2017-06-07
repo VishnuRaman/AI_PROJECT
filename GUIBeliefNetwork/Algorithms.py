@@ -10,24 +10,28 @@ class algorithms:
         queue = []
         #push first path into the queue
         queue.append([start])
+
+        visited = set()
         while queue:
             # gets the first path in the queue
             path = queue.pop(0)
             # gets the last node from the path
-            node = path[-1]
+            vertex = path[-1]
             # path found
-            if node == goal:
+            if vertex == goal:
                 return path
             # enumerate all adjacent nodes, construct a new path and push it into the queue
-            for adjacent in self.graph.get(node, []):
-                new_path = list(path)
-                new_path.append(adjacent)
-                queue.append(new_path)
+            elif vertex not in visited:
+                for adjacent in self.graph.get(vertex, []):
+                    new_path = list(path)
+                    new_path.append(adjacent)
+                    queue.append(new_path)
+                    visited.add(vertex)
 
 
-    def dfs(self,current, start, goal):
-        if current == goal:
-            return [current]
+    def dfs(self,node, start, goal):
+        if node == goal:
+            return [node]
         stack = [start]
         visited = set()
         while stack:
