@@ -1,6 +1,7 @@
-# Edited by Timo 2017/4/17
+# Edited by Rasveer 5/6/17
 import ManageNode,Linking,GuiArray
 from tkinter import *
+import tkinter.messagebox
 
 root = Tk()
 topFrame = Frame(root)
@@ -160,8 +161,6 @@ def Delete(index):
     root.config(cursor="spider")
     canvas.bind("<Button-1>",removeFromCanvas)
 
-
-
 def SetProperty(event):
     root.config(cursor="")
     print("SetProperty")
@@ -172,7 +171,31 @@ def ModifyProbabilityTable(event):
 def Run(event):
     print("Run")
 
+    #create a new window with results when the run button is clicked
 
+    topFrame = Frame(root)
+    topFrame.pack(fill=X)
+    bottomFrame = Frame(root)
+    bottomFrame.pack(side=BOTTOM)
+
+    #canvas
+    resultcanvas = Canvas(root, width=500, height=100, bg="white")
+    resultcanvas.pack(expand=1, fill=BOTH)
+
+    # border for the 3 dialogue boxes underneath
+    finalPbox = resultcanvas.create_rectangle(5, 3, 608, 35)
+
+    resultcanvas.create_text(43,15,text = "Final Path: ") #+ the array of results from the alg)
+
+    # final path dialogue box
+    discoverPbox = resultcanvas.create_rectangle(5, 35, 608, 70)
+
+    resultcanvas.create_text(71, 50, text="Order of Discovery: ")  # + the array of results from the alg)
+
+    # order of discovery dialogue box
+    expandPbox = resultcanvas.create_rectangle(5, 70, 608, 100)
+
+    resultcanvas.create_text(73, 85, text="Order of Expansion: ")  # + the array of results from the alg)
 
 
 # listen to left click on each button
