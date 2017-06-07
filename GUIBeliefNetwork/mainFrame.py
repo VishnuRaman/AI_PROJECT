@@ -1,5 +1,5 @@
 # Edited by Timo 2017/4/17
-import ManageNode,Linking,GuiArray,Algorithms
+import ManageNode,Linking,GuiArray#,Algorithms
 from tkinter import *
 
 root = Tk()
@@ -74,8 +74,10 @@ def ArcPoint2(e):
             LK.add_edge(fromNode,toNode,1)
             #inf means infinity so hasnt been assigned a cost/value yet
             #this one shows the individual costs of travel between nodes (the weight variable in the class)
-            for v in LK:
-                print (str(v.get_id())+' is connected to '+str(LK.vert_dict[v.get_id()]))
+            for v in LK.vert_dict:
+                print(str(LK.vert_dict[v].get_id())+' is connected to '+str(LK.vert_dict[v]))
+
+
 
             canvas.bind("<Button-1>",ArcPoint1)
 # listen to the first click for the line
@@ -172,8 +174,8 @@ def ModifyProbabilityTable(event):
 
 def Run(event):
     root.config(cursor="")
-    AL=Algorithms.algorithms(LK.vert_dict)
-    print(AL.bfs(LK.vert_dict[0],LK.vert_dict[6]))
+    # AL=Algorithms.algorithms(LK.vert_dict)
+    # print(AL.bfs(LK.vert_dict[0],LK.vert_dict[6]))
 
     # create a new window with results when the run button is clicked
     topFrame = Frame(root)
