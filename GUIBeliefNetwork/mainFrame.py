@@ -174,6 +174,27 @@ def Run(event):
     root.config(cursor="")
     AL=Algorithms.algorithms(LK.vert_dict)
 
+    # create a new window with results when the run button is clicked
+    topFrame = Frame(root)
+    topFrame.pack(fill=X)
+    bottomFrame = Frame(root)
+    bottomFrame.pack(side=BOTTOM)
+    # canvas
+    resultcanvas = Canvas(root, width=500, height=100, bg="white")
+    resultcanvas.pack(expand=1, fill=BOTH)
+
+    # border for the 3 dialogue boxes underneath
+    finalPbox = resultcanvas.create_rectangle(5, 3, 608, 35)
+    resultcanvas.create_text(43, 15, text="Final Path: ")  # + the array of results from the alg)
+
+    # final path dialogue box
+    discoverPbox = resultcanvas.create_rectangle(5, 35, 608, 70)
+    resultcanvas.create_text(71, 50, text="Order of Discovery: ")  # + the array of results from the alg)
+
+    # order of discovery dialogue box
+    expandPbox = resultcanvas.create_rectangle(5, 70, 608, 100)
+    resultcanvas.create_text(73, 85, text="Order of Expansion: ")  # + the array of results from the alg)
+
 
 
 
