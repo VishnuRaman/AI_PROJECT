@@ -173,6 +173,7 @@ def ModifyProbabilityTable(event):
 def Run(event):
     root.config(cursor="")
     AL=Algorithms.algorithms(LK.vert_dict)
+    print(AL.bfs(LK.vert_dict[0],LK.vert_dict[6]))
 
     # create a new window with results when the run button is clicked
     topFrame = Frame(root)
@@ -194,6 +195,7 @@ def Run(event):
     # order of discovery dialogue box
     expandPbox = resultcanvas.create_rectangle(5, 70, 608, 100)
     resultcanvas.create_text(73, 85, text="Order of Expansion: ")  # + the array of results from the alg)
+
 
 
 

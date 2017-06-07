@@ -1,4 +1,4 @@
-import math, numpy
+import math, numpy,Linking
 
 class algorithms:
     def __init__(self,dict):
@@ -29,9 +29,7 @@ class algorithms:
                     visited.add(vertex)
 
 
-    def dfs(self,node, start, goal):
-        if node == goal:
-            return [node]
+    def dfs(self, start, goal):
         stack = [start]
         visited = set()
         while stack:
@@ -44,3 +42,17 @@ class algorithms:
                     stack.append((neighbour, path + [neighbour]))
 
 
+
+LK=Linking.Graph()
+LK.add_vertex(0)
+LK.add_vertex(1)
+LK.add_vertex(2)
+LK.add_vertex(3)
+LK.add_vertex(4)
+LK.add_edge(0,1,1)
+LK.add_edge(0,2,1)
+LK.add_edge(1,3,1)
+LK.add_edge(1,4,1)
+AL=algorithms(LK.vert_dict)
+print('abc')
+print(AL.bfs(0,4))
