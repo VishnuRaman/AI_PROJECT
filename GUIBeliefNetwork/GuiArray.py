@@ -4,6 +4,7 @@ class guiArray:
     def __init__(self,canvas):
         self.canvas=canvas
         self.nodeList={}
+
     def get_nodeList(self):
         return self.nodeList
     def addNode(self,set,nodeID):

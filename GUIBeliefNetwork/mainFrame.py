@@ -1,5 +1,5 @@
 # Edited by Timo 2017/4/17
-import ManageNode,Linking,GuiArray
+import ManageNode,Linking,GuiArray,Algorithms
 from tkinter import *
 
 root = Tk()
@@ -17,6 +17,7 @@ GA=GuiArray.guiArray(canvas)
 nodeList=GA.get_nodeList
 MN=ManageNode.manageNode()
 LK=Linking.Graph()
+
 
 
 # create buttons
@@ -170,7 +171,8 @@ def ModifyProbabilityTable(event):
     print("ModifyProbabilityTable")
 
 def Run(event):
-    print("Run")
+    root.config(cursor="")
+    AL=Algorithms.algorithms(LK.vert_dict)
 
 
 

@@ -10,7 +10,6 @@ def overlaps(x1, y1, x2, y2):
     return oval_list
 
 a = Tk()
-
 # make a dictionary to hold object ids
 ovals = {}
 
