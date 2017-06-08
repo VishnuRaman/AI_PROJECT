@@ -10,7 +10,7 @@ class Vertex:
         self.adjacent = {}
 
     def __str__(self):
-        return str([x.id for x in self.adjacent])
+        return str([x for x in self.adjacent])
 
     def __iter__(self):######
         return iter(self.adjacent.keys())
@@ -67,7 +67,7 @@ class Graph:
             return None
 
     def add_edge(self, frm, to, cost):
-        self.vert_dict[frm].add_neighbor(self.vert_dict[to], cost)
+        self.vert_dict[frm].add_neighbor(to, cost)
 
 
     def delete_edge(self,frm,to):

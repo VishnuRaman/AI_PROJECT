@@ -16,18 +16,18 @@ class algorithms:
             # gets the first path in the queue
             path = queue.pop(0)
             # gets the last node from the path
-            vertex = path[-1]
-            # path found
-            if vertex == goal:
-                return path
-            # enumerate all adjacent nodes, construct a new path and push it into the queue
-            elif vertex not in visited:
-                for adj in self.graph[vertex]:
-                    print(adj)
-                    new_path = list(path)
-                    new_path.append(adj)
-                    # queue.append(new_path)
-                    visited.add(vertex)
+            for vertex in path:
+                # path found
+                if vertex == goal:
+                    return path
+                # enumerate all adjacent nodes, construct a new path and push it into the queue
+                elif vertex not in visited:
+                    for adj in self.graph[vertex]:
+                        new_path = list(path)
+                        new_path.append(adj)
+                        queue.append(new_path)
+                        visited.add(vertex)
+
 
 
     def dfs(self, start, goal):
@@ -55,16 +55,7 @@ LK.add_edge(0,2,1)
 LK.add_edge(1,3,1)
 LK.add_edge(1,4,1)
 AL=algorithms(LK.vert_dict)
-print(AL.bfs(0,4))
-# for v in LK.vert_dict:
-#     print(str(LK.vert_dict[v].get_id())+' is connected to '+str(LK.vert_dict[v]))
 
-# graph = {'A': ['B', 'C', 'E'],
-#          'B': ['A','D', 'E'],
-#          'C': ['A', 'F', 'G'],
-#          'D': ['B'],
-#          'E': ['A', 'B','D'],
-#          'F': ['C'],
-#          'G': ['C']}
-# AL=algorithms(graph)
-# print(AL.bfs('A','D'))
+for v in LK.vert_dict:
+    print(str(LK.vert_dict[v].get_id())+' is connected to '+str(LK.vert_dict[v]))
+print(AL.bfs(0,3))
