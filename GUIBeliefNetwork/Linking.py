@@ -12,6 +12,9 @@ class Vertex:
     def __str__(self):
         return str([x.id for x in self.adjacent])
 
+    def __iter__(self):######
+        return iter(self.adjacent.keys())
+
     def check_neighbor_existed(self,node):
 
         if node in self.adjacent:
