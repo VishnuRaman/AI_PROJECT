@@ -3,6 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/GUIBeliefNetwork.iml" filepath="$PROJECT_DIR$/.idea/GUIBeliefNetwork.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../../tkinterTurtorial/.idea/tkinterTurtorial.iml" filepath="$PROJECT_DIR$/../../tkinterTurtorial/.idea/tkinterTurtorial.iml" />
       <module fileurl="file://$PROJECT_DIR$/../.idea/untitled2.iml" filepath="$PROJECT_DIR$/../.idea/untitled2.iml" />
     </modules>
   </component>
