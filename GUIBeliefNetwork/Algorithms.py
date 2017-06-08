@@ -27,21 +27,23 @@ class algorithms:
                         new_path.append(adj)
                         queue.append(new_path)
                         visited.add(vertex)
-
+                        print(queue)
 
 
     def dfs(self, start, goal):
-        stack = [start]
         visited = set()
-        while stack:
-            (vertex, path ) = stack.pop()
-            if vertex not in visited:
-                if vertex == goal:
-                    return path
-                visited.add(vertex)
-                for neighbour in self.graph[vertex]:
-                    stack.append((neighbour, path + [neighbour]))
+        stack = [(start,[start])]
 
+        while stack:
+            (node, path) = stack.pop()
+            if node not in visited:
+                visited.add(node)
+                if node == goal:
+                    return path
+                for adj in self.graph[node]:
+                    if adj not in visited :
+                        stack.append((adj, path + [adj]))
+                        print(stack)
 
 
 LK=Linking.Graph()
@@ -58,4 +60,4 @@ AL=algorithms(LK.vert_dict)
 
 for v in LK.vert_dict:
     print(str(LK.vert_dict[v].get_id())+' is connected to '+str([g for g in LK.vert_dict[v]]))
-print(AL.bfs(0,3))
+print(AL.bfs(0,4))
