@@ -9,9 +9,6 @@ class Vertex:
         # a dictionary like a map in JAVA which stores all adjacent nodes
         self.adjacent = {}
 
-    def __str__(self):
-        return str([x for x in self.adjacent])
-
     def __iter__(self):######
         return iter(self.adjacent.keys())
 

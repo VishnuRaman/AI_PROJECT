@@ -57,5 +57,5 @@ LK.add_edge(1,4,1)
 AL=algorithms(LK.vert_dict)
 
 for v in LK.vert_dict:
-    print(str(LK.vert_dict[v].get_id())+' is connected to '+str(LK.vert_dict[v]))
+    print(str(LK.vert_dict[v].get_id())+' is connected to '+str([g for g in LK.vert_dict[v]]))
 print(AL.bfs(0,3))

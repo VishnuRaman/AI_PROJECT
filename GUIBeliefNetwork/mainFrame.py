@@ -75,7 +75,7 @@ def ArcPoint2(e):
             #inf means infinity so hasnt been assigned a cost/value yet
             #this one shows the individual costs of travel between nodes (the weight variable in the class)
             for v in LK.vert_dict:
-                print(str(LK.vert_dict[v].get_id())+' is connected to '+str(LK.vert_dict[v]))
+                print(str(LK.vert_dict[v].get_id())+' is connected to '+str([g for g in LK.vert_dict[v]]))
 
 
 
