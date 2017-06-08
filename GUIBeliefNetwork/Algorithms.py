@@ -23,7 +23,6 @@ class algorithms:
             # enumerate all adjacent nodes, construct a new path and push it into the queue
             elif vertex not in visited:
                 for adj in self.graph[vertex]:
-                    print(self.graph[vertex])
                     print(adj)
                     new_path = list(path)
                     new_path.append(adj)
