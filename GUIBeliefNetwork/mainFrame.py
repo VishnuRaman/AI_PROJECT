@@ -1,10 +1,6 @@
 # Edited by Timo 2017/4/17
 import ManageNode,Linking,GuiArray,Algorithms
-# import Algorithms
-# from . import Algorithms as algo
 from tkinter import *
-
-# algo.algorithms
 
 root = Tk()
 topFrame = Frame(root)
@@ -17,18 +13,20 @@ canvas.pack(expand=1,fill=BOTH)
 
 #creating objects - link to the classes in the folder
 GA=GuiArray.guiArray(canvas)
-
 #node list calls list from the object GA which references Gui Array class
 nodeList=GA.get_nodeList
 MN=ManageNode.manageNode()
 LK=Linking.Graph()
 
+
+#drop down list
 myMenu = Menu(root)
 root.config(menu=myMenu)
 
+
 def chooseBFS():
-   global algorithm
-   algorithm='BFS'
+    global algorithm
+    algorithm='BFS'
 
 def chooseDFS():
     global algorithm
@@ -38,6 +36,7 @@ editMenu = Menu(myMenu)
 myMenu.add_cascade(label="Run by", menu=editMenu)
 editMenu.add_command(label="BFS", command=chooseBFS)
 editMenu.add_command(label="DFS", command=chooseDFS)
+
 
 
 # create buttons
@@ -52,6 +51,7 @@ text1=Label(root,text="Start node")
 startNode=Entry(root, width=2)
 text2=Label(root,text="End node")
 endNode=Entry(root, width=2)
+
 button1.pack(side=LEFT)
 button2.pack(side=LEFT)
 button3.pack(side=LEFT)
@@ -59,11 +59,11 @@ button4.pack(side=LEFT)
 button5.pack(side=LEFT)
 button6.pack(side=LEFT)
 button7.pack(side=BOTTOM)
-
 text1.pack(side=LEFT)
 startNode.pack(side=LEFT)
 text2.pack(side=LEFT)
 endNode.pack(side=LEFT)
+
 # methods called by buttons
 node_id_Dic={}
 # draw on the canvas
@@ -100,8 +100,10 @@ def ArcPoint2(e):
             LK.add_edge(fromNode,toNode,1)
             #inf means infinity so hasnt been assigned a cost/value yet
             #this one shows the individual costs of travel between nodes (the weight variable in the class)
-            for v in LK:
-                print (str(v.get_id())+' is connected to '+str(LK.vert_dict[v.get_id()]))
+            for v in LK.vert_dict:
+                print(str(LK.vert_dict[v].get_id())+' is connected to '+str([g for g in LK.vert_dict[v]]))
+
+
 
             canvas.bind("<Button-1>",ArcPoint1)
 # listen to the first click for the line
@@ -197,16 +199,14 @@ def ModifyProbabilityTable(event):
     print("ModifyProbabilityTable")
 
 def Run(event):
-    # root.config(cursor="")
-    # AL=Algorithms.algorithms(LK.vert_dict)
-    # print(AL.bfs(LK.vert_dict[0],LK.vert_dict[6]))
+    root.config(cursor="")
+    if algorithm=='BFS':
+        AL=Algorithms.algorithms(LK.vert_dict)
+        print(AL.bfs(int(startNode.get()),int(endNode.get())))
+    elif algorithm=='DFS':
+        AL=Algorithms.algorithms(LK.vert_dict)
+        print(AL.dfs(int(startNode.get()),int(endNode.get())))
 
-    if algorithm == 'BFS':
-        AL = Algorithms.algorithms(LK.vert_dict)
-        print(AL.bfs(int(startNode.get()), int(endNode.get())))
-    elif algorithm == 'DFS':
-        AL = Algorithms.algorithms(LK.vert_dict)
-        print(AL.dfs(int(startNode.get()), int(endNode.get())))
     # create a new window with results when the run button is clicked
     topFrame = Frame(root)
     topFrame.pack(fill=X)
