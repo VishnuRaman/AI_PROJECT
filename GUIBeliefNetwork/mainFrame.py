@@ -213,11 +213,12 @@ def Run(event):
     resultcanvas = Canvas(root, width=500, height=100, bg="white")
     resultcanvas.pack(expand=1, fill=BOTH)
 
-    # border for the 3 dialogue boxes underneath
-    finalPath = AL.bfs(int(startNode.get()),int(endNode.get()))
+   #finds final path for bfs
+    finalP = AL.bfs(int(startNode.get()),int(endNode.get()))
+    finalPath = str(finalP)
 
     finalPbox = resultcanvas.create_rectangle(5, 3, 608, 35)
-    resultcanvas.create_text(43, 15, text="Final Path: " ) # + the array of results from the alg)
+    resultcanvas.create_text(43, 15, text="Final Path: " + finalPath) # + the array of results from the alg)
 
     # final path dialogue box
     discoverPbox = resultcanvas.create_rectangle(5, 35, 608, 70)
