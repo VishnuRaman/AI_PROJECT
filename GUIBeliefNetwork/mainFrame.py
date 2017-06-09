@@ -1,5 +1,5 @@
 # Edited by Timo 2017/4/17
-import ManageNode,Linking,GuiArray #,Algorithms
+import ManageNode,Linking,GuiArray,Algorithms
 # import Algorithms
 # from . import Algorithms as algo
 from tkinter import *
