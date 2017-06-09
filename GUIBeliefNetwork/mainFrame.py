@@ -214,11 +214,20 @@ def Run(event):
     resultcanvas.pack(expand=1, fill=BOTH)
 
    #finds final path for bfs
-    finalP = AL.bfs(int(startNode.get()),int(endNode.get()))
-    finalPath = str(finalP)
+    finalbfsP = AL.bfs(int(startNode.get()),int(endNode.get()))
+    finalbfsPath = str(finalbfsP)
+
+    #finds final path for dfs
+    finaldfsP = AL.dfs(int(startNode.get()),int(endNode.get()))
+    finaldfsPath = str(finaldfsP)
 
     finalPbox = resultcanvas.create_rectangle(5, 3, 608, 35)
-    resultcanvas.create_text(43, 15, text="Final Path: " + finalPath) # + the array of results from the alg)
+    if algorithm=='BFS':
+        resultcanvas.create_text(60, 15, text="Final Path: " + finalbfsPath) # + the array of results from the alg)
+
+    elif algorithm=='DFS':
+        resultcanvas.create_text(60, 15, text="Final Path: " + finaldfsPath)  # + the array of results from the alg)
+
 
     # final path dialogue box
     discoverPbox = resultcanvas.create_rectangle(5, 35, 608, 70)
