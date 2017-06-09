@@ -1,4 +1,3 @@
-# Edited by Timo 2017/4/17
 import ManageNode,Linking,GuiArray,Algorithms
 from tkinter import *
 
@@ -217,8 +216,10 @@ def Run(event):
     resultcanvas.pack(expand=1, fill=BOTH)
 
     # border for the 3 dialogue boxes underneath
+    finalPath = Algorithms.algorithms.bfs(AL.bfs(int(startNode.get()),int(endNode.get())))
+
     finalPbox = resultcanvas.create_rectangle(5, 3, 608, 35)
-    resultcanvas.create_text(43, 15, text="Final Path: " ) # + the array of results from the alg)
+    resultcanvas.create_text(43, 15, text="Final Path: " + finalPath) # + the array of results from the alg)
 
     # final path dialogue box
     discoverPbox = resultcanvas.create_rectangle(5, 35, 608, 70)
