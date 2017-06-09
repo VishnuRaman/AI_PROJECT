@@ -1,6 +1,8 @@
 import ManageNode,Linking,GuiArray,Algorithms
 from tkinter import *
 
+from GUIBeliefNetwork.Algorithms import algorithms
+
 root = Tk()
 topFrame = Frame(root)
 topFrame.pack(fill=X)
@@ -218,9 +220,18 @@ def Run(event):
     finalbfsPath = str(finalbfsP)
 
     #finds final path for dfs
-    finaldfsP = AL.dfs(int(startNode.get()),int(endNode.get()))
+    finaldfsP = AL.dfs()
     finaldfsPath = str(finaldfsP)
 
+    # #finds queue for bfs
+    # queueBFS = AL.bfs(queue(-1))
+    # bfsQueue = str(queueBFS)
+    #
+    # #finds stack for dfs
+    # stackDFS = Algorithms.dfs(int(startNode.get()),int(endNode.get()))
+    # dfsStack = str(stackDFS)
+
+    #final path dialogue box
     finalPbox = resultcanvas.create_rectangle(5, 3, 608, 35)
     if algorithm=='BFS':
         resultcanvas.create_text(60, 15, text="Final Path: " + finalbfsPath) # + the array of results from the alg)
@@ -228,12 +239,11 @@ def Run(event):
     elif algorithm=='DFS':
         resultcanvas.create_text(60, 15, text="Final Path: " + finaldfsPath)  # + the array of results from the alg)
 
-
-    # final path dialogue box
-    discoverPbox = resultcanvas.create_rectangle(5, 35, 608, 70)
-    resultcanvas.create_text(71, 50, text="Order of Discovery: ")  # + the array of results from the alg)
-
     # order of discovery dialogue box
+    discoverPbox = resultcanvas.create_rectangle(5, 35, 608, 70)
+    resultcanvas.create_text(71, 50, text="Order of Discovery: " + dfsStack)  # + the array of results from the alg)
+
+    #order of expansion dialogue box
     expandPbox = resultcanvas.create_rectangle(5, 70, 608, 100)
     resultcanvas.create_text(73, 85, text="Order of Expansion: ")  # + the array of results from the alg)
 
