@@ -188,8 +188,6 @@ def Delete(index):
     root.config(cursor="spider")
     canvas.bind("<Button-1>",removeFromCanvas)
 
-
-
 def SetProperty(event):
     root.config(cursor="")
     print("SetProperty")
@@ -216,7 +214,7 @@ def Run(event):
     resultcanvas.pack(expand=1, fill=BOTH)
 
     # border for the 3 dialogue boxes underneath
-    finalPath = Algorithms.algorithms.bfs(AL.bfs(int(startNode.get()),int(endNode.get())))
+    finalPath = AL.bfs(int(startNode.get()),int(endNode.get()))
 
     finalPbox = resultcanvas.create_rectangle(5, 3, 608, 35)
     resultcanvas.create_text(43, 15, text="Final Path: " + finalPath) # + the array of results from the alg)
