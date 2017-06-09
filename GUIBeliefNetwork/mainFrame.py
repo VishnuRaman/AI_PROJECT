@@ -1,10 +1,10 @@
 # Edited by Timo 2017/4/17
 import ManageNode,Linking,GuiArray,Algorithms
 # import Algorithms
-# from . import Algorithms as algo
+from . import Algorithms as algo
 from tkinter import *
 
-# algo.algorithms
+var = algo.algorithms
 
 root = Tk()
 topFrame = Frame(root)
@@ -201,12 +201,7 @@ def Run(event):
     # AL=Algorithms.algorithms(LK.vert_dict)
     # print(AL.bfs(LK.vert_dict[0],LK.vert_dict[6]))
 
-    if algorithm == 'BFS':
-        AL = Algorithms.algorithms(LK.vert_dict)
-        print(AL.bfs(int(startNode.get()), int(endNode.get())))
-    elif algorithm == 'DFS':
-        AL = Algorithms.algorithms(LK.vert_dict)
-        print(AL.dfs(int(startNode.get()), int(endNode.get())))
+
     # create a new window with results when the run button is clicked
     topFrame = Frame(root)
     topFrame.pack(fill=X)
@@ -230,8 +225,12 @@ def Run(event):
 
     #if the boxes appeared once then dont let appear a second time
 
-
-
+    if algo.algorithms == 'BFS':
+        AL = Algo.algorithms(LK.vert_dict)
+        print(AL.bfs(int(startNode.get()), int(endNode.get())))
+    elif algo.algorithms == 'DFS':
+        AL = Algo.algorithms(LK.vert_dict)
+        print(AL.dfs(int(startNode.get()), int(endNode.get())))
 # listen to left click on each button
 button1.bind("<Button-1>",CreateNode)
 button2.bind("<Button-1>",CreateArc)
