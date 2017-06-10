@@ -27,7 +27,7 @@ class algorithms:
             #timo:why the above 'for loop' is needed?
             # path found
             if node == goal:
-                self.queueLog.append((node,[n[0] for n in queue]))
+                self.queueLog.append([node,[n[0] for n in queue]])
                 return path
             # enumerate all adjacent nodes, construct a new path and push it into the queue
             elif node not in visited:
@@ -37,7 +37,7 @@ class algorithms:
                     # new_path.append(adj)
                     queue.append((adj,path+[adj]))
                 print(queue)
-                self.queueLog.append((node,[n[0] for n in queue]))
+                self.queueLog.append([node,[n[0] for n in queue]])
 
 
 
@@ -53,13 +53,13 @@ class algorithms:
             # for node in path:
             #timo:why the above 'for loop' is needed?
             if node == goal:
-                self.stackLog.append((node,[n[0] for n in stack]))
+                self.stackLog.append([node,[n[0] for n in stack]])
                 return path
             elif node not in visited:
                 visited.add(node)
                 for adj in self.graph[node]:
                     stack.append((adj, path + [adj]))
-                self.stackLog.append((node,[n[0] for n in stack]))
+                self.stackLog.append([node,[n[0] for n in stack]])
                 print(stack)
 
     def getQueueLog(self):
