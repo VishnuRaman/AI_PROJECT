@@ -232,34 +232,36 @@ def Run(event):
     #final path dialogue box
     finalPbox = resultcanvas.create_rectangle(5, 3, 798, 35)
     if algorithm=='BFS':
-        resultcanvas.create_text(100, 15, text="Final Path: " + finalbfsPath) # + the array of results from the alg)
+        resultcanvas.create_text(100, 15, text="Final Path: " + finalbfsPath)
 
     elif algorithm=='DFS':
-        resultcanvas.create_text(100, 15, text="Final Path: " + finaldfsPath)  # + the array of results from the alg)
+        resultcanvas.create_text(100, 15, text="Final Path: " + finaldfsPath)
 
     # order of discovery dialogue box
     discoverPbox = resultcanvas.create_rectangle(5, 35, 798, 70)
 
     if algorithm == 'BFS':
-        resultcanvas.create_text(200, 50, text="BFS Queue: " + bfsQueue)  # + the array of results from the alg)
+        resultcanvas.create_text(200, 50, text="BFS Queue: " + bfsQueue)
 
     elif algorithm == 'DFS':
-        resultcanvas.create_text(200, 50, text="DFS Stack: " + dfsStack)  # + the array of results from the alg)
+        resultcanvas.create_text(200, 50, text="DFS Stack: " + dfsStack)
 
     # #order of expansion dialogue box
     # expandPbox = resultcanvas.create_rectangle(5, 70, 608, 100)
-    # resultcanvas.create_text(73, 85, text="Order of Expansion: ")  # + the array of results from the alg)
+    # resultcanvas.create_text(73, 85, text="Order of Expansion: ")  # + the array of results from the alg)  # listen to left click on each button
+
+
 
     #if the boxes appeared once then dont let appear a second time
 
-    #reset button for the run bit
-    # if ex(resultcanvas) == false
-    #     print(resultcanvas)
+    # visible = True
+    #
+    # if visible:
+    #    removeFromCanvas(resultcanvas)
+
+    #next task = create error messages for when user does wrong thing eg enters goal node higher than nodes shown
 
 
-
-
-# listen to left click on each button
 button1.bind("<Button-1>",CreateNode)
 button2.bind("<Button-1>",CreateArc)
 button3.bind("<Button-1>",Move)
