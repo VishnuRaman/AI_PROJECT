@@ -9,7 +9,7 @@ topFrame.pack(fill=X)
 bottomFrame = Frame(root)
 bottomFrame.pack(side=BOTTOM)
 # canvas
-canvas = Canvas(root, width=500,height=300,bg="light gray")
+canvas = Canvas(root, width=800,height=400,bg="light gray")
 canvas.pack(expand=1,fill=BOTH)
 
 #creating objects - link to the classes in the folder
@@ -210,7 +210,7 @@ def Run(event):
     bottomFrame = Frame(root)
     bottomFrame.pack(side=BOTTOM)
     # canvas
-    resultcanvas = Canvas(root, width=500, height=100, bg="white")
+    resultcanvas = Canvas(root, width=800, height=100, bg="white")
     resultcanvas.pack(expand=1, fill=BOTH)
 
    #finds final path for bfs
@@ -230,21 +230,21 @@ def Run(event):
     dfsStack = str(stackDFS)
 
     #final path dialogue box
-    finalPbox = resultcanvas.create_rectangle(5, 3, 608, 35)
+    finalPbox = resultcanvas.create_rectangle(5, 3, 798, 35)
     if algorithm=='BFS':
-        resultcanvas.create_text(60, 15, text="Final Path: " + finalbfsPath) # + the array of results from the alg)
+        resultcanvas.create_text(100, 15, text="Final Path: " + finalbfsPath) # + the array of results from the alg)
 
     elif algorithm=='DFS':
-        resultcanvas.create_text(60, 15, text="Final Path: " + finaldfsPath)  # + the array of results from the alg)
+        resultcanvas.create_text(100, 15, text="Final Path: " + finaldfsPath)  # + the array of results from the alg)
 
     # order of discovery dialogue box
-    discoverPbox = resultcanvas.create_rectangle(5, 35, 608, 70)
+    discoverPbox = resultcanvas.create_rectangle(5, 35, 798, 70)
 
     if algorithm == 'BFS':
-        resultcanvas.create_text(128, 50, text="BFS Queue: " + bfsQueue)  # + the array of results from the alg)
+        resultcanvas.create_text(200, 50, text="BFS Queue: " + bfsQueue)  # + the array of results from the alg)
 
     elif algorithm == 'DFS':
-        resultcanvas.create_text(103, 50, text="DFS Stack: " + dfsStack)  # + the array of results from the alg)
+        resultcanvas.create_text(200, 50, text="DFS Stack: " + dfsStack)  # + the array of results from the alg)
 
     # #order of expansion dialogue box
     # expandPbox = resultcanvas.create_rectangle(5, 70, 608, 100)
@@ -253,6 +253,9 @@ def Run(event):
     #if the boxes appeared once then dont let appear a second time
 
     #reset button for the run bit
+    # if ex(resultcanvas) == false
+    #     print(resultcanvas)
+
 
 
 
