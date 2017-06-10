@@ -38,8 +38,6 @@ myMenu.add_cascade(label="Run by", menu=editMenu)
 editMenu.add_command(label="BFS", command=chooseBFS)
 editMenu.add_command(label="DFS", command=chooseDFS)
 
-
-
 # create buttons
 button1 = Button(topFrame,text="Create Node ")
 button2 = Button(topFrame,text="Create Arc")
@@ -220,16 +218,16 @@ def Run(event):
     finalbfsPath = str(finalbfsP)
 
     #finds final path for dfs
-    finaldfsP = AL.dfs()
+    finaldfsP = AL.dfs(int(startNode.get()),int(endNode.get()))
     finaldfsPath = str(finaldfsP)
 
-    # #finds queue for bfs
-    # queueBFS = AL.bfs(queue(-1))
-    # bfsQueue = str(queueBFS)
-    #
-    # #finds stack for dfs
-    # stackDFS = Algorithms.dfs(int(startNode.get()),int(endNode.get()))
-    # dfsStack = str(stackDFS)
+    #calls the queue for bfs
+    queueBFS = AL.getQueueLog()
+    bfsQueue = str(queueBFS)
+
+    #calls the stack for dfs
+    stackDFS = AL.getStackLog()
+    dfsStack = str(stackDFS)
 
     #final path dialogue box
     finalPbox = resultcanvas.create_rectangle(5, 3, 608, 35)
@@ -241,13 +239,20 @@ def Run(event):
 
     # order of discovery dialogue box
     discoverPbox = resultcanvas.create_rectangle(5, 35, 608, 70)
-    resultcanvas.create_text(71, 50, text="Order of Discovery: " + dfsStack)  # + the array of results from the alg)
 
-    #order of expansion dialogue box
-    expandPbox = resultcanvas.create_rectangle(5, 70, 608, 100)
-    resultcanvas.create_text(73, 85, text="Order of Expansion: ")  # + the array of results from the alg)
+    if algorithm == 'BFS':
+        resultcanvas.create_text(128, 50, text="BFS Queue: " + bfsQueue)  # + the array of results from the alg)
+
+    elif algorithm == 'DFS':
+        resultcanvas.create_text(103, 50, text="DFS Stack: " + dfsStack)  # + the array of results from the alg)
+
+    # #order of expansion dialogue box
+    # expandPbox = resultcanvas.create_rectangle(5, 70, 608, 100)
+    # resultcanvas.create_text(73, 85, text="Order of Expansion: ")  # + the array of results from the alg)
 
     #if the boxes appeared once then dont let appear a second time
+
+    #reset button for the run bit
 
 
 

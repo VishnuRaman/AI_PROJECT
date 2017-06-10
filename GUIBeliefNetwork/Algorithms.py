@@ -15,6 +15,8 @@ class algorithms:
 
 
         visited = set()
+
+
         while queue:
 
 
@@ -67,6 +69,7 @@ class algorithms:
 
     def getStackLog(self):
         return self.stackLog
+
 
 LK=Linking.Graph()
 LK.add_vertex(0)
