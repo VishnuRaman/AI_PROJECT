@@ -5,47 +5,68 @@ class algorithms:
         self.graph = dict
 
 
+
+
     def bfs(self, start, goal):
+        self.queueLog=[]
         # maintain a queue of paths
-        queue = []
-        #push first path into the queue
-        queue.append([start])
+        # #push first path into the queue
+        queue = [(start,[start])]
+
 
         visited = set()
         while queue:
+
+
             # gets the first path in the queue
-            path = queue.pop(0)
+            (node,path) = queue.pop(0)#pop(0) means from head
+
+
             # gets the last node from the path
-            for vertex in path:
-                # path found
-                if vertex == goal:
-                    return path
-                # enumerate all adjacent nodes, construct a new path and push it into the queue
-                elif vertex not in visited:
-                    for adj in self.graph[vertex]:
-                        new_path = list(path)
-                        new_path.append(adj)
-                        queue.append(new_path)
-                        visited.add(vertex)
-                        print(queue)
+            # for vertex in path:
+            #timo:why the above 'for loop' is needed?
+            # path found
+            if node == goal:
+                self.queueLog.append((node,[n[0] for n in queue]))
+                return path
+            # enumerate all adjacent nodes, construct a new path and push it into the queue
+            elif node not in visited:
+                visited.add(node)
+                for adj in self.graph[node]:
+                    # new_path = list(path)
+                    # new_path.append(adj)
+                    queue.append((adj,path+[adj]))
+                print(queue)
+                self.queueLog.append((node,[n[0] for n in queue]))
+
+
 
 
     def dfs(self, start, goal):
+        self.stackLog=[]
         visited = set()
         stack = [(start,[start])]
 
         while stack:
-            (node, path) = stack.pop()
+            (node, path) = stack.pop()#pop() means from tail
 
-            for node in path:
-                if node == goal:
-                    return path
-                elif node not in visited:
-                    for adj in self.graph[node]:
-                        stack.append((adj, path + [adj]))
-                        visited.add(node)
-                        print(stack)
+            # for node in path:
+            #timo:why the above 'for loop' is needed?
+            if node == goal:
+                self.stackLog.append((node,[n[0] for n in stack]))
+                return path
+            elif node not in visited:
+                visited.add(node)
+                for adj in self.graph[node]:
+                    stack.append((adj, path + [adj]))
+                self.stackLog.append((node,[n[0] for n in stack]))
+                print(stack)
 
+    def getQueueLog(self):
+        return self.queueLog
+
+    def getStackLog(self):
+        return self.stackLog
 
 LK=Linking.Graph()
 LK.add_vertex(0)
@@ -65,5 +86,9 @@ AL=algorithms(LK.vert_dict)
 
 # for v in LK.vert_dict:
 #     print(str(LK.vert_dict[v].get_id())+' is connected to '+str([g for g in LK.vert_dict[v]]))
-# print(AL.bfs(0,5))
-print(AL.dfs(0,5))
+# print('bfs: '+str(AL.bfs(0,3)))
+# print('dfs: '+str(AL.dfs(0,3)))
+AL.bfs(0,3)
+print(AL.getQueueLog())
+# AL.dfs(0,3)
+# print(AL.getStackLog())
