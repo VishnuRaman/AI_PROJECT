@@ -227,7 +227,7 @@ def Run(event):
         if algorithm=='BFS':
 
             #final path label
-            finalPathLabel=Label(resultcanvas,text="Final path: ")
+            finalPathLabel=Label(resultcanvas, bg="turquoise", text="Final path: ")
             finalPathLabel.grid(column=0,row=0)
 
             #final path for the bfs
@@ -235,7 +235,7 @@ def Run(event):
             bfsPath.grid(column=1,row=0)
 
             #now expanding path label
-            expandLabel=Label(resultcanvas,text="Now expanding: ")
+            expandLabel=Label(resultcanvas,bg="light pink",text="Now expanding: ")
             expandLabel.grid(column=0,row=1)
 
             #node being expanded bfs
@@ -258,10 +258,12 @@ def Run(event):
             visitedString = Label(resultcanvas, text=str(AL.getVisited()))
             visitedString.grid(column=1,row=3)
 
+            #notifies the result variable its no longer empty
             result.extend([resultcanvas,finalPathLabel,expandLabel,visitedLabel])
+
         elif algorithm=='DFS':
             # final path label
-            finalPathLabel = Label(resultcanvas, text="Final path: ")
+            finalPathLabel = Label(resultcanvas, bg="turquoise", text="Final path: ")
             finalPathLabel.grid(column=0, row=0)
 
             # final path for the dfs
@@ -269,10 +271,10 @@ def Run(event):
             dfsPath.grid(column=1, row=0)
 
             # now expanding path label
-            expandLabel = Label(resultcanvas, text="Now expanding: ")
+            expandLabel = Label(resultcanvas, bg="light pink", text="Now expanding: ")
             expandLabel.grid(column=0, row=1)
 
-            # node being expanded bfs
+            # node being expanded dfs
             expandString = Label(resultcanvas, text=str(stackDFS[-1][0]))
             expandString.grid(column=1, row=1)
 
@@ -292,6 +294,7 @@ def Run(event):
             visitedString = Label(resultcanvas, text=str(AL.getVisited()))
             visitedString.grid(column=1, row=3)
 
+            # notifies the result variable its no longer empty
             result.extend([resultcanvas,finalPathLabel,expandLabel,visitedLabel])
     else:
         print()
