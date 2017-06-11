@@ -39,6 +39,7 @@ class algorithms:
 
 
     def dfs(self, start, goal):
+        #ie this.stackLog - so field variable and can be called by others
         self.stackLog=[]
         self.visited = set()
 

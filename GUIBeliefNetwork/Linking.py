@@ -12,19 +12,21 @@ class Vertex:
     def __iter__(self):######
         return iter(self.adjacent.keys())
 
+    #checks if selected node in the brackets is adjacent to the other node
     def check_neighbor_existed(self,node):
 
         if node in self.adjacent:
             return True
         else:
             return False
-
+    #adds a neighbour node into the adjacent one - ie adjacent becomes the neighbour
     def add_neighbor(self, neighbor, weight=0):
 
         self.adjacent[neighbor] = weight
 
     def delete_neighbor(self, neighbor):
         self.adjacent.pop(neighbor)
+
     def get_connections(self):
         return self.adjacent.keys()
 
