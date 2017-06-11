@@ -201,12 +201,24 @@ def Run(event):
     root.config(cursor="")
     if algorithm=='BFS':
         print(AL.bfs(int(startNode.get()),int(endNode.get())))
+        startNode.bg = "red"
+        endNode.bg = "green"
+
     elif algorithm=='DFS':
         print(AL.dfs(int(startNode.get()),int(endNode.get())))
 
     #finds final path for bfs
     finalbfsP = AL.bfs(int(startNode.get()),int(endNode.get()))
     finalbfsPath = str(finalbfsP)
+
+    # set final path colour of nodes to turquoise
+
+    # /take path from algorithms and colour
+    # /find whats the gui object for each bit of the path nd colour that
+    #  for loop to get all the no.s inside and use the no. to find the GUI object
+
+
+
 
     #calls the queue for bfs
     queueBFS = AL.getQueueLog()
@@ -227,7 +239,7 @@ def Run(event):
         if algorithm=='BFS':
 
             #final path label
-            finalPathLabel=Label(resultcanvas,text="Final path: ")
+            finalPathLabel=Label(resultcanvas, bg="turquoise", text="Final path: ")
             finalPathLabel.grid(column=0,row=0)
 
             #final path for the bfs
@@ -235,7 +247,7 @@ def Run(event):
             bfsPath.grid(column=1,row=0)
 
             #now expanding path label
-            expandLabel=Label(resultcanvas,text="Now expanding: ")
+            expandLabel=Label(resultcanvas,bg="light pink",text="Now expanding: ")
             expandLabel.grid(column=0,row=1)
 
             #node being expanded bfs
@@ -259,9 +271,12 @@ def Run(event):
             visitedString.grid(column=1,row=3)
 
             result.extend([bfsPath,expandString,queueString,visitedString])
+            #notifies the result variable its no longer empty
+            result.extend([resultcanvas,finalPathLabel,expandLabel,visitedLabel])
+
         elif algorithm=='DFS':
             # final path label
-            finalPathLabel = Label(resultcanvas, text="Final path: ")
+            finalPathLabel = Label(resultcanvas, bg="turquoise", text="Final path: ")
             finalPathLabel.grid(column=0, row=0)
 
             # final path for the dfs
@@ -269,10 +284,10 @@ def Run(event):
             dfsPath.grid(column=1, row=0)
 
             # now expanding path label
-            expandLabel = Label(resultcanvas, text="Now expanding: ")
+            expandLabel = Label(resultcanvas, bg="light pink", text="Now expanding: ")
             expandLabel.grid(column=0, row=1)
 
-            # node being expanded bfs
+            # node being expanded dfs
             expandString = Label(resultcanvas, text=str(stackDFS[-1][0]))
             expandString.grid(column=1, row=1)
 
@@ -292,6 +307,8 @@ def Run(event):
             visitedString = Label(resultcanvas, text=str(AL.getVisited()))
             visitedString.grid(column=1, row=3)
 
+            # notifies the result variable its no longer empty
+            result.extend([resultcanvas,finalPathLabel,expandLabel,visitedLabel])
             result.extend([bfsPath,expandString,stackString,visitedString])
     else:
         if algorithm=='BFS':
