@@ -231,6 +231,7 @@ def Run(event):
 
     #final path dialogue box
     finalPbox = resultcanvas.create_rectangle(5, 3, 798, 35)
+
     if algorithm=='BFS':
         resultcanvas.create_text(100, 15, text="Final Path: " + finalbfsPath)
 

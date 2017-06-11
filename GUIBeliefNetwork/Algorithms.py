@@ -34,6 +34,7 @@ class algorithms:
             # enumerate all adjacent nodes, construct a new path and push it into the queue
             elif node not in visited:
                 visited.add(node)
+                #goes through the adjacent of the node that was just popped from the queue
                 for adj in self.graph[node]:
                     # new_path = list(path)
                     # new_path.append(adj)
@@ -45,6 +46,7 @@ class algorithms:
 
 
     def dfs(self, start, goal):
+        #ie this.stackLog - so field variable and can be called by others
         self.stackLog=[]
         visited = set()
         stack = [(start,[start])]
