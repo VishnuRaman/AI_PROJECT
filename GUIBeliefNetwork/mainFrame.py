@@ -231,17 +231,30 @@ def Run(event):
         resultcanvas.pack(expand=1, fill=BOTH)
 
         if algorithm=='BFS':
-            finalPathLabel=Label(resultcanvas,text="Final path: "+finalbfsPath)
+            finalPathLabel=Label(resultcanvas,text="Final path: ")
             finalPathLabel.grid(column=0,row=0)
 
-            expandLabel=Label(resultcanvas,text="Now expanding: "+str(queueBFS[-1][0]))
+            bfsPath = Label(resultcanvas, text=finalbfsPath)
+            bfsPath.grid(column=1,row=0)
+
+            expandLabel=Label(resultcanvas,text="Now expanding: ")
             expandLabel.grid(column=0,row=1)
 
-            queueLabel=Label(resultcanvas,text="Queue: "+str(queueBFS[-1][-1]))
+            expandString = Label(resultcanvas, text=str(queueBFS[-1][0]))
+            expandString.grid(column=1,row=1)
+
+            queueLabel=Label(resultcanvas,text="Queue: ")
             queueLabel.grid(column=0,row=2)
 
-            visitedLabel=Label(resultcanvas,text="Visited: "+str(AL.getVisited()))
+            queueString = Label(resultcanvas,text=str(queueBFS[-1][-1]))
+            queueString.grid(column=1,row=2)
+
+            visitedLabel=Label(resultcanvas,text="Visited: ")
             visitedLabel.grid(column=0,row=3)
+
+            visitedString = Label(resultcanvas, text=str(AL.getVisited()))
+            visitedString.grid(column=1,row=3)
+
         elif algorithm=='DFS':
             print('dfs')
 
