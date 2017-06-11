@@ -104,8 +104,6 @@ def ArcPoint2(e):
             for v in LK.vert_dict:
                 print(str(LK.vert_dict[v].get_id())+' is connected to '+str([g for g in LK.vert_dict[v]]))
 
-
-
             canvas.bind("<Button-1>",ArcPoint1)
 # listen to the first click for the line
 def ArcPoint1(e):
@@ -124,7 +122,6 @@ def ArcPoint1(e):
 def CreateArc(event):
     root.config(cursor="")
     canvas.bind("<Button-1>",ArcPoint1)
-
 
 def moveTo(e):
     #for both lines below so x = location of the node you want to move
@@ -268,6 +265,7 @@ def Run(event):
         finalPathLabel = Label(resultcanvas, text="Final path: ")
         finalPathLabel.grid(column=0, row=0)
 
+
         # final path for the dfs
         dfsPath = Label(resultcanvas, text=finaldfsPath)
         dfsPath.grid(column=1, row=0)
@@ -298,21 +296,6 @@ def Run(event):
 
         #adds the canvas onto the GUI to show the results
         result.append((resultcanvas,finalPathLabel,expandLabel,visitedLabel))
-
-
-
-    # #order of expansion dialogue box
-    # expandPbox = resultcanvas.create_rectangle(5, 70, 608, 100)
-    # resultcanvas.create_text(73, 85, text="Order of Expansion: ")  # + the array of results from the alg)  # listen to left click on each button
-
-
-
-    #if the boxes appeared once then dont let appear a second time
-
-    # visible = True
-    #
-    # if visible:
-    #    removeFromCanvas(resultcanvas)
 
     #next task = create error messages for when user does wrong thing eg enters goal node higher than nodes shown
 
