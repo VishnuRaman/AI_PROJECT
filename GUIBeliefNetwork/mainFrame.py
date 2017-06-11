@@ -202,6 +202,7 @@ def Run(event):
     if algorithm=='BFS':
         print(AL.bfs(int(startNode.get()),int(endNode.get())))
         startNode.bg = "red"
+        endNode.bg = "green"
 
     elif algorithm=='DFS':
         print(AL.dfs(int(startNode.get()),int(endNode.get())))
