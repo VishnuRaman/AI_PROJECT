@@ -6,6 +6,8 @@ from GUIBeliefNetwork.Algorithms import algorithms
 root = Tk()
 topFrame = Frame(root)
 topFrame.pack(fill=X)
+topFrame2 = Frame(root)
+topFrame2.pack(fill=X)
 bottomFrame = Frame(root)
 bottomFrame.pack(side=BOTTOM)
 # canvas
@@ -46,10 +48,10 @@ button4 = Button(topFrame,text="Delete")
 button5 = Button(topFrame,text="Set Property")
 button6 = Button(topFrame,text="Modify Probability Table",bg="light green")
 button7 = Button(bottomFrame,text="Run",bg="red")
-text1=Label(root,text="Start node")
-startNode=Entry(root, width=2)
-text2=Label(root,text="End node")
-endNode=Entry(root, width=2)
+text1=Label(topFrame2,text="Start node")
+startNode=Entry(topFrame2, width=2)
+text2=Label(topFrame2,text="End node")
+endNode=Entry(topFrame2, width=2)
 
 button1.pack(side=LEFT)
 button2.pack(side=LEFT)
@@ -195,56 +197,75 @@ def SetProperty(event):
 def ModifyProbabilityTable(event):
     print("ModifyProbabilityTable")
 
+AL=Algorithms.algorithms(LK.vert_dict)
 def Run(event):
     root.config(cursor="")
     if algorithm=='BFS':
-        AL=Algorithms.algorithms(LK.vert_dict)
         print(AL.bfs(int(startNode.get()),int(endNode.get())))
     elif algorithm=='DFS':
-        AL=Algorithms.algorithms(LK.vert_dict)
         print(AL.dfs(int(startNode.get()),int(endNode.get())))
 
     # create a new window with results when the run button is clicked
-    topFrame = Frame(root)
-    topFrame.pack(fill=X)
-    bottomFrame = Frame(root)
-    bottomFrame.pack(side=BOTTOM)
-    # canvas
-    resultcanvas = Canvas(root, width=800, height=100, bg="white")
-    resultcanvas.pack(expand=1, fill=BOTH)
+    # topFrame = Frame(root)
+    # topFrame.pack(fill=X)
+    # bottomFrame = Frame(root)
+    # bottomFrame.pack(side=BOTTOM)
 
-   #finds final path for bfs
+    #finds final path for bfs
     finalbfsP = AL.bfs(int(startNode.get()),int(endNode.get()))
     finalbfsPath = str(finalbfsP)
-
-    #finds final path for dfs
-    finaldfsP = AL.dfs(int(startNode.get()),int(endNode.get()))
-    finaldfsPath = str(finaldfsP)
-
     #calls the queue for bfs
     queueBFS = AL.getQueueLog()
     bfsQueue = str(queueBFS)
 
+    #finds final path for dfs
+    finaldfsP = AL.dfs(int(startNode.get()),int(endNode.get()))
+    finaldfsPath = str(finaldfsP)
     #calls the stack for dfs
     stackDFS = AL.getStackLog()
     dfsStack = str(stackDFS)
+    # canvas
+    result=[]
+    if not result:
+        resultcanvas = Canvas(root, width=800, height=100, bg="white")
+        resultcanvas.pack(expand=1, fill=BOTH)
 
-    #final path dialogue box
-    finalPbox = resultcanvas.create_rectangle(5, 3, 798, 35)
-    if algorithm=='BFS':
-        resultcanvas.create_text(100, 15, text="Final Path: " + finalbfsPath)
+        if algorithm=='BFS':
+            finalPathLabel=Label(resultcanvas,text="Final path: "+finalbfsPath)
+            finalPathLabel.grid(column=0,row=0)
 
-    elif algorithm=='DFS':
-        resultcanvas.create_text(100, 15, text="Final Path: " + finaldfsPath)
+            expandLabel=Label(resultcanvas,text="Now expanding: "+str(queueBFS[-1][0]))
+            expandLabel.grid(column=0,row=1)
 
-    # order of discovery dialogue box
-    discoverPbox = resultcanvas.create_rectangle(5, 35, 798, 70)
+            queueLabel=Label(resultcanvas,text="Queue: "+str(queueBFS[-1][-1]))
+            queueLabel.grid(column=0,row=2)
 
-    if algorithm == 'BFS':
-        resultcanvas.create_text(200, 50, text="BFS Queue: " + bfsQueue)
+            visitedLabel=Label(resultcanvas,text="Visited: "+str(AL.getVisited()))
+            visitedLabel.grid(column=0,row=3)
+        elif algorithm=='DFS':
+            print('dfs')
 
-    elif algorithm == 'DFS':
-        resultcanvas.create_text(200, 50, text="DFS Stack: " + dfsStack)
+        result.append((resultcanvas,finalPathLabel,expandLabel,visitedLabel))
+
+
+
+    # #final path dialogue box
+    # finalPbox = resultcanvas.create_rectangle(5, 3, 798, 35)
+    #
+    # if algorithm=='BFS':
+    #     resultcanvas.create_text(100, 15, text="Final Path: " + finalbfsPath)
+    #
+    # elif algorithm=='DFS':
+    #     resultcanvas.create_text(100, 15, text="Final Path: " + finaldfsPath)
+    #
+    # # order of discovery dialogue box
+    # discoverPbox = resultcanvas.create_rectangle(5, 35, 798, 70)
+    #
+    # if algorithm == 'BFS':
+    #     resultcanvas.create_text(200, 50, text="BFS Queue: " + bfsQueue)
+    #
+    # elif algorithm == 'DFS':
+    #     resultcanvas.create_text(200, 50, text="DFS Stack: " + dfsStack)
 
     # #order of expansion dialogue box
     # expandPbox = resultcanvas.create_rectangle(5, 70, 608, 100)
