@@ -9,7 +9,7 @@ class algorithms:
 
     def bfs(self, start, goal):
         self.queueLog=[]
-        self.visited = set()
+        self.visited =[]
 
         # maintain a queue of paths
         # #push first path into the queue
@@ -20,15 +20,15 @@ class algorithms:
 
             if node == goal:
                 self.queueLog.append([node,[n[0] for n in queue]])
-                self.visited.add(node)
+                self.visited.append(node)
                 return path
             # enumerate all adjacent nodes, construct a new path and push it into the queue
             elif node not in self.visited:
-                self.visited.add(node)
+                self.queueLog.append([node,[n[0] for n in queue]])
+                self.visited.append(node)
                 for adj in self.graph[node]:
                     queue.append((adj,path+[adj]))
-                print(queue)
-                self.queueLog.append([node,[n[0] for n in queue]])
+                # print('bfs:'+str(queue))
 
 
 
@@ -36,25 +36,23 @@ class algorithms:
     def dfs(self, start, goal):
         #ie this.stackLog - so field variable and can be called by others
         self.stackLog=[]
-        self.visited = set()
+        self.visited =[]
 
         stack = [(start,[start])]
 
         while stack:
             (node, path) = stack.pop()#pop() means from tail
 
-            # for node in path:
-            #timo:why the above 'for loop' is needed?
             if node == goal:
                 self.stackLog.append([node,[n[0] for n in stack]])
-                self.visited.add(node)
+                self.visited.append(node)
                 return path
             elif node not in self.visited:
-                self.visited.add(node)
+                self.stackLog.append([node,[n[0] for n in stack]])
+                self.visited.append(node)
                 for adj in self.graph[node]:
                     stack.append((adj, path + [adj]))
-                self.stackLog.append([node,[n[0] for n in stack]])
-                print(stack)
+                # print('dfs: '+str(stack))
 
     def getQueueLog(self):
         return self.queueLog

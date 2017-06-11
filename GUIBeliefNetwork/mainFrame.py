@@ -95,14 +95,17 @@ def ArcPoint2(e):
         toNode=node_id_Dic[canvas.find_enclosed(e.x-50,e.y-50,e.x+50,e.y+50)[0]]#the node is created before num so it is at [0]
         if (fromNode is not toNode)and(LK.check_edge_existed(fromNode,toNode)==False):
             root.config(cursor="")
-            arrow = canvas.create_line(x,y,e.x,e.y,arrow="last")
+            arrow = canvas.create_line(x,y,e.x,e.y,arrow="last")#fill="turquoise" can change color
+            #use -->  canvas.itemconfig(arrow,fill="red") <-- to change color after created
+
             GA.addArrow(fromNode,toNode,arrow)
             #this method produces the connection and provides a cost
             LK.add_edge(fromNode,toNode,1)
             #inf means infinity so hasnt been assigned a cost/value yet
             #this one shows the individual costs of travel between nodes (the weight variable in the class)
-            for v in LK.vert_dict:
-                print(str(LK.vert_dict[v].get_id())+' is connected to '+str([g for g in LK.vert_dict[v]]))
+
+            # for v in LK.vert_dict:#####
+            #     print(str(LK.vert_dict[v].get_id())+' is connected to '+str([g for g in LK.vert_dict[v]]))
 
             canvas.bind("<Button-1>",ArcPoint1)
 # listen to the first click for the line
@@ -178,8 +181,9 @@ def removeFromCanvas(e):
         #this removes the deleted node and arrow out of the array and stores the number of that node into a priority queue
         #so takes no. from top of priority queue when creating next node
         MN.remove(selectedNode)
-        for v in LK:
-            print (str(v.get_id())+' is connected to '+str(LK.vert_dict[v.get_id()]))#########
+
+        # for v in LK.vert_dict:#####
+        #     print(str(LK.vert_dict[v].get_id())+' is connected to '+str([g for g in LK.vert_dict[v]]))
         Delete #takes you to delete def below
 
 # Delete the node
@@ -199,17 +203,6 @@ AL=Algorithms.algorithms(LK.vert_dict)
 result=[]
 def Run(event):
     root.config(cursor="")
-    if algorithm=='BFS':
-        print(AL.bfs(int(startNode.get()),int(endNode.get())))
-        startNode.bg = "red"
-        endNode.bg = "green"
-
-    elif algorithm=='DFS':
-        print(AL.dfs(int(startNode.get()),int(endNode.get())))
-
-    #finds final path for bfs
-    finalbfsP = AL.bfs(int(startNode.get()),int(endNode.get()))
-    finalbfsPath = str(finalbfsP)
 
     # set final path colour of nodes to turquoise
 
@@ -218,18 +211,6 @@ def Run(event):
     #  for loop to get all the no.s inside and use the no. to find the GUI object
 
 
-
-
-    #calls the queue for bfs
-    queueBFS = AL.getQueueLog()
-
-    #finds final path for dfs
-    finaldfsP = AL.dfs(int(startNode.get()),int(endNode.get()))
-    finaldfsPath = str(finaldfsP)
-
-    #calls the stack for dfs
-    stackDFS = AL.getStackLog()
-
     # canvas
 
     if not result:#if result is empty then create the labels - ie not shown already
@@ -237,19 +218,21 @@ def Run(event):
         resultcanvas.pack(expand=1, fill=BOTH)
 
         if algorithm=='BFS':
+            #finds final path for bfs
+            finalbfsP = AL.bfs(int(startNode.get()),int(endNode.get()))
+            #calls the queue for bfs
+            queueBFS = AL.getQueueLog()
 
             #final path label
             finalPathLabel=Label(resultcanvas, bg="turquoise", text="Final path: ")
             finalPathLabel.grid(column=0,row=0)
-
             #final path for the bfs
-            bfsPath = Label(resultcanvas, text=finalbfsPath)
+            bfsPath = Label(resultcanvas, text=str(finalbfsP))
             bfsPath.grid(column=1,row=0)
 
             #now expanding path label
             expandLabel=Label(resultcanvas,bg="light pink",text="Now expanding: ")
             expandLabel.grid(column=0,row=1)
-
             #node being expanded bfs
             expandString = Label(resultcanvas, text=str(queueBFS[-1][0]))
             expandString.grid(column=1,row=1)
@@ -257,7 +240,6 @@ def Run(event):
             #queue label
             queueLabel=Label(resultcanvas,text="Queue: ")
             queueLabel.grid(column=0,row=2)
-
             #bfs queue
             queueString = Label(resultcanvas,text=str(queueBFS[-1][-1]))
             queueString.grid(column=1,row=2)
@@ -265,28 +247,32 @@ def Run(event):
             #visited label
             visitedLabel=Label(resultcanvas,text="Visited: ")
             visitedLabel.grid(column=0,row=3)
-
             #nodes that are visited bfs
             visitedString = Label(resultcanvas, text=str(AL.getVisited()))
             visitedString.grid(column=1,row=3)
 
-            result.extend([bfsPath,expandString,queueString,visitedString])
             #notifies the result variable its no longer empty
-            result.extend([resultcanvas,finalPathLabel,expandLabel,visitedLabel])
+            result.extend([bfsPath,expandString,queueLabel,queueString,visitedString])
+
+
 
         elif algorithm=='DFS':
+            #finds final path for dfs
+            finaldfsP = AL.dfs(int(startNode.get()),int(endNode.get()))
+
+            #calls the stack for dfs
+            stackDFS = AL.getStackLog()
+
             # final path label
             finalPathLabel = Label(resultcanvas, bg="turquoise", text="Final path: ")
             finalPathLabel.grid(column=0, row=0)
-
             # final path for the dfs
-            dfsPath = Label(resultcanvas, text=finaldfsPath)
+            dfsPath = Label(resultcanvas, text=str(finaldfsP))
             dfsPath.grid(column=1, row=0)
 
             # now expanding path label
             expandLabel = Label(resultcanvas, bg="light pink", text="Now expanding: ")
             expandLabel.grid(column=0, row=1)
-
             # node being expanded dfs
             expandString = Label(resultcanvas, text=str(stackDFS[-1][0]))
             expandString.grid(column=1, row=1)
@@ -294,7 +280,6 @@ def Run(event):
             # stack label
             stackLabel = Label(resultcanvas, text="Stack: ")
             stackLabel.grid(column=0, row=2)
-
             # dfs stack
             stackString = Label(resultcanvas, text=str(stackDFS[-1][-1]))
             stackString.grid(column=1, row=2)
@@ -302,25 +287,25 @@ def Run(event):
             # visited label
             visitedLabel = Label(resultcanvas, text="Visited: ")
             visitedLabel.grid(column=0, row=3)
-
             # nodes that are visited bfs
             visitedString = Label(resultcanvas, text=str(AL.getVisited()))
             visitedString.grid(column=1, row=3)
 
             # notifies the result variable its no longer empty
-            result.extend([resultcanvas,finalPathLabel,expandLabel,visitedLabel])
-            result.extend([bfsPath,expandString,stackString,visitedString])
+            result.extend([dfsPath,expandString,stackLabel,stackString,visitedString])
     else:
         if algorithm=='BFS':
-            result[0]['text']=finalbfsPath
-            result[1]['text']=str(queueBFS[-1][0])
-            result[2]['text']=str(queueBFS[-1][-1])
-            result[3]['text']=str(AL.getVisited())
-        elif algorithms=='DFS':
-            result[0]['text']=finaldfsPath
-            result[1]['text']=str(stackBFS[-1][0])
-            result[2]['text']=str(stackBFS[-1][-1])
-            result[3]['text']=str(AL.getVisited())
+            result[0]['text']=str(AL.bfs(int(startNode.get()),int(endNode.get())))
+            result[1]['text']=str(AL.getQueueLog()[-1][0])
+            result[2]['text']="Queue: "
+            result[3]['text']=str(AL.getQueueLog()[-1][-1])
+            result[4]['text']=str(AL.getVisited())
+        elif algorithm=='DFS':
+            result[0]['text']=str(AL.dfs(int(startNode.get()),int(endNode.get())))
+            result[1]['text']=str(AL.getStackLog()[-1][0])
+            result[2]['text']="Stack: "
+            result[3]['text']=str(AL.getStackLog()[-1][-1])
+            result[4]['text']=str(AL.getVisited())
 
 
 
