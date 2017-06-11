@@ -209,16 +209,17 @@ def Run(event):
     #finds final path for bfs
     finalbfsP = AL.bfs(int(startNode.get()),int(endNode.get()))
     finalbfsPath = str(finalbfsP)
+
     #calls the queue for bfs
     queueBFS = AL.getQueueLog()
-    bfsQueue = str(queueBFS)
 
     #finds final path for dfs
     finaldfsP = AL.dfs(int(startNode.get()),int(endNode.get()))
     finaldfsPath = str(finaldfsP)
+
     #calls the stack for dfs
     stackDFS = AL.getStackLog()
-    dfsStack = str(stackDFS)
+
     # canvas
 
     if not result:#if result is empty then create the labels
@@ -226,22 +227,96 @@ def Run(event):
         resultcanvas.pack(expand=1, fill=BOTH)
 
         if algorithm=='BFS':
-            finalPathLabel=Label(resultcanvas,text="Final path: "+finalbfsPath)
+
+            #final path label
+            finalPathLabel=Label(resultcanvas,text="Final path: ")
             finalPathLabel.grid(column=0,row=0)
 
-            expandLabel=Label(resultcanvas,text="Now expanding: "+str(queueBFS[-1][0]))
+            #final path for the bfs
+            bfsPath = Label(resultcanvas, text=finalbfsPath)
+            bfsPath.grid(column=1,row=0)
+
+            #now expanding path label
+            expandLabel=Label(resultcanvas,text="Now expanding: ")
             expandLabel.grid(column=0,row=1)
 
-            queueLabel=Label(resultcanvas,text="Queue: "+str(queueBFS[-1][-1]))
+            #node being expanded bfs
+            expandString = Label(resultcanvas, text=str(queueBFS[-1][0]))
+            expandString.grid(column=1,row=1)
+
+            #queue label
+            queueLabel=Label(resultcanvas,text="Queue: ")
             queueLabel.grid(column=0,row=2)
 
-            visitedLabel=Label(resultcanvas,text="Visited: "+str(AL.getVisited()))
+            #bfs queue
+            queueString = Label(resultcanvas,text=str(queueBFS[-1][-1]))
+            queueString.grid(column=1,row=2)
+
+            #visited label
+            visitedLabel=Label(resultcanvas,text="Visited: ")
             visitedLabel.grid(column=0,row=3)
+
+            #nodes that are visited bfs
+            visitedString = Label(resultcanvas, text=str(AL.getVisited()))
+            visitedString.grid(column=1,row=3)
+
             result.extend([resultcanvas,finalPathLabel,expandLabel,visitedLabel])
         elif algorithm=='DFS':
             print('dfs')
     else:
         print()
+            # final path label
+            finalPathLabel = Label(resultcanvas, text="Final path: ")
+            finalPathLabel.grid(column=0, row=0)
+
+            # final path for the dfs
+            dfsPath = Label(resultcanvas, text=finaldfsPath)
+            dfsPath.grid(column=1, row=0)
+
+            # now expanding path label
+            expandLabel = Label(resultcanvas, text="Now expanding: ")
+            expandLabel.grid(column=0, row=1)
+
+            # node being expanded bfs
+            expandString = Label(resultcanvas, text=str(stackDFS[-1][0]))
+            expandString.grid(column=1, row=1)
+
+            # stack label
+            stackLabel = Label(resultcanvas, text="Stack: ")
+            stackLabel.grid(column=0, row=2)
+
+            # dfs stack
+            stackString = Label(resultcanvas, text=str(stackDFS[-1][-1]))
+            stackString.grid(column=1, row=2)
+
+            # visited label
+            visitedLabel = Label(resultcanvas, text="Visited: ")
+            visitedLabel.grid(column=0, row=3)
+
+            # nodes that are visited bfs
+            visitedString = Label(resultcanvas, text=str(AL.getVisited()))
+            visitedString.grid(column=1, row=3)
+
+            # print('dfs')
+
+        result.append((resultcanvas,finalPathLabel,expandLabel,visitedLabel))
+
+
+
+    # #order of expansion dialogue box
+    # expandPbox = resultcanvas.create_rectangle(5, 70, 608, 100)
+    # resultcanvas.create_text(73, 85, text="Order of Expansion: ")  # + the array of results from the alg)  # listen to left click on each button
+
+
+
+    #if the boxes appeared once then dont let appear a second time
+
+    # visible = True
+    #
+    # if visible:
+    #    removeFromCanvas(resultcanvas)
+
+    #next task = create error messages for when user does wrong thing eg enters goal node higher than nodes shown
 
 
 button1.bind("<Button-1>",CreateNode)
