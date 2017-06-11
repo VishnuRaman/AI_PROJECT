@@ -201,12 +201,23 @@ def Run(event):
     root.config(cursor="")
     if algorithm=='BFS':
         print(AL.bfs(int(startNode.get()),int(endNode.get())))
+        startNode.bg = "red"
+
     elif algorithm=='DFS':
         print(AL.dfs(int(startNode.get()),int(endNode.get())))
 
     #finds final path for bfs
     finalbfsP = AL.bfs(int(startNode.get()),int(endNode.get()))
     finalbfsPath = str(finalbfsP)
+
+    # set final path colour of nodes to turquoise
+
+    # /take path from algorithms and colour
+    # /find whats the gui object for each bit of the path nd colour that
+    #  for loop to get all the no.s inside and use the no. to find the GUI object
+
+
+
 
     #calls the queue for bfs
     queueBFS = AL.getQueueLog()
