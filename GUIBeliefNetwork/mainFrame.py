@@ -262,8 +262,7 @@ def Run(event):
 
             result.extend([resultcanvas,finalPathLabel,expandLabel,visitedLabel])
         elif algorithm=='DFS':
-            print('dfs')
-    else:
+
         # final path label
         finalPathLabel = Label(resultcanvas, text="Final path: ")
         finalPathLabel.grid(column=0, row=0)
