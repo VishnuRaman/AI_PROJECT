@@ -297,9 +297,6 @@ def Run(event):
         print()
 
 
-    #next task = create error messages for when user does wrong thing eg enters goal node higher than nodes shown
-
-
 button1.bind("<Button-1>",CreateNode)
 button2.bind("<Button-1>",CreateArc)
 button3.bind("<Button-1>",Move)
