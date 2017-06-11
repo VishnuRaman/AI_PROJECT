@@ -198,6 +198,7 @@ def ModifyProbabilityTable(event):
     print("ModifyProbabilityTable")
 
 AL=Algorithms.algorithms(LK.vert_dict)
+#result variable default setting = empty so resultcanvas is printed
 result=[]
 def Run(event):
     root.config(cursor="")
@@ -222,7 +223,7 @@ def Run(event):
 
     # canvas
 
-    if not result:#if result is empty then create the labels
+    if not result:#if result is empty then create the labels - ie not shown already
         resultcanvas = Canvas(root, width=800, height=100, bg="white")
         resultcanvas.pack(expand=1, fill=BOTH)
 
