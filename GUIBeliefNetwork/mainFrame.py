@@ -264,40 +264,39 @@ def Run(event):
         elif algorithm=='DFS':
             print('dfs')
     else:
-        print()
-            # final path label
-            finalPathLabel = Label(resultcanvas, text="Final path: ")
-            finalPathLabel.grid(column=0, row=0)
+        # final path label
+        finalPathLabel = Label(resultcanvas, text="Final path: ")
+        finalPathLabel.grid(column=0, row=0)
 
-            # final path for the dfs
-            dfsPath = Label(resultcanvas, text=finaldfsPath)
-            dfsPath.grid(column=1, row=0)
+        # final path for the dfs
+        dfsPath = Label(resultcanvas, text=finaldfsPath)
+        dfsPath.grid(column=1, row=0)
 
-            # now expanding path label
-            expandLabel = Label(resultcanvas, text="Now expanding: ")
-            expandLabel.grid(column=0, row=1)
+        # now expanding path label
+        expandLabel = Label(resultcanvas, text="Now expanding: ")
+        expandLabel.grid(column=0, row=1)
 
-            # node being expanded bfs
-            expandString = Label(resultcanvas, text=str(stackDFS[-1][0]))
-            expandString.grid(column=1, row=1)
+        # node being expanded bfs
+        expandString = Label(resultcanvas, text=str(stackDFS[-1][0]))
+        expandString.grid(column=1, row=1)
 
-            # stack label
-            stackLabel = Label(resultcanvas, text="Stack: ")
-            stackLabel.grid(column=0, row=2)
+        # stack label
+        stackLabel = Label(resultcanvas, text="Stack: ")
+        stackLabel.grid(column=0, row=2)
 
-            # dfs stack
-            stackString = Label(resultcanvas, text=str(stackDFS[-1][-1]))
-            stackString.grid(column=1, row=2)
+        # dfs stack
+        stackString = Label(resultcanvas, text=str(stackDFS[-1][-1]))
+        stackString.grid(column=1, row=2)
 
-            # visited label
-            visitedLabel = Label(resultcanvas, text="Visited: ")
-            visitedLabel.grid(column=0, row=3)
+        # visited label
+        visitedLabel = Label(resultcanvas, text="Visited: ")
+        visitedLabel.grid(column=0, row=3)
 
-            # nodes that are visited bfs
-            visitedString = Label(resultcanvas, text=str(AL.getVisited()))
-            visitedString.grid(column=1, row=3)
+        # nodes that are visited bfs
+        visitedString = Label(resultcanvas, text=str(AL.getVisited()))
+        visitedString.grid(column=1, row=3)
 
-            # print('dfs')
+        # print('dfs')
 
         result.append((resultcanvas,finalPathLabel,expandLabel,visitedLabel))
 
