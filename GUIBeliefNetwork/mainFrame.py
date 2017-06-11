@@ -198,18 +198,13 @@ def ModifyProbabilityTable(event):
     print("ModifyProbabilityTable")
 
 AL=Algorithms.algorithms(LK.vert_dict)
+result=[]
 def Run(event):
     root.config(cursor="")
     if algorithm=='BFS':
         print(AL.bfs(int(startNode.get()),int(endNode.get())))
     elif algorithm=='DFS':
         print(AL.dfs(int(startNode.get()),int(endNode.get())))
-
-    # create a new window with results when the run button is clicked
-    # topFrame = Frame(root)
-    # topFrame.pack(fill=X)
-    # bottomFrame = Frame(root)
-    # bottomFrame.pack(side=BOTTOM)
 
     #finds final path for bfs
     finalbfsP = AL.bfs(int(startNode.get()),int(endNode.get()))
@@ -225,8 +220,8 @@ def Run(event):
     stackDFS = AL.getStackLog()
     dfsStack = str(stackDFS)
     # canvas
-    result=[]
-    if not result:
+
+    if not result:#if result is empty then create the labels
         resultcanvas = Canvas(root, width=800, height=100, bg="white")
         resultcanvas.pack(expand=1, fill=BOTH)
 
@@ -242,45 +237,11 @@ def Run(event):
 
             visitedLabel=Label(resultcanvas,text="Visited: "+str(AL.getVisited()))
             visitedLabel.grid(column=0,row=3)
+            result.extend([resultcanvas,finalPathLabel,expandLabel,visitedLabel])
         elif algorithm=='DFS':
             print('dfs')
-
-        result.append((resultcanvas,finalPathLabel,expandLabel,visitedLabel))
-
-
-
-    # #final path dialogue box
-    # finalPbox = resultcanvas.create_rectangle(5, 3, 798, 35)
-    #
-    # if algorithm=='BFS':
-    #     resultcanvas.create_text(100, 15, text="Final Path: " + finalbfsPath)
-    #
-    # elif algorithm=='DFS':
-    #     resultcanvas.create_text(100, 15, text="Final Path: " + finaldfsPath)
-    #
-    # # order of discovery dialogue box
-    # discoverPbox = resultcanvas.create_rectangle(5, 35, 798, 70)
-    #
-    # if algorithm == 'BFS':
-    #     resultcanvas.create_text(200, 50, text="BFS Queue: " + bfsQueue)
-    #
-    # elif algorithm == 'DFS':
-    #     resultcanvas.create_text(200, 50, text="DFS Stack: " + dfsStack)
-
-    # #order of expansion dialogue box
-    # expandPbox = resultcanvas.create_rectangle(5, 70, 608, 100)
-    # resultcanvas.create_text(73, 85, text="Order of Expansion: ")  # + the array of results from the alg)  # listen to left click on each button
-
-
-
-    #if the boxes appeared once then dont let appear a second time
-
-    # visible = True
-    #
-    # if visible:
-    #    removeFromCanvas(resultcanvas)
-
-    #next task = create error messages for when user does wrong thing eg enters goal node higher than nodes shown
+    else:
+        print()
 
 
 button1.bind("<Button-1>",CreateNode)
