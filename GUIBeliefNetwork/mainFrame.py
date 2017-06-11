@@ -258,7 +258,7 @@ def Run(event):
             visitedString = Label(resultcanvas, text=str(AL.getVisited()))
             visitedString.grid(column=1,row=3)
 
-            result.extend([resultcanvas,finalPathLabel,expandLabel,visitedLabel])
+            result.extend([bfsPath,expandString,queueString,visitedString])
         elif algorithm=='DFS':
             # final path label
             finalPathLabel = Label(resultcanvas, text="Final path: ")
@@ -292,9 +292,19 @@ def Run(event):
             visitedString = Label(resultcanvas, text=str(AL.getVisited()))
             visitedString.grid(column=1, row=3)
 
-            result.extend([resultcanvas,finalPathLabel,expandLabel,visitedLabel])
+            result.extend([bfsPath,expandString,stackString,visitedString])
     else:
-        print()
+        if algorithm=='BFS':
+            result[0]['text']=finalbfsPath
+            result[1]['text']=str(queueBFS[-1][0])
+            result[2]['text']=str(queueBFS[-1][-1])
+            result[3]['text']=str(AL.getVisited())
+        elif algorithms=='DFS':
+            result[0]['text']=finaldfsPath
+            result[1]['text']=str(stackBFS[-1][0])
+            result[2]['text']=str(stackBFS[-1][-1])
+            result[3]['text']=str(AL.getVisited())
+
 
 
 button1.bind("<Button-1>",CreateNode)

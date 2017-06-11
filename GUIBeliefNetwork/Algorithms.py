@@ -17,10 +17,7 @@ class algorithms:
         while queue:
             # gets the first path in the queue
             (node,path) = queue.pop(0)#pop(0) means from head
-            # gets the last node from the path
-            # for vertex in path:
-            #timo:why the above 'for loop' is needed?
-            # path found
+
             if node == goal:
                 self.queueLog.append([node,[n[0] for n in queue]])
                 self.visited.add(node)
@@ -29,8 +26,6 @@ class algorithms:
             elif node not in self.visited:
                 self.visited.add(node)
                 for adj in self.graph[node]:
-                    # new_path = list(path)
-                    # new_path.append(adj)
                     queue.append((adj,path+[adj]))
                 print(queue)
                 self.queueLog.append([node,[n[0] for n in queue]])
