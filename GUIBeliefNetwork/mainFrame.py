@@ -1,4 +1,4 @@
-import ManageNode,Linking,GuiArray,Algorithms
+import ManageNode,Linking,GuiArray,Algorithms,time
 from tkinter import *
 
 from GUIBeliefNetwork.Algorithms import algorithms
@@ -52,6 +52,8 @@ text1=Label(topFrame2,text="Start node")
 startNode=Entry(topFrame2, width=2)
 text2=Label(topFrame2,text="End node")
 endNode=Entry(topFrame2, width=2)
+text3=Label(topFrame2,text="Delay seconds")
+delay=Entry(topFrame2, width=2)
 
 button1.pack(side=LEFT)
 button2.pack(side=LEFT)
@@ -64,6 +66,8 @@ text1.pack(side=LEFT)
 startNode.pack(side=LEFT)
 text2.pack(side=LEFT)
 endNode.pack(side=LEFT)
+text3.pack(side=LEFT)
+delay.pack(side=LEFT)
 
 # methods called by buttons
 node_id_Dic={}
@@ -198,10 +202,34 @@ def SetProperty(event):
 def ModifyProbabilityTable(event):
     print("ModifyProbabilityTable")
 
+
 AL=Algorithms.algorithms(LK.vert_dict)
 #result variable default setting = empty so resultcanvas is printed
 result=[]
+
 def Run(event):
+    global finalPath,xTh,delaytime
+    xTh=0
+    if algorithm=='BFS':
+        finalPath = AL.bfs(int(startNode.get()),int(endNode.get()))
+    elif algorithm=='DFS':
+        finalPath = AL.dfs(int(startNode.get()),int(endNode.get()))
+
+    if delay.get() and delay.get()!=0:
+        delaytime=int(delay.get())
+
+        for i in range(len(finalPath)):
+            display(event)
+            xTh+=1
+            time.sleep(delaytime)
+    else:
+        xTh=-1
+        delaytime=0
+        display(event)
+
+
+
+def display(event):
     root.config(cursor="")
 
     # set final path colour of nodes to turquoise
@@ -214,98 +242,55 @@ def Run(event):
     # canvas
 
     if not result:#if result is empty then create the labels - ie not shown already
-        resultcanvas = Canvas(root, width=800, height=100, bg="white")
-        resultcanvas.pack(expand=1, fill=BOTH)
+        resultcanvas = Frame(root)
+        resultcanvas.pack(side=BOTTOM)
+
+        # buttonDisp = Button(resultcanvas,text="disp",bg="light green")
+        # buttonDisp.grid(column=0,row=4)
 
         if algorithm=='BFS':
-            #finds final path for bfs
-            finalbfsP = AL.bfs(int(startNode.get()),int(endNode.get()))
-            #calls the queue for bfs
-            queueBFS = AL.getQueueLog()
-
-            #final path label
-            finalPathLabel=Label(resultcanvas, bg="turquoise", text="Final path: ")
-            finalPathLabel.grid(column=0,row=0)
-            #final path for the bfs
-            bfsPath = Label(resultcanvas, text=str(finalbfsP))
-            bfsPath.grid(column=1,row=0)
-
-            #now expanding path label
-            expandLabel=Label(resultcanvas,bg="light pink",text="Now expanding: ")
-            expandLabel.grid(column=0,row=1)
-            #node being expanded bfs
-            expandString = Label(resultcanvas, text=str(queueBFS[-1][0]))
-            expandString.grid(column=1,row=1)
-
             #queue label
-            queueLabel=Label(resultcanvas,text="Queue: ")
-            queueLabel.grid(column=0,row=2)
-            #bfs queue
-            queueString = Label(resultcanvas,text=str(queueBFS[-1][-1]))
-            queueString.grid(column=1,row=2)
-
-            #visited label
-            visitedLabel=Label(resultcanvas,text="Visited: ")
-            visitedLabel.grid(column=0,row=3)
-            #nodes that are visited bfs
-            visitedString = Label(resultcanvas, text=str(AL.getVisited()))
-            visitedString.grid(column=1,row=3)
-
-            #notifies the result variable its no longer empty
-            result.extend([bfsPath,expandString,queueLabel,queueString,visitedString])
-
-
-
+            qsLabel=Label(resultcanvas,text="Queue: ")
+            qsLabel.grid(column=0,row=2)
         elif algorithm=='DFS':
-            #finds final path for dfs
-            finaldfsP = AL.dfs(int(startNode.get()),int(endNode.get()))
-
-            #calls the stack for dfs
-            stackDFS = AL.getStackLog()
-
-            # final path label
-            finalPathLabel = Label(resultcanvas, bg="turquoise", text="Final path: ")
-            finalPathLabel.grid(column=0, row=0)
-            # final path for the dfs
-            dfsPath = Label(resultcanvas, text=str(finaldfsP))
-            dfsPath.grid(column=1, row=0)
-
-            # now expanding path label
-            expandLabel = Label(resultcanvas, bg="light pink", text="Now expanding: ")
-            expandLabel.grid(column=0, row=1)
-            # node being expanded dfs
-            expandString = Label(resultcanvas, text=str(stackDFS[-1][0]))
-            expandString.grid(column=1, row=1)
-
             # stack label
-            stackLabel = Label(resultcanvas, text="Stack: ")
-            stackLabel.grid(column=0, row=2)
-            # dfs stack
-            stackString = Label(resultcanvas, text=str(stackDFS[-1][-1]))
-            stackString.grid(column=1, row=2)
+            qsLabel = Label(resultcanvas, text="Stack: ")
+            qsLabel.grid(column=0, row=2)
+        #final path label
+        finalPathLabel=Label(resultcanvas, bg="turquoise", text="Final path: ")
+        finalPathLabel.grid(column=0,row=0)
+        #final path for the bfs
+        finalPathValue = Label(resultcanvas, text=str(finalPath))
+        finalPathValue.grid(column=1,row=0)
 
-            # visited label
-            visitedLabel = Label(resultcanvas, text="Visited: ")
-            visitedLabel.grid(column=0, row=3)
-            # nodes that are visited bfs
-            visitedString = Label(resultcanvas, text=str(AL.getVisited()))
-            visitedString.grid(column=1, row=3)
+        #now expanding path label
+        expandLabel=Label(resultcanvas,bg="light pink",text="Now expanding: ")
+        expandLabel.grid(column=0,row=1)
+        #node being expanded bfs
+        expandValue = Label(resultcanvas, text=str(AL.getQsLog()[xTh][0]))
+        expandValue.grid(column=1,row=1)
 
-            # notifies the result variable its no longer empty
-            result.extend([dfsPath,expandString,stackLabel,stackString,visitedString])
+        qsValue = Label(resultcanvas,text=str(AL.getQsLog()[xTh][-1]))
+        qsValue.grid(column=1,row=2)
+
+        #visited label
+        visitedLabel=Label(resultcanvas,text="Visited: ")
+        visitedLabel.grid(column=0,row=3)
+        #nodes that are visited bfs
+        visitedValue = Label(resultcanvas, text=str(AL.getVisitedLog()[xTh]))
+        visitedValue.grid(column=1,row=3)
+        #notifies the result variable its no longer empty
+        result.extend([finalPathValue,expandValue,qsLabel,qsValue,visitedValue])
     else:
         if algorithm=='BFS':
             result[0]['text']=str(AL.bfs(int(startNode.get()),int(endNode.get())))
-            result[1]['text']=str(AL.getQueueLog()[-1][0])
             result[2]['text']="Queue: "
-            result[3]['text']=str(AL.getQueueLog()[-1][-1])
-            result[4]['text']=str(AL.getVisited())
         elif algorithm=='DFS':
             result[0]['text']=str(AL.dfs(int(startNode.get()),int(endNode.get())))
-            result[1]['text']=str(AL.getStackLog()[-1][0])
             result[2]['text']="Stack: "
-            result[3]['text']=str(AL.getStackLog()[-1][-1])
-            result[4]['text']=str(AL.getVisited())
+        result[1]['text']=str(AL.getQsLog()[-1][0])
+        result[3]['text']=str(AL.getQsLog()[-1][-1])
+        result[4]['text']=str(AL.getVisitedLog()[-1])
 
 
 

@@ -8,24 +8,26 @@ class algorithms:
 
 
     def bfs(self, start, goal):
-        self.queueLog=[]
-        self.visited =[]
-
+        self.qsLog=[]
+        self.visitedLog =[]
         # maintain a queue of paths
         # #push first path into the queue
         queue = [(start,[start])]
+        visited=[]
         while queue:
             # gets the first path in the queue
             (node,path) = queue.pop(0)#pop(0) means from head
 
             if node == goal:
-                self.queueLog.append([node,[n[0] for n in queue]])
-                self.visited.append(node)
+                self.qsLog.append([node,[n[0] for n in queue]])
+                visited.append(node)
+                self.visitedLog.append([n for n in visited])
                 return path
             # enumerate all adjacent nodes, construct a new path and push it into the queue
-            elif node not in self.visited:
-                self.queueLog.append([node,[n[0] for n in queue]])
-                self.visited.append(node)
+            elif node not in visited:
+                self.qsLog.append([node,[n[0] for n in queue]])
+                visited.append(node)
+                self.visitedLog.append([n for n in visited])
                 for adj in self.graph[node]:
                     queue.append((adj,path+[adj]))
                 # print('bfs:'+str(queue))
@@ -35,33 +37,33 @@ class algorithms:
 
     def dfs(self, start, goal):
         #ie this.stackLog - so field variable and can be called by others
-        self.stackLog=[]
-        self.visited =[]
+        self.qsLog=[]
+        self.visitedLog =[]
 
         stack = [(start,[start])]
-
+        visited=[]
         while stack:
             (node, path) = stack.pop()#pop() means from tail
 
             if node == goal:
-                self.stackLog.append([node,[n[0] for n in stack]])
-                self.visited.append(node)
+                self.qsLog.append([node,[n[0] for n in stack]])
+                visited.append(node)
+                self.visitedLog.append([n for n in visited])
                 return path
-            elif node not in self.visited:
-                self.stackLog.append([node,[n[0] for n in stack]])
-                self.visited.append(node)
+            elif node not in visited:
+                self.qsLog.append([node,[n[0] for n in stack]])
+                visited.append(node)
+                self.visitedLog.append([n for n in visited])
                 for adj in self.graph[node]:
                     stack.append((adj, path + [adj]))
                 # print('dfs: '+str(stack))
 
-    def getQueueLog(self):
-        return self.queueLog
+    def getQsLog(self):
+        return self.qsLog
 
-    def getStackLog(self):
-        return self.stackLog
 
-    def getVisited(self):
-        return  self.visited
+    def getVisitedLog(self):
+        return  self.visitedLog
 
 
 # LK=Linking.Graph()
