@@ -292,6 +292,12 @@ def display(event):
         result[3]['text']=str(AL.getQsLog()[-1][-1])
         result[4]['text']=str(AL.getVisitedLog()[-1])
 
+    # for node_id_Dic in finalbfsP:
+    #     canvas.itemconfig(node_id_Dic, fill="turquoise")
+    #
+    for node in finalbfsP:
+        canvas.itemconfig(node, fill="turquoise")
+
 
 
 button1.bind("<Button-1>",CreateNode)
