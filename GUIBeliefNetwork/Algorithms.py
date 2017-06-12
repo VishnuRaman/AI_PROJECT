@@ -26,11 +26,12 @@ class algorithms:
                 return path
             # enumerate all adjacent nodes, construct a new path and push it into the queue
             elif node not in visited:
-                self.qsLog.append([node,[n[0] for n in qs]])
                 visited.append(node)
                 self.visitedLog.append([n for n in visited])
                 for adj in self.graph[node]:
                     qs.append((adj,path+[adj]))
+                qs.sort()#make sure expand in numerical sequence
+                self.qsLog.append([node,[n[0] for n in qs]])
                 # print('bdfs:'+str(qs))
 
 

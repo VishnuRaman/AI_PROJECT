@@ -54,6 +54,8 @@ text2=Label(topFrame2,text="End node")
 endNode=Entry(topFrame2, width=2)
 text3=Label(topFrame2,text="Delay seconds")
 delay=Entry(topFrame2, width=2)
+button8 = Button(topFrame2,text="<<",bg="light blue")
+button9 = Button(topFrame2,text=">>",bg="light blue")
 
 button1.pack(side=LEFT)
 button2.pack(side=LEFT)
@@ -68,6 +70,8 @@ text2.pack(side=LEFT)
 endNode.pack(side=LEFT)
 text3.pack(side=LEFT)
 delay.pack(side=LEFT)
+button8.pack(side=LEFT)
+button9.pack(side=LEFT)
 
 # methods called by buttons
 node_id_Dic={}
@@ -191,7 +195,7 @@ def removeFromCanvas(e):
         Delete #takes you to delete def below
 
 # Delete the node
-def Delete(index):
+def Delete(event):
     root.config(cursor="spider")
     canvas.bind("<Button-1>",removeFromCanvas)
 
@@ -219,11 +223,13 @@ def Run(event):
 
         for i in range(len(AL.getQsLog())):
             display()
+            root.update()
             xTh+=1
             time.sleep(delaytime)
     else:
-        xTh=-1
+        xTh=len(AL.getQsLog())-1
         display()
+
 
 
 
@@ -286,6 +292,18 @@ def display():
         result[1]['text']=str(AL.getQsLog()[xTh][0])
         result[3]['text']=str(AL.getQsLog()[xTh][-1])
         result[4]['text']=str(AL.getVisitedLog()[xTh])
+def NextStep(e):
+    global xTh
+    if xTh<len(AL.getQsLog())-1:
+        xTh+=1
+        display()
+        root.update()
+def PreStep(e):
+    global xTh
+    if xTh>0:
+        xTh-=1
+        display()
+        root.update()
 
     # for node_id_Dic in finalbfsP:
     #     canvas.itemconfig(node_id_Dic, fill="turquoise")
@@ -302,6 +320,8 @@ button4.bind("<Button-1>",Delete)
 button5.bind("<Button-1>",SetProperty)
 button6.bind("<Button-1>",ModifyProbabilityTable)
 button7.bind("<Button-1>",Run)
+button8.bind("<Button-1>",PreStep)
+button9.bind("<Button-1>",NextStep)
 
 
 root.mainloop()
