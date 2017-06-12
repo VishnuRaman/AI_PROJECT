@@ -187,7 +187,7 @@ def removeFromCanvas(e):
         MN.remove(selectedNode)
 
         # for v in LK.vert_dict:#####
-        #     print(str(LK.vert_dict[v].get_id())+' is connected to '+str([g for g in LK.vert_dict[v]]))
+        #     print(str(LK.vert_dict[v].get_id())+' is connected to '+str([g for g in LK.vert_dict[v].adjacent]))
         Delete #takes you to delete def below
 
 # Delete the node
@@ -290,8 +290,8 @@ def display():
     # for node_id_Dic in finalbfsP:
     #     canvas.itemconfig(node_id_Dic, fill="turquoise")
     #
-    for node in finalbfsP:
-        canvas.itemconfig(node, fill="turquoise")
+    # for node in finalbfsP:
+    #     canvas.itemconfig(node, fill="turquoise")
 
 
 

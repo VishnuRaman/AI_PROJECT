@@ -54,10 +54,11 @@ class Graph:
 
     def delete_vertex(self,node):
         self.num_vertices -=1
-        for n in self.vert_dict:
+        for n in self.vert_dict:#n is the key in that dict
             if self.check_edge_existed(n,node):
                 self.vert_dict[n].delete_neighbor(node)
         self.vert_dict.pop(node)
+
 
     def get_vertex(self, n):
         if n in self.vert_dict:
@@ -74,7 +75,7 @@ class Graph:
 
 
     def check_edge_existed(self,frm,to):
-        return self.vert_dict[frm].check_neighbor_existed(self.vert_dict[to])
+        return self.vert_dict[frm].check_neighbor_existed(to)
 
     def get_vertices(self):
         return self.vert_dict.keys()
