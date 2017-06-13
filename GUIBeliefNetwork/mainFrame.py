@@ -1,4 +1,4 @@
-import ManageNode,Linking,GuiArray,Algorithms,time
+import ManageNode,Linking,GuiArray,Algorithms
 from tkinter import *
 
 from GUIBeliefNetwork.Algorithms import algorithms
@@ -225,7 +225,7 @@ def Run(event):
             display()
             root.update()
             xTh+=1
-            time.sleep(delaytime)
+            root.after(delaytime*1000)
     else:
         xTh=len(AL.getQsLog())-1
         display()
