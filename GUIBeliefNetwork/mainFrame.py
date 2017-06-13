@@ -305,6 +305,10 @@ def PreStep(e):
         display()
         root.update()
 
+    for node in finalPath:
+        if node in finalPath:
+            canvas.itemconfig(node, fill="turquoise")
+            canvas.itemconfig(arrow,fill="turquoise")
     # for node_id_Dic in finalbfsP:
     #     canvas.itemconfig(node_id_Dic, fill="turquoise")
     #
