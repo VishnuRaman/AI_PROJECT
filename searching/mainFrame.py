@@ -1,7 +1,7 @@
 import ManageNode,Linking,GuiArray,Algorithms
 from tkinter import *
 
-from GUIBeliefNetwork.Algorithms import algorithms
+from searching.Algorithms import algorithms
 
 root = Tk()
 topFrame = Frame(root)
