@@ -221,10 +221,10 @@ def Run(event):
         display()
     else:
         delaytime=int(delay.get())
-        for i in range(len(AL.getQsLog())):
+        for i in range(len(AL.getVisitedLog())):
+            xTh=i
             display()
             root.update()
-            xTh=i
             root.after(delaytime*1000)
 
 
@@ -283,24 +283,25 @@ def display():
         result[3]['text']=str(AL.getQsLog()[xTh][1])#qsValue
         result[4]['text']=str(AL.getVisitedLog()[xTh])#visitedValue
 
-
     if AL.getQsLog()[xTh][0]==finalPath[-1]:#meet the goal then color the final path
         for a in range(len(finalPath)-1):
             canvas.itemconfig(GA.nodeList[finalPath[a]][2][finalPath[a+1]],fill="red")#final path arrow
-    else:
-        for a in range(len(finalPath)-1):
-            canvas.itemconfig(GA.nodeList[finalPath[a]][2][finalPath[a+1]],fill="black")#final path arrow
-
 
     for n in GA.nodeList:
-        if n in AL.getQsLog()[xTh][1]:#ovals in queue or stack
-            canvas.itemconfig(GA.nodeList[n][1],fill="yellow")
-        elif n in AL.getVisitedLog()[xTh]:#visited oval
+        if n in AL.getVisitedLog()[xTh]:#visited oval
             canvas.itemconfig(GA.nodeList[n][1],fill="brown")
             if n == AL.getQsLog()[xTh][0]:#expanding oval
                 canvas.itemconfig(GA.nodeList[n][1],fill="light pink")#now expending oval
+        elif n in AL.getQsLog()[xTh][1]:#ovals in queue or stack
+            canvas.itemconfig(GA.nodeList[n][1],fill="yellow")
         else:
             canvas.itemconfig(GA.nodeList[n][1],fill="")
+
+        if AL.getQsLog()[xTh][0]!=finalPath[-1]:#meet the goal then color the final path
+            for a in GA.nodeList[n][2].values():
+               canvas.itemconfig(a,fill="black")#final path arrow
+
+
 
 
 def NextStep(e):

@@ -30,7 +30,7 @@ class algorithms:
                 self.visitedLog.append([n for n in visited])
                 temp=[]
                 for adj in self.graph[node]:
-                    if adj not in [n[0] for n in qs]:#avoid duplicated node
+                    if adj not in [n[0] for n in qs] and adj not in visited:#avoid duplicated node, avoid visited node
                         temp.append((adj,path+[adj]))
                 temp.sort()#make sure expand in numerical sequence
                 qs.extend(temp)
