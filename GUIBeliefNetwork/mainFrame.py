@@ -292,6 +292,20 @@ def display():
         result[1]['text']=str(AL.getQsLog()[xTh][0])
         result[3]['text']=str(AL.getQsLog()[xTh][-1])
         result[4]['text']=str(AL.getVisitedLog()[xTh])
+
+
+    # for node_id_Dic in finalPathValue:
+    #     canvas.itemconfig(node_id_Dic, fill="turquoise")
+    #
+    # for node in finalPathValue:
+    #     canvas.itemconfig(node, fill="turquoise")
+
+    for node in finalPath:
+        if node in finalPath:
+            canvas.itemconfig(node, fill="turquoise")
+            #canvas.itemconfig(arrow, fill="turquoise")
+
+
 def NextStep(e):
     global xTh
     if xTh<len(AL.getQsLog())-1:
@@ -305,12 +319,11 @@ def PreStep(e):
         display()
         root.update()
 
-    # for node_id_Dic in finalbfsP:
-    #     canvas.itemconfig(node_id_Dic, fill="turquoise")
+    # for node in finalPath:
+    #     if node in finalPath:
+    #         canvas.itemconfig(node, fill="turquoise")
+    #         canvas.itemconfig(arrow,fill="turquoise")
     #
-    # for node in finalbfsP:
-    #     canvas.itemconfig(node, fill="turquoise")
-
 
 
 button1.bind("<Button-1>",CreateNode)
