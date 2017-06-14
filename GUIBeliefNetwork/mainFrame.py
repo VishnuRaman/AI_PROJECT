@@ -17,7 +17,6 @@ canvas.pack(expand=1,fill=BOTH)
 #creating objects - link to the classes in the folder
 GA=GuiArray.guiArray(canvas)
 #node list calls list from the object GA which references Gui Array class
-nodeList=GA.get_nodeList
 MN=ManageNode.manageNode()
 LK=Linking.Graph()
 
@@ -47,7 +46,7 @@ button3 = Button(topFrame,text="Move")
 button4 = Button(topFrame,text="Delete")
 button5 = Button(topFrame,text="Set Property")
 button6 = Button(topFrame,text="Modify Probability Table",bg="light green")
-button7 = Button(bottomFrame,text="Run",bg="red")
+button7 = Button(bottomFrame,text="Run",bg="green")
 text1=Label(topFrame2,text="Start node")
 startNode=Entry(topFrame2, width=2)
 text2=Label(topFrame2,text="End node")
@@ -82,14 +81,14 @@ def drawNode(e):
     #if objects are present it wont create a node there
     #if is empty then creates the oval
     if not canvas.find_enclosed(e.x-50,e.y-50,e.x+50,e.y+50):
-        node=canvas.create_oval(e.x-20,e.y-10,e.x+20,e.y+10)
+        oval=canvas.create_oval(e.x-20,e.y-10,e.x+20,e.y+10)
       #MN.inc means increase that method by 1 as new node was created
         nodeID=MN.inc()
         num=canvas.create_text(e.x,e.y,text=str(nodeID))
         #num = the number label for the node eg 0,1,2
         #node = the oval shape
-        GUIset=[num,node,{}]
-        node_id_Dic[node]=nodeID
+        GUIset=[num,oval,{}]#number object / oval object / dictionary for linking
+        node_id_Dic[oval]=nodeID
         GA.addNode(GUIset,nodeID)
         LK.add_vertex(nodeID)
 
@@ -218,31 +217,22 @@ def Run(event):
 
     finalPath = AL.bdfs(int(startNode.get()),int(endNode.get()),algorithm)
 
-    if delay.get() and delay.get()!=0:
+    if not delay.get():
+        display()
+    else:
         delaytime=int(delay.get())
-
         for i in range(len(AL.getQsLog())):
             display()
             root.update()
-            xTh+=1
+            xTh=i
             root.after(delaytime*1000)
-    else:
-        xTh=len(AL.getQsLog())-1
-        display()
+
 
 
 
 
 def display():
-    # set final path colour of nodes to turquoise
-
-    # /take path from algorithms and colour
-    # /find whats the gui object for each bit of the path nd colour that
-    #  for loop to get all the no.s inside and use the no. to find the GUI object
-
-
     # canvas
-
     if not result:#if result is empty then create the labels - ie not shown already
         resultcanvas = Frame(root)
         resultcanvas.pack(side=BOTTOM)
@@ -252,14 +242,14 @@ def display():
 
         if algorithm=='BFS':
             #queue label
-            qsLabel=Label(resultcanvas,text="Queue: ")
+            qsLabel=Label(resultcanvas,bg="yellow",text="Queue: ")
             qsLabel.grid(column=0,row=2,sticky=W)
         elif algorithm=='DFS':
             # stack label
-            qsLabel = Label(resultcanvas, text="Stack: ")
+            qsLabel = Label(resultcanvas,bg="yellow", text="Stack: ")
             qsLabel.grid(column=0, row=2,sticky=W)
         #final path label
-        finalPathLabel=Label(resultcanvas, bg="turquoise", text="Final path: ")
+        finalPathLabel=Label(resultcanvas, bg="red", text="Final path: ")
         finalPathLabel.grid(column=0,row=0,sticky=W)
         #final path for the bfs
         finalPathValue = Label(resultcanvas, text=str(finalPath))
@@ -276,7 +266,7 @@ def display():
         qsValue.grid(column=1,row=2,sticky=W)
 
         #visited label
-        visitedLabel=Label(resultcanvas,text="Visited: ")
+        visitedLabel=Label(resultcanvas,bg="brown",text="Visited: ")
         visitedLabel.grid(column=0,row=3,sticky=W)
         #nodes that are visited bfs
         visitedValue = Label(resultcanvas, text=str(AL.getVisitedLog()[xTh]))
@@ -289,21 +279,28 @@ def display():
             result[2]['text']="Queue: "
         elif algorithm=='DFS':
             result[2]['text']="Stack: "
-        result[1]['text']=str(AL.getQsLog()[xTh][0])
-        result[3]['text']=str(AL.getQsLog()[xTh][-1])
-        result[4]['text']=str(AL.getVisitedLog()[xTh])
+        result[1]['text']=str(AL.getQsLog()[xTh][0])#expandValue
+        result[3]['text']=str(AL.getQsLog()[xTh][1])#qsValue
+        result[4]['text']=str(AL.getVisitedLog()[xTh])#visitedValue
 
 
-    # for node_id_Dic in finalPathValue:
-    #     canvas.itemconfig(node_id_Dic, fill="turquoise")
-    #
-    # for node in finalPathValue:
-    #     canvas.itemconfig(node, fill="turquoise")
+    if AL.getQsLog()[xTh][0]==finalPath[-1]:#meet the goal then color the final path
+        for a in range(len(finalPath)-1):
+            canvas.itemconfig(GA.nodeList[finalPath[a]][2][finalPath[a+1]],fill="red")#final path arrow
+    else:
+        for a in range(len(finalPath)-1):
+            canvas.itemconfig(GA.nodeList[finalPath[a]][2][finalPath[a+1]],fill="black")#final path arrow
 
-    for node in finalPath:
-        if node in finalPath:
-            canvas.itemconfig(node, fill="turquoise")
-            #canvas.itemconfig(arrow, fill="turquoise")
+
+    for n in GA.nodeList:
+        if n in AL.getQsLog()[xTh][1]:#ovals in queue or stack
+            canvas.itemconfig(GA.nodeList[n][1],fill="yellow")
+        elif n in AL.getVisitedLog()[xTh]:#visited oval
+            canvas.itemconfig(GA.nodeList[n][1],fill="brown")
+            if n == AL.getQsLog()[xTh][0]:#expanding oval
+                canvas.itemconfig(GA.nodeList[n][1],fill="light pink")#now expending oval
+        else:
+            canvas.itemconfig(GA.nodeList[n][1],fill="")
 
 
 def NextStep(e):
@@ -318,13 +315,6 @@ def PreStep(e):
         xTh-=1
         display()
         root.update()
-
-    # for node in finalPath:
-    #     if node in finalPath:
-    #         canvas.itemconfig(node, fill="turquoise")
-    #         canvas.itemconfig(arrow,fill="turquoise")
-    #
-
 
 button1.bind("<Button-1>",CreateNode)
 button2.bind("<Button-1>",CreateArc)
