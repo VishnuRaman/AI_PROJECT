@@ -300,10 +300,16 @@ def display():
     # for node in finalPathValue:
     #     canvas.itemconfig(node, fill="turquoise")
 
-    for node in finalPath:
-        if node in finalPath:
-            canvas.itemconfig(node, fill="turquoise")
-            #canvas.itemconfig(arrow, fill="turquoise")
+        # for i in the range of range= number of final path nodes
+        for i in range(len(finalPath) - 1):
+            # nodelist is the dictionary containing all the GUI objects
+            # the 1st final path references the start node of the link and the 2nd references the
+            # goal node of the link
+            # the [2] is the 3rd object (starts at 0) in the nodelist dictionary
+            # the +1 allows you to get the next object as it is currently out of the range
+            canvas.itemconfig(GA.nodeList[finalPath[i]][2][finalPath[i + 1]], fill="turquoise")
+
+            # canvas.itemconfig(arrow,fill="turquoise")
 
 
 def NextStep(e):
