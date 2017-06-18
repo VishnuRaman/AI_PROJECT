@@ -299,8 +299,15 @@ def display():
         result[4]['text']=str(AL.getVisitedLog()[xTh])#visitedValue
 
     if AL.getQsLog()[xTh][0]==finalPath[-1]:#meet the goal then color the final path
+        # for i in the range of range= number of final path nodes
         for a in range(len(finalPath)-1):
             canvas.itemconfig(GA.nodeList[finalPath[a]][2][finalPath[a+1]][0],fill="red")#final path arrow
+            # nodelist is the dictionary containing all the GUI objects
+            # the 1st final path references the start node of the link and the 2nd references the
+            # goal node of the link
+            # the [2] is the 3rd object (starts at 0) in the nodelist dictionary
+            # the +1 allows you to get the next object as it is currently out of the range
+            canvas.itemconfig(GA.nodeList[finalPath[a]][2][finalPath[a+1]],fill="red")#final path arrow
 
     for n in GA.nodeList:
         if n in AL.getVisitedLog()[xTh]:#visited oval
@@ -315,9 +322,6 @@ def display():
         if AL.getQsLog()[xTh][0]!=finalPath[-1]:#meet the goal then color the final path
             for a in GA.nodeList[n][2].values():
                canvas.itemconfig(a[0],fill="black")#final path arrow
-
-
-
 
 def NextStep(e):
     global xTh
