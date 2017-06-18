@@ -8,11 +8,11 @@ class guiArray:
     def addNode(self,set,nodeID):
         self.nodeList[nodeID]=set
         print('GUI object '+str(self.nodeList))#########
-    def addArrow(self,fromNode,toNode,arrow):
+    def addArrow(self,fromNode,toNode,arrow,weight):
 
         #so print will say node you are travelling FROM, it travels DOWN the grid to that node
         #then travels ACROSS to find the node you're travelling TO
-        self.nodeList[fromNode][2][toNode]=arrow
+        self.nodeList[fromNode][2][toNode]=(arrow,weight)
         print('GUI object '+str(self.nodeList))#########
 
     def deleteNode(self,node):
@@ -24,9 +24,11 @@ class guiArray:
 
     def deleteArrow(self,node):
         for i in self.nodeList[node][2]:#delete the links from the node to anywhere
-            self.canvas.delete(self.nodeList[node][2][i])
+            self.canvas.delete(self.nodeList[node][2][i][0])#delete arrow
+            self.canvas.delete(self.nodeList[node][2][i][1])#delete text
         for n in self.nodeList:#delete the links from anywhere to the node
             if node in self.nodeList[n][2]:
-                self.canvas.delete(self.nodeList[n][2][node])
+                self.canvas.delete(self.nodeList[n][2][node][0])#delete arrow
+                self.canvas.delete(self.nodeList[n][2][node][1])#delete text
                 self.nodeList[n][2].pop(node)
 

@@ -34,17 +34,22 @@ def chooseDFS():
     global algorithm
     algorithm='DFS'
 
+def chooseUCS():
+    global algorithm
+    algorithm='UCS'
+
 editMenu = Menu(myMenu)
 myMenu.add_cascade(label="Run by", menu=editMenu)
 editMenu.add_command(label="BFS", command=chooseBFS)
 editMenu.add_command(label="DFS", command=chooseDFS)
+editMenu.add_command(label="UCS", command=chooseUCS)
 
 # create buttons
 button1 = Button(topFrame,text="Create Node ")
 button2 = Button(topFrame,text="Create Arc")
 button3 = Button(topFrame,text="Move")
 button4 = Button(topFrame,text="Delete")
-button5 = Button(topFrame,text="Set Property")
+button5 = Button(topFrame,text="Set weight",bg="light green")
 button6 = Button(topFrame,text="Modify Probability Table",bg="light green")
 button7 = Button(bottomFrame,text="Run",bg="green")
 text1=Label(topFrame2,text="Start node")
@@ -105,7 +110,9 @@ def ArcPoint2(e):
             arrow = canvas.create_line(x,y,e.x,e.y,arrow="last")#fill="turquoise" can change color
             #use -->  canvas.itemconfig(arrow,fill="red") <-- to change color after created
 
-            GA.addArrow(fromNode,toNode,arrow)
+            weight = canvas.create_text(0.5*(x+e.x),0.5*(y+e.y)-10,text=1)
+
+            GA.addArrow(fromNode,toNode,arrow,weight)
             #this method produces the connection and provides a cost
             LK.add_edge(fromNode,toNode,1)
             #inf means infinity so hasnt been assigned a cost/value yet
@@ -198,9 +205,10 @@ def Delete(event):
     root.config(cursor="spider")
     canvas.bind("<Button-1>",removeFromCanvas)
 
-def SetProperty(event):
+def SetWeight(event):
     root.config(cursor="")
-    print("SetProperty")
+
+    print("SetWeight")
 
 def ModifyProbabilityTable(event):
     print("ModifyProbabilityTable")
@@ -214,8 +222,11 @@ def Run(event):
     root.config(cursor="")
     global finalPath,xTh,delaytime
     xTh=0
+    if algorithm in ('UCS','aStar'):
+        finalPath = AL.ucsAStar(int(startNode.get()),int(endNode.get()))
+    else:
+        finalPath = AL.bdfs(int(startNode.get()),int(endNode.get()),algorithm)
 
-    finalPath = AL.bdfs(int(startNode.get()),int(endNode.get()),algorithm)
 
     if not delay.get():
         display()
@@ -243,11 +254,13 @@ def display():
         if algorithm=='BFS':
             #queue label
             qsLabel=Label(resultcanvas,bg="yellow",text="Queue: ")
-            qsLabel.grid(column=0,row=2,sticky=W)
         elif algorithm=='DFS':
             # stack label
             qsLabel = Label(resultcanvas,bg="yellow", text="Stack: ")
-            qsLabel.grid(column=0, row=2,sticky=W)
+        elif algorithm=='UCS':
+            #priotity queue label
+            qsLabel=Label(resultcanvas,bg="yellow",text="Priority Queue: ")
+        qsLabel.grid(column=0,row=2,sticky=W)
         #final path label
         finalPathLabel=Label(resultcanvas, bg="red", text="Final path: ")
         finalPathLabel.grid(column=0,row=0,sticky=W)
@@ -279,13 +292,15 @@ def display():
             result[2]['text']="Queue: "
         elif algorithm=='DFS':
             result[2]['text']="Stack: "
+        elif algorithm=='UCS':
+            result[2]['text']="Priority queue: "
         result[1]['text']=str(AL.getQsLog()[xTh][0])#expandValue
         result[3]['text']=str(AL.getQsLog()[xTh][1])#qsValue
         result[4]['text']=str(AL.getVisitedLog()[xTh])#visitedValue
 
     if AL.getQsLog()[xTh][0]==finalPath[-1]:#meet the goal then color the final path
         for a in range(len(finalPath)-1):
-            canvas.itemconfig(GA.nodeList[finalPath[a]][2][finalPath[a+1]],fill="red")#final path arrow
+            canvas.itemconfig(GA.nodeList[finalPath[a]][2][finalPath[a+1]][0],fill="red")#final path arrow
 
     for n in GA.nodeList:
         if n in AL.getVisitedLog()[xTh]:#visited oval
@@ -299,7 +314,7 @@ def display():
 
         if AL.getQsLog()[xTh][0]!=finalPath[-1]:#meet the goal then color the final path
             for a in GA.nodeList[n][2].values():
-               canvas.itemconfig(a,fill="black")#final path arrow
+               canvas.itemconfig(a[0],fill="black")#final path arrow
 
 
 
@@ -321,7 +336,7 @@ button1.bind("<Button-1>",CreateNode)
 button2.bind("<Button-1>",CreateArc)
 button3.bind("<Button-1>",Move)
 button4.bind("<Button-1>",Delete)
-button5.bind("<Button-1>",SetProperty)
+button5.bind("<Button-1>",SetWeight)
 button6.bind("<Button-1>",ModifyProbabilityTable)
 button7.bind("<Button-1>",Run)
 button8.bind("<Button-1>",PreStep)
