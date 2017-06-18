@@ -307,7 +307,6 @@ def display():
             # goal node of the link
             # the [2] is the 3rd object (starts at 0) in the nodelist dictionary
             # the +1 allows you to get the next object as it is currently out of the range
-            canvas.itemconfig(GA.nodeList[finalPath[a]][2][finalPath[a+1]],fill="red")#final path arrow
 
     for n in GA.nodeList:
         if n in AL.getVisitedLog()[xTh]:#visited oval
