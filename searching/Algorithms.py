@@ -47,6 +47,7 @@ class algorithms:
         pq.put((cost,start,[start]))
 
 
+
         visited=[]
         while pq:
             # gets the first path in the queue

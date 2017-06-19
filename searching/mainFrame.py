@@ -238,10 +238,6 @@ def Run(event):
             root.update()
             root.after(delaytime*1000)
 
-
-
-
-
 def display():
     # canvas
     if not result:#if result is empty then create the labels - ie not shown already
@@ -323,14 +319,20 @@ def display():
                canvas.itemconfig(a[0],fill="black")#final path arrow
 
 def NextStep(e):
+    #global variable because otherwise cant be called in new methods as it
+    #would be a local variable
+    #xth is 1st,2nd,3rd,4th etc
     global xTh
     if xTh<len(AL.getQsLog())-1:
+        #add 1 to go forward
         xTh+=1
         display()
         root.update()
 def PreStep(e):
     global xTh
+    #cant have negative no.s
     if xTh>0:
+        #-1 to go back
         xTh-=1
         display()
         root.update()
