@@ -197,7 +197,7 @@ def removeFromCanvas(e):
         MN.remove(selectedNode)
 
         # for v in LK.vert_dict:#####
-        #     print(str(LK.vert_dict[v].get_id())+' is connected to '+str([g for g in LK.vert_dict[v].adjacent]))
+        #     print(str(LK.vert_dict[v].get_id())+' is connected to '+str([g for g in LK.vert_dict[v]]))
         Delete #takes you to delete def below
 
 # Delete the node

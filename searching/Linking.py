@@ -1,4 +1,4 @@
-import  math,numpy
+import  math,numpy,pickle,os
 
 #
 class Vertex:
@@ -66,6 +66,8 @@ class Graph:
         else:
             return None
 
+
+
     def add_edge(self, frm, to, cost):
         self.vert_dict[frm].add_neighbor(to, cost)
 
@@ -79,3 +81,41 @@ class Graph:
 
     def get_vertices(self):
         return self.vert_dict.keys()
+
+    #save the current vert_dict with given fileName
+    #input: fileName as a string
+    def saveFile(self,fileName):
+        newDict=self.vert_dict
+        output = open(fileName+'.pkl', 'wb')
+        pickle.dump(newDict, output)
+        output.close()
+
+    #load the stored vert_dict with having the name fileName
+    #input: fileName as a string
+    #output: vert_dict
+    def loadFile(self,fileName):
+        # read python dict back from the file
+        file = open(fileName+'.pkl', 'rb')
+        dict = pickle.load(file)
+        file.close()
+        return dict
+
+    #see all the .pkl files name
+    #output: all the names as a list
+    def fileNames(self):
+        temp=[]
+        for i in os.listdir(os.getcwd()):
+            if '.pkl' in i:
+                temp.append(i)
+        return temp
+
+#
+# g=Graph()
+# # g.add_vertex(0)
+# # g.add_vertex(1)
+# # g.add_edge(0,1,1)
+# # g.saveFile('junk')
+# # print(g.fileNames())
+# dict=g.loadFile('junk')
+# for v in dict:#####
+#     print(str(dict[v].get_id())+' is connected to '+str([g for g in dict[v]]))
