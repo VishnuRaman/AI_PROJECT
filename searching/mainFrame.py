@@ -223,7 +223,7 @@ def Run(event):
     global finalPath,xTh,delaytime
     xTh=0
     if algorithm in ('UCS','aStar'):
-        finalPath = AL.ucsAStar(int(startNode.get()),int(endNode.get()))
+        finalPath = AL.ucsAStar(int(startNode.get()),int(endNode.get()),algorithm)
     else:
         finalPath = AL.bdfs(int(startNode.get()),int(endNode.get()),algorithm)
 

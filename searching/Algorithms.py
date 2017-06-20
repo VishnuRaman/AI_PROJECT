@@ -4,13 +4,13 @@ class algorithms:
     def __init__(self,dict):
         self.graph = dict
 
-    def bdfs(self, start, goal,switch):
-        self.qsLog=[]
-        self.visitedLog =[]
-        # maintain a queue of paths
-        # #push first path into the queue
-        qs = [(start,[start])]
+    def bdfs(self, start, goal,switch,it=-1):
+        if it == -1:
+            self.qsLog=[]
+            self.visitedLog =[]
+            self.maxDepth=math.inf
 
+        qs = [(start,[start])]#push first path into the queue
         visited=[]
         while qs:
             # gets the first path in the queue
@@ -28,16 +28,17 @@ class algorithms:
             elif node not in visited:
                 visited.append(node)
                 self.visitedLog.append([n for n in visited])
-                temp=[]
-                for adj in self.graph[node]:
-                    if adj not in [n[0] for n in qs] and adj not in visited:#avoid duplicated node, avoid visited node
-                        temp.append((adj,path+[adj]))
-                temp.sort()#make sure expand in numerical sequence
-                qs.extend(temp)
+                if self.maxDepth>0:
+                    temp=[]
+                    for adj in self.graph[node]:
+                        if adj not in [n[0] for n in qs] and adj not in visited:#avoid duplicated node, avoid visited node
+                            temp.append((adj,path+[adj]))
+                    temp.sort()#make sure expand in numerical sequence
+                    qs.extend(temp)
                 self.qsLog.append([node,[n[0] for n in qs]])
-                # print('bdfs:'+str(qs))
+                    # print('bdfs:'+str(qs))
 
-    def ucsAStar(self, start, goal):
+    def ucsAStar(self, start, goal,switch,it=-1):
         self.qsLog=[]
         self.visitedLog =[]
         # maintain a queue of paths
@@ -45,8 +46,6 @@ class algorithms:
         cost=0
         pq = queue.PriorityQueue()
         pq.put((cost,start,[start]))
-
-
 
         visited=[]
         while pq:
@@ -71,6 +70,18 @@ class algorithms:
                 self.qsLog.append([node,[n[1] for n in pq.queue]])
                 # print('bdfs:'+str(qs))
 
+    def iterative(self,start, goal,switch, it):
+        self.qsLog=[]
+        self.visitedLog =[]
+        if switch in ('BFS','DFS'):
+            for i in range(it):
+                self.maxDepth=i+1
+                rtn = self.bdfs(start,goal,switch,it)
+                if rtn:
+                    return  rtn
+
+        elif switch in ('UCS','aStar'):
+            self.ucsAStar(start,goal)
 
     def getQsLog(self):
         return self.qsLog
