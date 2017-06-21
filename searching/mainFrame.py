@@ -227,7 +227,6 @@ def Run(event):
     else:
         finalPath = AL.bdfs(int(startNode.get()),int(endNode.get()),algorithm)
 
-
     if not delay.get():
         display()
     else:

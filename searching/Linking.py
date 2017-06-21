@@ -20,7 +20,7 @@ class Vertex:
         else:
             return False
     #adds a neighbour node into the adjacent one - ie adjacent becomes the neighbour
-    def add_neighbor(self, neighbor, weight=0):
+    def add_neighbor(self, neighbor, weight=1):
 
         self.adjacent[neighbor] = weight
 
