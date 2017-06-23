@@ -80,6 +80,7 @@ class algorithms:
                             temp.put((newCost,adj,path+[adj]))
                             self.layerDict[adj]=self.layerDict[node]+1#layer of child = layer of parent +1
                     pq.queue.extend(temp.queue)
+                    pq.queue.sort()#first sort by cost, then sort by numerical order
                 self.qsLog.append([node,[n[1] for n in pq.queue]])
                 # print('bdfs:'+str(qs))
 

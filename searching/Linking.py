@@ -110,12 +110,17 @@ class Graph:
         return temp
 
 #
-# g=Graph()
-# # g.add_vertex(0)
-# # g.add_vertex(1)
-# # g.add_edge(0,1,1)
-# # g.saveFile('junk')
-# # print(g.fileNames())
+g=Graph()
+# for i in range(7):
+#     g.add_vertex(i)
+# g.add_edge(0,1,1)
+# g.add_edge(0,2,1)
+# g.add_edge(1,3,1)
+# g.add_edge(1,4,1)
+# g.add_edge(2,5,1)
+# g.add_edge(2,6,1)
+# g.saveFile('junk')
+# print(g.fileNames())
 # dict=g.loadFile('junk')
 # for v in dict:#####
 #     print(str(dict[v].get_id())+' is connected to '+str([g for g in dict[v]]))
