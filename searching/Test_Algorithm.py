@@ -1,4 +1,4 @@
-import unittest,Algorithms,pickle,Linking
+import unittest,Algorithms,Linking
 
 class Test_algorithm(unittest.TestCase):
     g=Linking.Graph()

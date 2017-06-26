@@ -12,7 +12,9 @@ class Vertex:
     def __iter__(self):######
         return iter(self.adjacent.keys())
 
-    #checks if selected node in the brackets is adjacent to the other node
+    #checks if the given node is already connected
+    #input: node needed to be check
+    #output: Boolean
     def check_neighbor_existed(self,node):
 
         if node in self.adjacent:
@@ -20,19 +22,25 @@ class Vertex:
         else:
             return False
     #adds a neighbour node into the adjacent one - ie adjacent becomes the neighbour
+    #input: node needed to be add
     def add_neighbor(self, neighbor, weight=1):
 
         self.adjacent[neighbor] = weight
-
+    #Delete the node
+    #input: node needed to be delete
     def delete_neighbor(self, neighbor):
         self.adjacent.pop(neighbor)
-
+    #return the list of nodes that connected to itself
+    #output: list
     def get_connections(self):
         return self.adjacent.keys()
-
+    #get the id of itself
+    #output: id number
     def get_id(self):
         return self.id
-
+    #get the weight of a neighbor
+    #input: node id
+    #output: weight
     def get_weight(self, neighbor):
         return self.adjacent[neighbor]
 
@@ -45,42 +53,47 @@ class Graph:
 
     def __iter__(self):
         return iter(self.vert_dict.values())
-
+    #add a new vertex
+    #input: node id of the node needed to be create
+    #output: the node object just be created
     def add_vertex(self, node):
         self.num_vertices += 1
         new_vertex = Vertex(node)
         self.vert_dict[node] = new_vertex
         return new_vertex
-
+    #delete a node and every connection with it
+    #input: node id
     def delete_vertex(self,node):
         self.num_vertices -=1
         for n in self.vert_dict:#n is the key in that dict
             if self.check_edge_existed(n,node):
                 self.vert_dict[n].delete_neighbor(node)
         self.vert_dict.pop(node)
-
-
+    #get the node object
+    #input: node id
+    #output: node object
     def get_vertex(self, n):
         if n in self.vert_dict:
             return self.vert_dict[n]
         else:
             return None
-
-
-
+    #add a linking
+    #input: from 'node id' to 'node id', and the 'cost' of the linking
     def add_edge(self, frm, to, cost):
         self.vert_dict[frm].add_neighbor(to, cost)
-
-
+    #delete a linking
+    #input: from 'node id' to 'node id'
     def delete_edge(self,frm,to):
-        self.vert_dict[frm].delete_neighbor(self.vert_dict[to])
-
-
+        self.vert_dict[frm].delete_neighbor(to)
+    #check if the linking is existed
+    #input: from 'node id' to 'node id'
+    #output: Boolean
     def check_edge_existed(self,frm,to):
         return self.vert_dict[frm].check_neighbor_existed(to)
-
+    #get the list of vertex that already created
+    #output: list
     def get_vertices(self):
-        return self.vert_dict.keys()
+        return [n for n in self.vert_dict.keys()]
 
     #save the current vert_dict with given fileName
     #input: fileName as a string
@@ -109,8 +122,8 @@ class Graph:
                 temp.append(i)
         return temp
 
-#
-g=Graph()
+
+# g=Graph()
 # for i in range(7):
 #     g.add_vertex(i)
 # g.add_edge(0,1,1)
