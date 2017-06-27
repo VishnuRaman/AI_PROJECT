@@ -4,7 +4,7 @@ class algorithms:
     def __init__(self,dict):
         self.graph = dict
 
-    #Call this method when you want BFS or DFS. It can also be iterated if called by 'iterative'.
+    ##Call this method when you want BFS or DFS. It can also be iterated if called by 'iterative'.
     # input: start node, goal node, algorithm
     #output: the final path as a list
     def bdfs(self, start, goal,switch,it=-1):
@@ -42,7 +42,7 @@ class algorithms:
                     qs.extend(temp)
                 self.qsLog.append([node,[n[0] for n in qs]])
 
-    #Call this method when you want UCS or A*. It can also be iterated if called by 'iterative'.
+    ##Call this method when you want UCS or A*. It can also be iterated if called by 'iterative'.
     # input: start node, goal node, algorithm
     #output: the final path as a list
     def ucsAStar(self, start, goal,switch,it=-1):
@@ -84,7 +84,7 @@ class algorithms:
                 self.qsLog.append([node,[n[1] for n in pq.queue]])
                 # print('bdfs:'+str(qs))
 
-    #Call this method when you want an iterative algorithm
+    ##Call this method when you want an iterative algorithm
     # input: start node, goal node, algorithm, iterate deep
     #output: the final path as a list
     def iterative(self,start, goal,switch, it):
@@ -103,9 +103,11 @@ class algorithms:
         return None
 
 
-
+    ##after an algorithm executed, it will generate a log of expending node and corresponding queue/stack for each step from the begining to the end.
+    #output: queue log/ stack log  ie. [[expending node,[queue/stack]],...]
     def getQsLog(self):
         return self.qsLog
-
+    ##after an algorithm executed, it will generate a log of visited nodes for each step from the begining to the end.
+    #output: visited nodes log  ie. [[visited nodes],...]
     def getVisitedLog(self):
         return  self.visitedLog

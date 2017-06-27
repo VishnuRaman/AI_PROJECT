@@ -1,8 +1,9 @@
 import  math,numpy,pickle,os
 
-#
+##Vertex is a basic object representing the conception of node. The id is the identity of the node,
+# and the dictionary called 'adjacent' is used to store the id of the nodes which it is connecting to. The id as the key, while the weight of the connection as the value.
 class Vertex:
-    # a constructor to initialize the class
+    ## a constructor to initialize the class
     def __init__(self, node):
         # this gives the node a number
         self.id = node
@@ -12,7 +13,7 @@ class Vertex:
     def __iter__(self):######
         return iter(self.adjacent.keys())
 
-    #checks if the given node is already connected
+    ##checks if the given node is already connected
     #input: node needed to be check
     #output: Boolean
     def check_neighbor_existed(self,node):
@@ -21,29 +22,31 @@ class Vertex:
             return True
         else:
             return False
-    #adds a neighbour node into the adjacent one - ie adjacent becomes the neighbour
+    ##adds a neighbour node into the adjacent one - ie adjacent becomes the neighbour
     #input: node needed to be add
     def add_neighbor(self, neighbor, weight=1):
 
         self.adjacent[neighbor] = weight
-    #Delete the node
+    ##Delete the node
     #input: node needed to be delete
     def delete_neighbor(self, neighbor):
         self.adjacent.pop(neighbor)
-    #return the list of nodes that connected to itself
+    ##return the list of nodes that connected to itself
     #output: list
     def get_connections(self):
         return self.adjacent.keys()
-    #get the id of itself
+    ##get the id of itself
     #output: id number
     def get_id(self):
         return self.id
-    #get the weight of a neighbor
+    ##get the weight of a neighbor
     #input: node id
     #output: weight
     def get_weight(self, neighbor):
         return self.adjacent[neighbor]
 
+##Graph is the object which can be used to manage vertex. There is a dictionary called 'ver_dict' storing the node id as the key and the vertex object as the value.
+#Read through the vert_dict we can know how many nodes are in a graph, and read through each vertex we can know the connection between them.
 class Graph:
     def __init__(self):
         # dictionary which stores all the vertex
@@ -53,7 +56,7 @@ class Graph:
 
     def __iter__(self):
         return iter(self.vert_dict.values())
-    #add a new vertex
+    ##add a new vertex
     #input: node id of the node needed to be create
     #output: the node object just be created
     def add_vertex(self, node):
@@ -61,7 +64,7 @@ class Graph:
         new_vertex = Vertex(node)
         self.vert_dict[node] = new_vertex
         return new_vertex
-    #delete a node and every connection with it
+    ##delete a node and every connection with it
     #input: node id
     def delete_vertex(self,node):
         self.num_vertices -=1
@@ -69,7 +72,7 @@ class Graph:
             if self.check_edge_existed(n,node):
                 self.vert_dict[n].delete_neighbor(node)
         self.vert_dict.pop(node)
-    #get the node object
+    ##get the node object
     #input: node id
     #output: node object
     def get_vertex(self, n):
@@ -77,25 +80,25 @@ class Graph:
             return self.vert_dict[n]
         else:
             return None
-    #add a linking
+    ##add a linking
     #input: from 'node id' to 'node id', and the 'cost' of the linking
     def add_edge(self, frm, to, cost):
         self.vert_dict[frm].add_neighbor(to, cost)
-    #delete a linking
+    ##delete a linking
     #input: from 'node id' to 'node id'
     def delete_edge(self,frm,to):
         self.vert_dict[frm].delete_neighbor(to)
-    #check if the linking is existed
+    ##check if the linking is existed
     #input: from 'node id' to 'node id'
     #output: Boolean
     def check_edge_existed(self,frm,to):
         return self.vert_dict[frm].check_neighbor_existed(to)
-    #get the list of vertex that already created
+    ##get the list of vertex that already created
     #output: list
     def get_vertices(self):
         return [n for n in self.vert_dict.keys()]
 
-    #save the current vert_dict with given fileName
+    ##save the current vert_dict with given fileName
     #input: fileName as a string
     def saveFile(self,fileName):
         newDict=self.vert_dict
@@ -103,7 +106,7 @@ class Graph:
         pickle.dump(newDict, output)
         output.close()
 
-    #load the stored vert_dict with having the name fileName
+    ##load the stored vert_dict with having the name fileName
     #input: fileName as a string
     #output: vert_dict
     def loadFile(self,fileName):
@@ -113,7 +116,7 @@ class Graph:
         file.close()
         return dict
 
-    #see all the .pkl files name
+    ##see all the .pkl files name
     #output: all the names as a list
     def fileNames(self):
         temp=[]
