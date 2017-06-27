@@ -112,3 +112,47 @@ class Test_linking(unittest.TestCase):
         os.remove('junk2.pkl')#now delete it
         self.assertFalse('junk2.pkl' in g.fileNames())# is there a file called junk2?
 
+    def test_gd_init(self):
+        gd=Linking.Grid(3,3)
+        self.assertTrue(8 in gd.grid_dict.keys())
+        self.assertEqual([i for i in gd.grid_dict[4].adjacent.keys()],[3,5,1,7])#the order doesn't matter
+        self.assertEqual([i for i in gd.grid_dict[8].adjacent.keys()],[7,5])
+    def test_gd_setWall(self):
+        gd=Linking.Grid(3,3)
+        self.assertTrue(4 in gd.grid_dict[3].adjacent.keys())#before setWall, they are connected to each other
+        self.assertTrue(3 in gd.grid_dict[4].adjacent.keys())
+        gd.setWall(3,4)
+        self.assertFalse(4 in gd.grid_dict[3].adjacent.keys())#after setWall, they are not connected to each other
+        self.assertFalse(3 in gd.grid_dict[4].adjacent.keys())
+    def test_gd_breakWall(self):
+        gd=Linking.Grid(3,3)
+        gd.setWall(3,4)
+        self.assertFalse(4 in gd.grid_dict[3].adjacent.keys())#before breakWall, they are not connected to each other
+        self.assertFalse(3 in gd.grid_dict[4].adjacent.keys())
+        gd.breakWall(3,4)
+        self.assertTrue(4 in gd.grid_dict[3].adjacent.keys())#after breakWall, they are connected to each other
+        self.assertTrue(3 in gd.grid_dict[4].adjacent.keys())
+    def test_gd_physicalNeighbor(self):
+        gd=Linking.Grid(3,3)
+        self.assertListEqual(gd.physicalNeighbor(3),[0,6,4])
+        gd.setWall(3,4)# the result won't be changed by adding a wall
+        self.assertListEqual(gd.physicalNeighbor(3),[0,6,4])
+    def test_gd_setObstacle(self):
+        gd=Linking.Grid(3,3)
+        for i in [1,7,3,5]:#before setObstacle, 4 is connecting to 1,7,3,5
+            self.assertTrue(4 in gd.grid_dict[i].adjacent.keys())
+            self.assertTrue(i in gd.grid_dict[4].adjacent.keys())
+        gd.setObstacle(4)
+        for i in [1,7,3,5]:#after setObstacle, they are not connected to each other
+            self.assertFalse(4 in gd.grid_dict[i].adjacent.keys())
+            self.assertFalse(i in gd.grid_dict[4].adjacent.keys())
+    def test_gd_removeObstacle(self):
+        gd=Linking.Grid(3,3)
+        gd.setObstacle(4)
+        for i in [1,7,3,5]:#before removeObstacle, they are not connected to each other
+            self.assertFalse(4 in gd.grid_dict[i].adjacent.keys())
+            self.assertFalse(i in gd.grid_dict[4].adjacent.keys())
+        gd.removeObstacle(4)
+        for i in [1,7,3,5]:#after removeObstacle, 4 is connecting to 1,7,3,5
+            self.assertTrue(4 in gd.grid_dict[i].adjacent.keys())
+            self.assertTrue(i in gd.grid_dict[4].adjacent.keys())

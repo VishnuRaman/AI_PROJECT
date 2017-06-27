@@ -22,13 +22,13 @@ class Vertex:
             return True
         else:
             return False
-    ##adds a neighbour node into the adjacent one - ie adjacent becomes the neighbour
-    #input: node needed to be add
+    ##adds a connection to the given neighbor
+    #input: node needed to be add a connection to
     def add_neighbor(self, neighbor, weight=1):
 
         self.adjacent[neighbor] = weight
-    ##Delete the node
-    #input: node needed to be delete
+    ##Delete the connection
+    #input: node needed to be delete the connection
     def delete_neighbor(self, neighbor):
         self.adjacent.pop(neighbor)
     ##return the list of nodes that connected to itself
@@ -125,18 +125,73 @@ class Graph:
                 temp.append(i)
         return temp
 
+##Grid is the object which can be used to manage vertex. There is a dictionary called 'grid_dict' storing the unit grid id as the key and the vertex object as the value.
+class Grid:
+    ##Take every unit grid as a vertex object and store them into 'grid_dict'. The grids are numbered from left to right, top to bottom, 0 to x*y-1
+    #The default connection is full connected. Default weight of connection is 1.
+    def __init__(self,x,y):
+        self.grid_dict={}
+        self.x=x
+        self.y=y
 
-# g=Graph()
-# for i in range(7):
-#     g.add_vertex(i)
-# g.add_edge(0,1,1)
-# g.add_edge(0,2,1)
-# g.add_edge(1,3,1)
-# g.add_edge(1,4,1)
-# g.add_edge(2,5,1)
-# g.add_edge(2,6,1)
-# g.saveFile('junk')
-# print(g.fileNames())
-# dict=g.loadFile('junk')
-# for v in dict:#####
-#     print(str(dict[v].get_id())+' is connected to '+str([g for g in dict[v]]))
+        for j in range(y):# Create vertexs and store in  grid_dict
+            for i in range(x):
+                id=x*j+i#number the grids from left to right, top to bottom, 0 to x*y-1
+                new_vertex = Vertex(id)
+                self.grid_dict[id] = new_vertex
+        for j in range(y):# Generate the default connection of each unit grid in the x*y grid. The default weight of connection is 1
+            for i in range(x):
+                id=x*j+i
+                if i==0:#generate X-asix connection
+                    self.grid_dict[id].add_neighbor(id+1)#id+1 is the node right to itself.
+                elif i==x-1:
+                    self.grid_dict[id].add_neighbor(id-1)#id-1 is the node left to itself.
+                else:
+                    self.grid_dict[id].add_neighbor(id-1)#id-1 is the node left to itself.
+                    self.grid_dict[id].add_neighbor(id+1)#id+1 is the node right to itself.
+                if j==0:#generate Y-axis connection
+                    self.grid_dict[id].add_neighbor(id+x)#id+x is the node under itself.
+                elif j==y-1:
+                    self.grid_dict[id].add_neighbor(id-x)#id-x is the upper node.
+                else:
+                    self.grid_dict[id].add_neighbor(id-x)#id-x is the upper node.
+                    self.grid_dict[id].add_neighbor(id+x)#id+x is the node under itself.
+
+
+    ##set a wall between two unit grid
+    #input: two unit grid
+    def setWall(self,id1,id2):
+        self.grid_dict[id1].delete_neighbor(id2)
+        self.grid_dict[id2].delete_neighbor(id1)
+    ##break the wall between two unit grid
+    #input: two unit grid
+    def breakWall(self,id1,id2):
+        self.grid_dict[id1].add_neighbor(id2)
+        self.grid_dict[id2].add_neighbor(id1)
+    ##this is a method finding the physical  neighbors of a unit grid in a x*y grid. The physical neighbor won't be changed by wall
+    #input: a unit grid id
+    def physicalNeighbor(self,id):
+        phycialNeighbor=[]
+        if id>self.x-1:#not on the first row
+            upperGrid=id-self.x
+            phycialNeighbor.append(upperGrid)
+        if id<self.x*(self.y-1):#not on the last row
+            underGrid=id+self.x
+            phycialNeighbor.append(underGrid)
+        if id%self.x !=0:#if not on the leftest column
+            leftGrid=id-1
+            phycialNeighbor.append(leftGrid)
+        if id%self.x !=self.x-1:#if not on the rightest column
+            rightGrig=id+1
+            phycialNeighbor.append(rightGrig)
+        return phycialNeighbor
+    ##set the unit grid as an obstacle, means each edge of it becomes a wall
+    #input: a unit grid id
+    def setObstacle(self,id):
+        for n in self.physicalNeighbor(id):
+            self.setWall(id,n)
+    ##undo setObstacle
+    #input: a unit grid id
+    def removeObstacle(self,id):
+        for n in self.physicalNeighbor(id):
+            self.breakWall(id,n)
