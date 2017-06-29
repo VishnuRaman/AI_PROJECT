@@ -43,9 +43,9 @@ class algorithms:
                 self.qsLog.append([node,[n[0] for n in qs]])
 
     ##Call this method when you want UCS or A*. It can also be iterated if called by 'iterative'.
-    # input: start node, goal node, algorithm
+    # input: start node, goal node, algorithm. Heuristic is not necessary when calling UCS, but necessary when calling A*
     #output: the final path as a list
-    def ucsAStar(self, start, goal,switch,it=-1):
+    def ucsAStar(self, start, goal,switch,it=-1,heuristic=None):
         if it == -1:
             self.qsLog=[]
             self.visitedLog =[]
@@ -74,20 +74,20 @@ class algorithms:
                     for adj in self.graph[node]:
                         if adj not in [n[1] for n in pq.queue] and adj not in visited:#avoid duplicated node, avoid visited node
                             if switch=='UCS':
-                               newCost=cost+self.graph[node].get_weight(adj)
+                               newCost=cost+self.graph[node].get_weight(adj)#cost +weight of adj
                             elif switch=='aStar':#A*
-                                newCost=cost+self.graph[node].get_weight(adj)#need +heuristic
+                                newCost=cost+self.graph[node].get_weight(adj)+heuristic[adj]# +heuristic of adj
                             temp.put((newCost,adj,path+[adj]))
                             self.layerDict[adj]=self.layerDict[node]+1#layer of child = layer of parent +1
                     pq.queue.extend(temp.queue)
-                    pq.queue.sort()#first sort by cost, then sort by numerical order
+                pq.queue.sort()#first sort by cost, then sort by numerical order
                 self.qsLog.append([node,[n[1] for n in pq.queue]])
                 # print('bdfs:'+str(qs))
 
     ##Call this method when you want an iterative algorithm
-    # input: start node, goal node, algorithm, iterate deep
+    # input: start node, goal node, algorithm, iterate deep. Heuristic is not necessary when calling UCS, but necessary when calling A*
     #output: the final path as a list
-    def iterative(self,start, goal,switch, it):
+    def iterative(self,start, goal,switch,it,heuristic=None):
         self.qsLog=[]
         self.visitedLog =[]
         # self.layerDict={}
@@ -97,7 +97,7 @@ class algorithms:
             if switch in ('BFS','DFS'):
                 rtn = self.bdfs(start,goal,switch,it)
             elif switch in ('UCS','aStar'):
-                rtn = self.ucsAStar(start,goal,switch,it)
+                rtn = self.ucsAStar(start,goal,switch,it,heuristic)
             if rtn:
                 return rtn
         return None

@@ -2,7 +2,7 @@ import unittest,Algorithms,pickle,Linking,os
 
 class Test_linking(unittest.TestCase):
 
-
+#For Vertex
     def test_v_check_neighbor_existed(self):
         v=Linking.Vertex(6)# vertex 6
         for i in range(6):# vertex 6 is connected to 0~5
@@ -61,6 +61,8 @@ class Test_linking(unittest.TestCase):
         self.assertTrue((0 in g.vert_dict.keys()))#vertex 0 exist
         self.assertTrue((1 in g.vert_dict.keys()))#vertex 1 exist
         self.assertFalse((2 in g.vert_dict.keys()))#vertex 2 not exist
+
+#For Graph
     def test_g_get_vertex(self):
         g=Linking.Graph()
         v=Linking.Vertex(0)#create a vertex
@@ -111,7 +113,18 @@ class Test_linking(unittest.TestCase):
         self.assertTrue('junk2.pkl' in g.fileNames())# is there a file called junk2?
         os.remove('junk2.pkl')#now delete it
         self.assertFalse('junk2.pkl' in g.fileNames())# is there a file called junk2?
+    def test_g_setManualHeuristic(self):
+        g=Linking.Graph()
+        g.add_vertex(0)
+        g.add_vertex(1)
+        self.assertTrue(g.heuristic[0]==0)
+        self.assertTrue(g.heuristic[1]==0)
+        g.setManualHeuristic(0,1)
+        g.setManualHeuristic(1,2)
+        self.assertTrue(g.heuristic[0]==1)
+        self.assertTrue(g.heuristic[1]==2)
 
+#For Grid
     def test_gd_init(self):
         gd=Linking.Grid(3,3)
         self.assertTrue(8 in gd.grid_dict.keys())
@@ -156,3 +169,22 @@ class Test_linking(unittest.TestCase):
         for i in [1,7,3,5]:#after removeObstacle, 4 is connecting to 1,7,3,5
             self.assertTrue(4 in gd.grid_dict[i].adjacent.keys())
             self.assertTrue(i in gd.grid_dict[4].adjacent.keys())
+    def test_gd_setGridWeight(self):
+        gd=Linking.Grid(3,3)
+        self.assertTrue(gd.grid_weight[6]==1)#cost of unit grid6 is 1 (default)
+        self.assertTrue(gd.grid_dict[3].adjacent[6]==1)#the weight of physical neighbors connecting to it is also 1
+        self.assertTrue(gd.grid_dict[7].adjacent[6]==1)
+        gd.setGridWeight(6,2)#after setting cost to 2
+        self.assertTrue(gd.grid_weight[6]==2)#cost of unit grid6 is 2
+        self.assertTrue(gd.grid_dict[3].adjacent[6]==2)#the weight of physical neighbors connecting to it is also 2
+        self.assertTrue(gd.grid_dict[7].adjacent[6]==2)
+    def test_gd_getManhattanDist(self):
+        gd=Linking.Grid(3,3)
+        dict={0:1,1:0,2:1,
+              3:2,4:1,5:2,
+              6:3,7:2,8:3}
+        self.assertDictEqual(gd.getManhattanDist(1),dict)
+        dict={0:2,1:1,2:2,
+              3:1,4:0,5:1,
+              6:2,7:1,8:2}
+        self.assertDictEqual(gd.getManhattanDist(4),dict)

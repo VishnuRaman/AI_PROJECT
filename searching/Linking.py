@@ -22,7 +22,7 @@ class Vertex:
             return True
         else:
             return False
-    ##adds a connection to the given neighbor
+    ##adds a connection to the given neighbor.  It can also be used to set up the cost again
     #input: node needed to be add a connection to
     def add_neighbor(self, neighbor, weight=1):
 
@@ -51,6 +51,7 @@ class Graph:
     def __init__(self):
         # dictionary which stores all the vertex
         self.vert_dict = {}
+        self.heuristic = {}
         # the number of vertices increments as nodes are connected
         self.num_vertices = 0
 
@@ -63,6 +64,7 @@ class Graph:
         self.num_vertices += 1
         new_vertex = Vertex(node)
         self.vert_dict[node] = new_vertex
+        self.heuristic[node]=0#(default value = 0)
         return new_vertex
     ##delete a node and every connection with it
     #input: node id
@@ -72,6 +74,7 @@ class Graph:
             if self.check_edge_existed(n,node):
                 self.vert_dict[n].delete_neighbor(node)
         self.vert_dict.pop(node)
+        self.heuristic.pop(node)
     ##get the node object
     #input: node id
     #output: node object
@@ -80,9 +83,9 @@ class Graph:
             return self.vert_dict[n]
         else:
             return None
-    ##add a linking
+    ##add a linking. It can also be used to set up the cost again
     #input: from 'node id' to 'node id', and the 'cost' of the linking
-    def add_edge(self, frm, to, cost):
+    def add_edge(self, frm, to, cost=1):
         self.vert_dict[frm].add_neighbor(to, cost)
     ##delete a linking
     #input: from 'node id' to 'node id'
@@ -124,13 +127,19 @@ class Graph:
             if '.pkl' in i:
                 temp.append(i)
         return temp
+    ##allows user to set the heuristic manually within graph structure
+    #input: node id, the value of the new heuristic
+    def setManualHeuristic(self,node,value):
+        if node in self.vert_dict:
+            self.heuristic[node]=value
 
 ##Grid is the object which can be used to manage vertex. There is a dictionary called 'grid_dict' storing the unit grid id as the key and the vertex object as the value.
 class Grid:
     ##Take every unit grid as a vertex object and store them into 'grid_dict'. The grids are numbered from left to right, top to bottom, 0 to x*y-1
     #The default connection is full connected. Default weight of connection is 1.
-    def __init__(self,x,y):
-        self.grid_dict={}
+    def __init__(self,x,y):# for a x*y grid
+        self.grid_dict={}#stores the vertex objects as the unit grids
+        self.grid_weight={}#stroes the weight corresponding to the vertex id
         self.x=x
         self.y=y
 
@@ -139,6 +148,7 @@ class Grid:
                 id=x*j+i#number the grids from left to right, top to bottom, 0 to x*y-1
                 new_vertex = Vertex(id)
                 self.grid_dict[id] = new_vertex
+                self.grid_weight[id] = 1 #default cost of every unit grid is 1
         for j in range(y):# Generate the default connection of each unit grid in the x*y grid. The default weight of connection is 1
             for i in range(x):
                 id=x*j+i
@@ -163,11 +173,12 @@ class Grid:
     def setWall(self,id1,id2):
         self.grid_dict[id1].delete_neighbor(id2)
         self.grid_dict[id2].delete_neighbor(id1)
-    ##break the wall between two unit grid
+    ##break the wall between two unit grid.
     #input: two unit grid
     def breakWall(self,id1,id2):
-        self.grid_dict[id1].add_neighbor(id2)
-        self.grid_dict[id2].add_neighbor(id1)
+        self.grid_dict[id1].add_neighbor(id2,self.grid_weight[id2])
+        self.grid_dict[id2].add_neighbor(id1,self.grid_weight[id1])
+
     ##this is a method finding the physical  neighbors of a unit grid in a x*y grid. The physical neighbor won't be changed by wall
     #input: a unit grid id
     def physicalNeighbor(self,id):
@@ -195,3 +206,22 @@ class Grid:
     def removeObstacle(self,id):
         for n in self.physicalNeighbor(id):
             self.breakWall(id,n)
+    ##set the cost of beging connected for other unit grids.
+    #input: the id of itself. The weight
+    def setGridWeight(self,id,weight):
+        self.grid_weight[id]=weight
+        for n in self.physicalNeighbor(id):
+            if id in self.grid_dict[n].adjacent.keys():
+                self.grid_dict[n].add_neighbor(id,weight)
+    ## generate the Manhattan Distance for every unit grid to the goal
+    #input: the goal
+    #output: a dictionary. grid id as the key, Manhattan Distance as the value.
+    def getManhattanDist(self,goal):
+        grid_manhattan={}
+        (yCoordinate,xCoordinate)=divmod(goal,self.x)#yCoordinate is the quotient, xCoordinate is the reminder
+        for j in range(self.y):
+            for i in range(self.x):
+                id=self.x*j+i
+                grid_manhattan[id]=abs(i-xCoordinate)+abs(j-yCoordinate)
+
+        return grid_manhattan
