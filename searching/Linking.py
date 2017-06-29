@@ -225,3 +225,30 @@ class Grid:
                 grid_manhattan[id]=abs(i-xCoordinate)+abs(j-yCoordinate)
 
         return grid_manhattan
+
+    ##save the current vert_dict with given fileName
+    #input: fileName as a string
+    def saveFile(self,fileName):
+        newDict=self.grid_dict
+        output = open(fileName+'.pkl', 'wb')
+        pickle.dump(newDict, output)
+        output.close()
+
+    ##load the stored vert_dict with having the name fileName
+    #input: fileName as a string
+    #output: dictionary
+    def loadFile(self,fileName):
+        # read python dict back from the file
+        file = open(fileName+'.pkl', 'rb')
+        dict = pickle.load(file)
+        file.close()
+        return dict
+
+    ##see all the .pkl files name
+    #output: all the names as a list
+    def fileNames(self):
+        temp=[]
+        for i in os.listdir(os.getcwd()):
+            if '.pkl' in i:
+                temp.append(i)
+        return temp

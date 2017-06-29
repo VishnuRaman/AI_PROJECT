@@ -104,15 +104,15 @@ class Test_linking(unittest.TestCase):
         self.assertListEqual(g.get_vertices(),[0,1])
         g.add_vertex(2)
         self.assertListEqual(g.get_vertices(),[0,1,2])
-    def test_g_saveFile_and_loadFile_and_fileNames(self):
-        g=Linking.Graph()
-        newDict=g.vert_dict#create a vert_dict
-        output = open('junk2'+'.pkl', 'wb')
-        pickle.dump(newDict, output)#store it into disk
-        output.close()
-        self.assertTrue('junk2.pkl' in g.fileNames())# is there a file called junk2?
-        os.remove('junk2.pkl')#now delete it
-        self.assertFalse('junk2.pkl' in g.fileNames())# is there a file called junk2?
+    # def test_g_saveFile_and_loadFile_and_fileNames(self):
+    #     g=Linking.Graph()
+    #     newDict=g.vert_dict#create a vert_dict
+    #     output = open('junk2'+'.pkl', 'wb')
+    #     pickle.dump(newDict, output)#store it into disk
+    #     output.close()
+    #     self.assertTrue('junk2.pkl' in g.fileNames())# is there a file called junk2?
+    #     os.remove('junk2.pkl')#now delete it
+    #     self.assertFalse('junk2.pkl' in g.fileNames())# is there a file called junk2?
     def test_g_setManualHeuristic(self):
         g=Linking.Graph()
         g.add_vertex(0)
@@ -188,3 +188,12 @@ class Test_linking(unittest.TestCase):
               3:1,4:0,5:1,
               6:2,7:1,8:2}
         self.assertDictEqual(gd.getManhattanDist(4),dict)
+    # def test_gd_saveFile_and_loadFile_and_fileNames(self):
+    #     gd=Linking.Grid(3,3)
+    #     newDict=gd.grid_dict#create a vert_dict
+    #     output = open('junk2'+'.pkl', 'wb')
+    #     pickle.dump(newDict, output)#store it into disk
+    #     output.close()
+    #     self.assertTrue('junk2.pkl' in gd.fileNames())# is there a file called junk2?
+    #     os.remove('junk2.pkl')#now delete it
+    #     self.assertFalse('junk2.pkl' in gd.fileNames())# is there a file called junk2?
