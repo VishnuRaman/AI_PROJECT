@@ -38,11 +38,17 @@ def chooseUCS():
     global algorithm
     algorithm='UCS'
 
+def chooseAstar():
+    global algorithm
+    algorithm='aStar'
+
 editMenu = Menu(myMenu)
 myMenu.add_cascade(label="Run by", menu=editMenu)
 editMenu.add_command(label="BFS", command=chooseBFS)
 editMenu.add_command(label="DFS", command=chooseDFS)
 editMenu.add_command(label="UCS", command=chooseUCS)
+editMenu.add_command(label="A*", command=chooseAstar)
+
 
 # create buttons
 button1 = Button(topFrame,text="Create Node ")
@@ -114,6 +120,7 @@ def ArcPoint2(e):
 
             GA.addArrow(fromNode,toNode,arrow,weight)
             #this method produces the connection and provides a cost
+
             LK.add_edge(fromNode,toNode,1)
             #inf means infinity so hasnt been assigned a cost/value yet
             #this one shows the individual costs of travel between nodes (the weight variable in the class)
