@@ -34,7 +34,9 @@ class Vertex:
     ##return the list of nodes that connected to itself
     #output: list
     def get_connections(self):
-        return self.adjacent.keys()
+        temp=[i for i in self.adjacent.keys()]
+        temp.sort()
+        return temp
     ##get the id of itself
     #output: id number
     def get_id(self):
@@ -99,7 +101,9 @@ class Graph:
     ##get the list of vertex that already created
     #output: list
     def get_vertices(self):
-        return [n for n in self.vert_dict.keys()]
+        temp=[n for n in self.vert_dict.keys()]
+        temp.sort()
+        return temp
 
     ##save the current vert_dict with given fileName
     #input: fileName as a string
@@ -120,14 +124,14 @@ class Graph:
         return dict
 
     ##see all the .pkl files name
-    #output: all the names as a list
+    #output: all the names as a list [name1.pkl, name2.pkl, ...]
     def fileNames(self):
         temp=[]
         for i in os.listdir(os.getcwd()):
             if '.pkl' in i:
                 temp.append(i)
         return temp
-    ##allows user to set the heuristic manually within graph structure
+    ##allows user to set the heuristic manually within graph structure. If you need the dictionary of Heuristic, call Graph.heustic
     #input: node id, the value of the new heuristic
     def setManualHeuristic(self,node,value):
         if node in self.vert_dict:

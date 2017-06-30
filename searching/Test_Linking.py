@@ -30,7 +30,7 @@ class Test_linking(unittest.TestCase):
         v=Linking.Vertex(0)
         for i in range(6):# vertex 0 is connected to 0~5
             v.adjacent[i]=1
-        self.assertEqual('dict_keys([0, 1, 2, 3, 4, 5])',str(v.get_connections()))
+        self.assertListEqual([0, 1, 2, 3, 4, 5],v.get_connections())
     def test_v_get_id(self):
         v=Linking.Vertex(0)
         self.assertTrue(v.get_id()==0)
@@ -117,12 +117,14 @@ class Test_linking(unittest.TestCase):
         g=Linking.Graph()
         g.add_vertex(0)
         g.add_vertex(1)
-        self.assertTrue(g.heuristic[0]==0)
-        self.assertTrue(g.heuristic[1]==0)
         g.setManualHeuristic(0,1)
         g.setManualHeuristic(1,2)
         self.assertTrue(g.heuristic[0]==1)
         self.assertTrue(g.heuristic[1]==2)
+        g.setManualHeuristic(0,0)
+        g.setManualHeuristic(1,0)
+        self.assertTrue(g.heuristic[0]==0)
+        self.assertTrue(g.heuristic[1]==0)
 
 #For Grid
     def test_gd_init(self):

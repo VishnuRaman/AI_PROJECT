@@ -1,4 +1,4 @@
-import unittest,Algorithms,Linking
+import unittest,Algorithms,Linking,math
 
 class Test_algorithm(unittest.TestCase):
     g=Linking.Graph()
@@ -41,13 +41,6 @@ class Test_algorithm(unittest.TestCase):
         visitedExpect=[[0], [0, 1], [0, 1, 2], [0, 1, 2, 3], [0, 1, 2, 3, 4]]
         self.assertEqual(visitedExpect,self.AL.getVisitedLog())#Test UCS visitedLog
     def test_ucsAStar_aStar(self):
-        #A* (default heuristic=0)
-        heu=self.g.heuristic
-        self.assertEqual([0,1,4],self.AL.ucsAStar(0,4,'aStar',heuristic=heu))#Test A* final path
-        qsExpect=[[0, [1, 2]], [1, [2, 3, 4]], [2, [3, 4, 5, 6]], [3, [4, 5, 6]], [4, [5, 6]]]
-        self.assertEqual(qsExpect,self.AL.getQsLog())#Test A* qsLog
-        visitedExpect=[[0], [0, 1], [0, 1, 2], [0, 1, 2, 3], [0, 1, 2, 3, 4]]
-        self.assertEqual(visitedExpect,self.AL.getVisitedLog())#Test A* visitedLog
         #A* (manual heuristic)
         self.g.setManualHeuristic(1,1)
         self.g.setManualHeuristic(3,1)
@@ -59,6 +52,13 @@ class Test_algorithm(unittest.TestCase):
         self.assertEqual(visitedExpect,self.AL.getVisitedLog())#Test A* visitedLog
         self.g.setManualHeuristic(1,0)#set it back, otherwise it will infulence other testing
         self.g.setManualHeuristic(3,0)#set it back, otherwise it will infulence other testing
+        #A* (default heuristic=0)
+        heu=self.g.heuristic
+        self.assertEqual([0,1,4],self.AL.ucsAStar(0,4,'aStar',heuristic=heu))#Test A* final path
+        qsExpect=[[0, [1, 2]], [1, [2, 3, 4]], [2, [3, 4, 5, 6]], [3, [4, 5, 6]], [4, [5, 6]]]
+        self.assertEqual(qsExpect,self.AL.getQsLog())#Test A* qsLog
+        visitedExpect=[[0], [0, 1], [0, 1, 2], [0, 1, 2, 3], [0, 1, 2, 3, 4]]
+        self.assertEqual(visitedExpect,self.AL.getVisitedLog())#Test A* visitedLog
     def test_bdfs_bfs_iter(self):
         #BFS
         self.assertEqual([0,1,4],self.AL.iterative(0,4,'BFS',it=3))#Test BFS final path
@@ -81,13 +81,6 @@ class Test_algorithm(unittest.TestCase):
         visitedExpect=[[0], [0, 1], [0, 1, 2], [0], [0, 1], [0, 1, 2], [0, 1, 2, 3], [0, 1, 2, 3, 4]]
         self.assertEqual(visitedExpect,self.AL.getVisitedLog())#Test UCS visitedLog
     def test_ucsAStar_aStar_iter(self):
-        #A* (default heuristic=0)
-        heu=self.g.heuristic
-        self.assertEqual([0,1,4],self.AL.iterative(0,4,'aStar',it=3,heuristic=heu))#Test A* final path
-        qsExpect=[[0, [1, 2]], [1, [2]], [2, []], [0, [1, 2]], [1, [2, 3, 4]], [2, [3, 4, 5, 6]], [3, [4, 5, 6]], [4, [5, 6]]]
-        self.assertEqual(qsExpect,self.AL.getQsLog())#Test A* qsLog
-        visitedExpect=[[0], [0, 1], [0, 1, 2], [0], [0, 1], [0, 1, 2], [0, 1, 2, 3], [0, 1, 2, 3, 4]]
-        self.assertEqual(visitedExpect,self.AL.getVisitedLog())#Test A* visitedLog
         #A* (manual heuristic)
         self.g.setManualHeuristic(1,1)
         self.g.setManualHeuristic(3,1)
@@ -99,6 +92,15 @@ class Test_algorithm(unittest.TestCase):
         self.assertEqual(visitedExpect,self.AL.getVisitedLog())#Test A* visitedLog
         self.g.setManualHeuristic(1,0)#set it back, otherwise it will infulence other testing
         self.g.setManualHeuristic(3,0)#set it back, otherwise it will infulence other testing
+        #A* (default heuristic=0)
+        heu=self.g.heuristic
+        self.assertEqual([0,1,4],self.AL.iterative(0,4,'aStar',it=3,heuristic=heu))#Test A* final path
+        qsExpect=[[0, [1, 2]], [1, [2]], [2, []], [0, [1, 2]], [1, [2, 3, 4]], [2, [3, 4, 5, 6]], [3, [4, 5, 6]], [4, [5, 6]]]
+        self.assertEqual(qsExpect,self.AL.getQsLog())#Test A* qsLog
+        visitedExpect=[[0], [0, 1], [0, 1, 2], [0], [0, 1], [0, 1, 2], [0, 1, 2, 3], [0, 1, 2, 3, 4]]
+        self.assertEqual(visitedExpect,self.AL.getVisitedLog())#Test A* visitedLog
+
+
 
 #For Grid data structure
     def test_bdfs_bfs_grid(self):
@@ -159,3 +161,53 @@ class Test_algorithm(unittest.TestCase):
         self.assertEqual(qsExpect,self.AL_gd.getQsLog())#Test A* qsLog
         visitedExpect=[[0], [0, 1], [0, 1, 3], [0], [0, 1], [0, 1, 3], [0, 1, 3, 4]]
         self.assertEqual(visitedExpect,self.AL_gd.getVisitedLog())#Test A* visitedLog
+    def test_miniMax_miniMax(self):
+        self.g.setManualHeuristic(3,20)
+        self.g.setManualHeuristic(4,10)
+        self.g.setManualHeuristic(5,5)
+        self.g.setManualHeuristic(6,15)
+        heu=self.g.heuristic
+        self.assertListEqual(self.AL.miniMax(0,3,heu,'miniMax'),[{3: 20},
+                                                                 {3: 20, 1: 20},
+                                                                 {3: 20, 1: 20, 4: 10},
+                                                                 {3: 20, 1: 10, 4: 10},
+                                                                 {3: 20, 1: 10, 4: 10, 0: 10},
+                                                                 {3: 20, 1: 10, 4: 10, 0: 10, 5: 5},
+                                                                 {3: 20, 1: 10, 4: 10, 0: 10, 5: 5, 2: 5},
+                                                                 {3: 20, 1: 10, 4: 10, 0: 10, 5: 5, 2: 5, 6: 15}])
+        self.g.setManualHeuristic(3,0)
+        self.g.setManualHeuristic(4,0)
+        self.g.setManualHeuristic(5,0)
+        self.g.setManualHeuristic(6,0)
+    def test_miniMax_alphaBeta(self):
+        self.g.setManualHeuristic(3,20)
+        self.g.setManualHeuristic(4,1)
+        self.g.setManualHeuristic(5,5)
+        self.g.setManualHeuristic(6,30)
+        heu=self.g.heuristic
+        #without prune
+        self.assertListEqual(self.AL.miniMax(0,3,heu,'alphaBeta'),[{3: 20},
+                                                                   {3: 20, 1: 20},
+                                                                   {3: 20, 1: 20, 4: 1},
+                                                                   {3: 20, 1: 1, 4: 1},
+                                                                   {3: 20, 1: 1, 4: 1, 0: 1},
+                                                                   {3: 20, 1: 1, 4: 1, 0: 1, 5: 5},
+                                                                   {3: 20, 1: 1, 4: 1, 0: 1, 5: 5, 2: 5},
+                                                                   {3: 20, 1: 1, 4: 1, 0: 1, 5: 5, 2: 5, 6: 30},
+                                                                   {3: 20, 1: 1, 4: 1, 0: 5, 5: 5, 2: 5, 6: 30}])
+        #with prune
+        self.g.setManualHeuristic(3,20)
+        self.g.setManualHeuristic(4,10)
+        self.g.setManualHeuristic(5,5)
+        self.g.setManualHeuristic(6,15)
+        self.assertListEqual(self.AL.miniMax(0,3,heu,'alphaBeta'),[{3: 20},
+                                                                   {3: 20, 1: 20},
+                                                                   {3: 20, 1: 20, 4: 10},
+                                                                   {3: 20, 1: 10, 4: 10},
+                                                                   {3: 20, 1: 10, 4: 10, 0: 10},
+                                                                   {3: 20, 1: 10, 4: 10, 0: 10, 5: 5},
+                                                                   {3: 20, 1: 10, 4: 10, 0: 10, 5: 5, 2: 5}])#node 6 is pruned
+        self.g.setManualHeuristic(3,0)
+        self.g.setManualHeuristic(4,0)
+        self.g.setManualHeuristic(5,0)
+        self.g.setManualHeuristic(6,0)

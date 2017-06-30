@@ -101,7 +101,63 @@ class algorithms:
             if rtn:
                 return rtn
         return None
-
+    ##The miniMax algorithm
+    #input: the root node, how many layers it will goes, the heuristic dictionary
+    #output: a list [{id: utility}, ...] the root node is always on depth 0
+    def miniMax(self,id,depth,heuristic,switch):
+        self.utilityLog=[]#[{id: utility}, ...]
+        self.partOfminiMax(id,depth,depth,True,heuristic,switch)
+        return self.utilityLog
+    #the iterative part of the miniMax algorithm
+    def partOfminiMax(self,id,depth,oriDepth,player,heuristic,switch,ab=-math.inf):
+        if depth==0 or not self.graph[id].get_connections():#depth==0 or the id is the terminate.
+            if not self.utilityLog:#if it is empty
+                self.utilityLog.append({id: heuristic[id]})
+            else:
+                temp=dict(self.utilityLog[-1])#clone the last one
+                temp[id]=heuristic[id]#add key / value into dictionary
+                self.utilityLog.append(temp)#append into log before return
+            return heuristic[id]
+        if player:# if player==True
+            bestValue= -math.inf
+            for n in self.graph[id].get_connections():#for every child
+                if switch=='alphaBeta':
+                    val=self.partOfminiMax(n,depth-1,oriDepth,False,heuristic,switch,bestValue)
+                    if oriDepth-depth!=0 and val>ab:#skip this section when layer=0 (which means root)
+                        if bestValue<val:
+                            temp=dict(self.utilityLog[-1])
+                            temp[id]=val
+                            self.utilityLog.append(temp)
+                            bestValue=val
+                        break#prune
+                else:#miniMax
+                    val=self.partOfminiMax(n,depth-1,oriDepth,False,heuristic,switch)
+                if bestValue<val:
+                    temp=dict(self.utilityLog[-1])
+                    temp[id]=val
+                    self.utilityLog.append(temp)
+                    bestValue=val
+            return bestValue
+        else:#player== False
+            bestValue= math.inf
+            for n in self.graph[id].get_connections():#for every child
+                if switch=='alphaBeta':
+                    val=self.partOfminiMax(n,depth-1,oriDepth,True,heuristic,switch,bestValue)
+                    if val<ab:#if val < the bestValue of parent means it can be pruned
+                        if bestValue>val:
+                            temp=dict(self.utilityLog[-1])
+                            temp[id]=val
+                            self.utilityLog.append(temp)
+                            bestValue=val
+                        break#prune
+                else:#miniMax
+                    val=self.partOfminiMax(n,depth-1,oriDepth,True,heuristic,switch)
+                if bestValue>val:
+                    temp=dict(self.utilityLog[-1])
+                    temp[id]=val
+                    self.utilityLog.append(temp)
+                    bestValue=val
+            return bestValue
 
     ##after an algorithm executed, it will generate a log of expending node and corresponding queue/stack for each step from the begining to the end.
     #output: queue log/ stack log  ie. [[expending node,[queue/stack]],...]
