@@ -38,19 +38,25 @@ def chooseUCS():
     global algorithm
     algorithm='UCS'
 
+def chooseAstar():
+    global algorithm
+    algorithm='aStar'
+
 editMenu = Menu(myMenu)
 myMenu.add_cascade(label="Run by", menu=editMenu)
 editMenu.add_command(label="BFS", command=chooseBFS)
 editMenu.add_command(label="DFS", command=chooseDFS)
 editMenu.add_command(label="UCS", command=chooseUCS)
+editMenu.add_command(label="A*", command=chooseAstar)
+
 
 # create buttons
 button1 = Button(topFrame,text="Create Node ")
 button2 = Button(topFrame,text="Create Arc")
 button3 = Button(topFrame,text="Move")
 button4 = Button(topFrame,text="Delete")
-button5 = Button(topFrame,text="Set weight",bg="light green")
-button6 = Button(topFrame,text="Modify Probability Table",bg="light green")
+# button5 = Button(topFrame,text="Set weight",bg="light green")
+# button6 = Button(topFrame,text="Modify Probability Table",bg="light green")
 button7 = Button(bottomFrame,text="Run",bg="green")
 text1=Label(topFrame2,text="Start node")
 startNode=Entry(topFrame2, width=2)
@@ -61,12 +67,15 @@ delay=Entry(topFrame2, width=2)
 button8 = Button(topFrame2,text="<<",bg="light blue")
 button9 = Button(topFrame2,text=">>",bg="light blue")
 
+text4=Label(topFrame2,text="Heuristics")
+heuristics=Entry(topFrame2, width=4)
+
 button1.pack(side=LEFT)
 button2.pack(side=LEFT)
 button3.pack(side=LEFT)
 button4.pack(side=LEFT)
-button5.pack(side=LEFT)
-button6.pack(side=LEFT)
+# button5.pack(side=LEFT)
+# button6.pack(side=LEFT)
 button7.pack(side=BOTTOM)
 text1.pack(side=LEFT)
 startNode.pack(side=LEFT)
@@ -76,6 +85,8 @@ text3.pack(side=LEFT)
 delay.pack(side=LEFT)
 button8.pack(side=LEFT)
 button9.pack(side=LEFT)
+text4.pack(side=LEFT)
+heuristics.pack(side=LEFT)
 
 # methods called by buttons
 node_id_Dic={}
@@ -114,6 +125,7 @@ def ArcPoint2(e):
 
             GA.addArrow(fromNode,toNode,arrow,weight)
             #this method produces the connection and provides a cost
+
             LK.add_edge(fromNode,toNode,1)
             #inf means infinity so hasnt been assigned a cost/value yet
             #this one shows the individual costs of travel between nodes (the weight variable in the class)
@@ -340,8 +352,8 @@ button1.bind("<Button-1>",CreateNode)
 button2.bind("<Button-1>",CreateArc)
 button3.bind("<Button-1>",Move)
 button4.bind("<Button-1>",Delete)
-button5.bind("<Button-1>",SetWeight)
-button6.bind("<Button-1>",ModifyProbabilityTable)
+# button5.bind("<Button-1>",SetWeight)
+# button6.bind("<Button-1>",ModifyProbabilityTable)
 button7.bind("<Button-1>",Run)
 button8.bind("<Button-1>",PreStep)
 button9.bind("<Button-1>",NextStep)
