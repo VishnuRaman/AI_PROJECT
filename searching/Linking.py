@@ -7,14 +7,15 @@ class Vertex:
     def __init__(self, node):
         # this gives the node a number
         self.id = node
+        self.heuristic=0
         # a dictionary like a map in JAVA which stores all adjacent nodes
         self.adjacent = {}
 
-    def __iter__(self):######
+    def __iter__(self):
         return iter(self.adjacent.keys())
 
     ##checks if the given node is already connected
-    #input: node needed to be check
+    #input: @arg1 node needed to be check
     #output: Boolean
     def check_neighbor_existed(self,node):
 
@@ -23,12 +24,12 @@ class Vertex:
         else:
             return False
     ##adds a connection to the given neighbor.  It can also be used to set up the cost again
-    #input: node needed to be add a connection to
+    #input:@arg1  node needed to be add a connection to, @arg2 the weight of the connection
     def add_neighbor(self, neighbor, weight=1):
 
         self.adjacent[neighbor] = weight
     ##Delete the connection
-    #input: node needed to be delete the connection
+    #input:@arg1 node needed to be delete the connection
     def delete_neighbor(self, neighbor):
         self.adjacent.pop(neighbor)
     ##return the list of nodes that connected to itself
@@ -42,10 +43,14 @@ class Vertex:
     def get_id(self):
         return self.id
     ##get the weight of a neighbor
-    #input: node id
+    #input: @arg1 node id
     #output: weight
     def get_weight(self, neighbor):
         return self.adjacent[neighbor]
+    ##set the heuristic to the given value
+    #input: @arg1 heuristic value
+    def set_heuristic(self,value):
+        self.heuristic=value
 
 ##Graph is the object which can be used to manage vertex. There is a dictionary called 'ver_dict' storing the node id as the key and the vertex object as the value.
 #Read through the vert_dict we can know how many nodes are in a graph, and read through each vertex we can know the connection between them.
@@ -53,32 +58,29 @@ class Graph:
     def __init__(self):
         # dictionary which stores all the vertex
         self.vert_dict = {}
-        self.heuristic = {}
         # the number of vertices increments as nodes are connected
         self.num_vertices = 0
 
     def __iter__(self):
         return iter(self.vert_dict.values())
     ##add a new vertex
-    #input: node id of the node needed to be create
+    #input:@arg1  node id of the node needed to be create
     #output: the node object just be created
     def add_vertex(self, node):
         self.num_vertices += 1
         new_vertex = Vertex(node)
         self.vert_dict[node] = new_vertex
-        self.heuristic[node]=0#(default value = 0)
         return new_vertex
     ##delete a node and every connection with it
-    #input: node id
+    #input:@arg1 node id
     def delete_vertex(self,node):
         self.num_vertices -=1
         for n in self.vert_dict:#n is the key in that dict
             if self.check_edge_existed(n,node):
-                self.vert_dict[n].delete_neighbor(node)
+                self.get_vertex(n).delete_neighbor(node)
         self.vert_dict.pop(node)
-        self.heuristic.pop(node)
     ##get the node object
-    #input: node id
+    #input:@arg1  node id
     #output: node object
     def get_vertex(self, n):
         if n in self.vert_dict:
@@ -86,15 +88,15 @@ class Graph:
         else:
             return None
     ##add a linking. It can also be used to set up the cost again
-    #input: from 'node id' to 'node id', and the 'cost' of the linking
+    #input:@arg1  from 'node id' to 'node id', and the 'cost' of the linking
     def add_edge(self, frm, to, cost=1):
         self.vert_dict[frm].add_neighbor(to, cost)
     ##delete a linking
-    #input: from 'node id' to 'node id'
+    #input:@arg1  from 'node id' to 'node id'
     def delete_edge(self,frm,to):
         self.vert_dict[frm].delete_neighbor(to)
     ##check if the linking is existed
-    #input: from 'node id' to 'node id'
+    #input:@arg1  from 'node id' to 'node id'
     #output: Boolean
     def check_edge_existed(self,frm,to):
         return self.vert_dict[frm].check_neighbor_existed(to)
@@ -106,7 +108,7 @@ class Graph:
         return temp
 
     ##save the current vert_dict with given fileName
-    #input: fileName as a string
+    #input:@arg1  fileName as a string
     def saveFile(self,fileName):
         newDict=self.vert_dict
         output = open(fileName+'.pkl', 'wb')
@@ -114,7 +116,7 @@ class Graph:
         output.close()
 
     ##load the stored vert_dict with having the name fileName
-    #input: fileName as a string
+    #input:@arg1  fileName as a string
     #output: vert_dict
     def loadFile(self,fileName):
         # read python dict back from the file
@@ -132,15 +134,16 @@ class Graph:
                 temp.append(i)
         return temp
     ##allows user to set the heuristic manually within graph structure. If you need the dictionary of Heuristic, call Graph.heustic
-    #input: node id, the value of the new heuristic
+    #input:@arg1  node id,@arg2  the value of the new heuristic
     def setManualHeuristic(self,node,value):
         if node in self.vert_dict:
-            self.heuristic[node]=value
+            self.get_vertex(node).set_heuristic(value)
 
 ##Grid is the object which can be used to manage vertex. There is a dictionary called 'grid_dict' storing the unit grid id as the key and the vertex object as the value.
 class Grid:
     ##Take every unit grid as a vertex object and store them into 'grid_dict'. The grids are numbered from left to right, top to bottom, 0 to x*y-1
     #The default connection is full connected. Default weight of connection is 1.
+    #input:@arg1 columns, @arg2 rows
     def __init__(self,x,y):# for a x*y grid
         self.grid_dict={}#stores the vertex objects as the unit grids
         self.grid_weight={}#stroes the weight corresponding to the vertex id
@@ -173,18 +176,18 @@ class Grid:
 
 
     ##set a wall between two unit grid
-    #input: two unit grid
+    #input:@arg1  two unit grid
     def setWall(self,id1,id2):
         self.grid_dict[id1].delete_neighbor(id2)
         self.grid_dict[id2].delete_neighbor(id1)
     ##break the wall between two unit grid.
-    #input: two unit grid
+    #input:@arg1  two unit grid
     def breakWall(self,id1,id2):
         self.grid_dict[id1].add_neighbor(id2,self.grid_weight[id2])
         self.grid_dict[id2].add_neighbor(id1,self.grid_weight[id1])
 
     ##this is a method finding the physical  neighbors of a unit grid in a x*y grid. The physical neighbor won't be changed by wall
-    #input: a unit grid id
+    #input:@arg1  a unit grid id
     def physicalNeighbor(self,id):
         phycialNeighbor=[]
         if id>self.x-1:#not on the first row
@@ -201,37 +204,34 @@ class Grid:
             phycialNeighbor.append(rightGrig)
         return phycialNeighbor
     ##set the unit grid as an obstacle, means each edge of it becomes a wall
-    #input: a unit grid id
+    #input:@arg1  a unit grid id
     def setObstacle(self,id):
         for n in self.physicalNeighbor(id):
             self.setWall(id,n)
     ##undo setObstacle
-    #input: a unit grid id
+    #input:@arg1  a unit grid id
     def removeObstacle(self,id):
         for n in self.physicalNeighbor(id):
             self.breakWall(id,n)
     ##set the cost of beging connected for other unit grids.
-    #input: the id of itself. The weight
+    #input:@arg1  the id of itself, @arg2  The weight
     def setGridWeight(self,id,weight):
         self.grid_weight[id]=weight
         for n in self.physicalNeighbor(id):
             if id in self.grid_dict[n].adjacent.keys():
                 self.grid_dict[n].add_neighbor(id,weight)
     ## generate the Manhattan Distance for every unit grid to the goal
-    #input: the goal
-    #output: a dictionary. grid id as the key, Manhattan Distance as the value.
-    def getManhattanDist(self,goal):
-        grid_manhattan={}
+    #input: @arg1 the goal
+    def setManhattanDist(self,goal):
         (yCoordinate,xCoordinate)=divmod(goal,self.x)#yCoordinate is the quotient, xCoordinate is the reminder
         for j in range(self.y):
             for i in range(self.x):
                 id=self.x*j+i
-                grid_manhattan[id]=abs(i-xCoordinate)+abs(j-yCoordinate)
+                self.grid_dict[id].set_heuristic(abs(i-xCoordinate)+abs(j-yCoordinate))
 
-        return grid_manhattan
 
     ##save the current vert_dict with given fileName
-    #input: fileName as a string
+    #input: @arg1 fileName as a string
     def saveFile(self,fileName):
         newDict=self.grid_dict
         output = open(fileName+'.pkl', 'wb')
@@ -239,7 +239,7 @@ class Grid:
         output.close()
 
     ##load the stored vert_dict with having the name fileName
-    #input: fileName as a string
+    #input: @arg1 fileName as a string
     #output: dictionary
     def loadFile(self,fileName):
         # read python dict back from the file

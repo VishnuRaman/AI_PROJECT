@@ -42,6 +42,12 @@ class Test_linking(unittest.TestCase):
             v.adjacent[i]=i
         for i in range(6):
             self.assertTrue(v.get_weight(i)==i)
+    def test_v_set_heuristic(self):
+        v=Linking.Vertex(0)
+        v.set_heuristic(3)
+        self.assertEqual(v.heuristic,3)
+
+ #For Graph
     def test_g_add_vertex(self):
         g=Linking.Graph()
         g.add_vertex(0)#add vertex
@@ -61,8 +67,6 @@ class Test_linking(unittest.TestCase):
         self.assertTrue((0 in g.vert_dict.keys()))#vertex 0 exist
         self.assertTrue((1 in g.vert_dict.keys()))#vertex 1 exist
         self.assertFalse((2 in g.vert_dict.keys()))#vertex 2 not exist
-
-#For Graph
     def test_g_get_vertex(self):
         g=Linking.Graph()
         v=Linking.Vertex(0)#create a vertex
@@ -119,12 +123,12 @@ class Test_linking(unittest.TestCase):
         g.add_vertex(1)
         g.setManualHeuristic(0,1)
         g.setManualHeuristic(1,2)
-        self.assertTrue(g.heuristic[0]==1)
-        self.assertTrue(g.heuristic[1]==2)
+        self.assertTrue(g.vert_dict[0].heuristic==1)
+        self.assertTrue(g.vert_dict[1].heuristic==2)
         g.setManualHeuristic(0,0)
         g.setManualHeuristic(1,0)
-        self.assertTrue(g.heuristic[0]==0)
-        self.assertTrue(g.heuristic[1]==0)
+        self.assertTrue(g.vert_dict[0].heuristic==0)
+        self.assertTrue(g.vert_dict[1].heuristic==0)
 
 #For Grid
     def test_gd_init(self):
@@ -180,16 +184,20 @@ class Test_linking(unittest.TestCase):
         self.assertTrue(gd.grid_weight[6]==2)#cost of unit grid6 is 2
         self.assertTrue(gd.grid_dict[3].adjacent[6]==2)#the weight of physical neighbors connecting to it is also 2
         self.assertTrue(gd.grid_dict[7].adjacent[6]==2)
-    def test_gd_getManhattanDist(self):
+    def test_gd_setManhattanDist(self):
         gd=Linking.Grid(3,3)
         dict={0:1,1:0,2:1,
               3:2,4:1,5:2,
               6:3,7:2,8:3}
-        self.assertDictEqual(gd.getManhattanDist(1),dict)
+        gd.setManhattanDist(1)
+        for i in range(9):
+            self.assertEqual(gd.grid_dict[i].heuristic,dict[i])
         dict={0:2,1:1,2:2,
               3:1,4:0,5:1,
               6:2,7:1,8:2}
-        self.assertDictEqual(gd.getManhattanDist(4),dict)
+        gd.setManhattanDist(4)
+        for i in range(9):
+            self.assertEqual(gd.grid_dict[i].heuristic,dict[i])
     # def test_gd_saveFile_and_loadFile_and_fileNames(self):
     #     gd=Linking.Grid(3,3)
     #     newDict=gd.grid_dict#create a vert_dict

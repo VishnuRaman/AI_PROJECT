@@ -5,9 +5,9 @@ class algorithms:
         self.graph = dict
 
     ##Call this method when you want BFS or DFS. It can also be iterated if called by 'iterative'.
-    # input: start node, goal node, algorithm
+    # input:@arg1 start node, @arg2 goal node, @arg3 algorithm
     #output: the final path as a list
-    def bdfs(self, start, goal,switch,it=-1):
+    def bdfs(self, start, goal,algorithm,it=-1):
         if it == -1:
             self.qsLog=[]
             self.visitedLog =[]
@@ -18,9 +18,9 @@ class algorithms:
         visited=[]
         while qs:
             # gets the first path in the queue
-            if switch=='BFS':
+            if algorithm=='BFS':
                 (node,path) = qs.pop(0)#pop(0) means from head
-            elif switch=='DFS':
+            elif algorithm=='DFS':
                 (node, path) = qs.pop()#pop() means from tail
 
             if node == goal:
@@ -43,9 +43,9 @@ class algorithms:
                 self.qsLog.append([node,[n[0] for n in qs]])
 
     ##Call this method when you want UCS or A*. It can also be iterated if called by 'iterative'.
-    # input: start node, goal node, algorithm. Heuristic is not necessary when calling UCS, but necessary when calling A*
-    #output: the final path as a list
-    def ucsAStar(self, start, goal,switch,it=-1,heuristic=None):
+    # input: @arg1 start node, @arg2 goal node, @arg3 algorithm, @arg4 iterate how many layers
+    #output: the final path as a list.  ie. [0, 1, 4]  means from 0 to 1 to 4
+    def ucsAStar(self, start, goal,algorithm,it=-1):
         if it == -1:
             self.qsLog=[]
             self.visitedLog =[]
@@ -73,10 +73,11 @@ class algorithms:
                     temp=queue.PriorityQueue()
                     for adj in self.graph[node]:
                         if adj not in [n[1] for n in pq.queue] and adj not in visited:#avoid duplicated node, avoid visited node
-                            if switch=='UCS':
+                            if algorithm=='UCS':
                                newCost=cost+self.graph[node].get_weight(adj)#cost +weight of adj
-                            elif switch=='aStar':#A*
-                                newCost=cost+self.graph[node].get_weight(adj)+heuristic[adj]# +heuristic of adj
+                            elif algorithm=='aStar':#A*
+                                heu=self.graph[adj].heuristic
+                                newCost=cost+self.graph[node].get_weight(adj)+heu# +heuristic of adj
                             temp.put((newCost,adj,path+[adj]))
                             self.layerDict[adj]=self.layerDict[node]+1#layer of child = layer of parent +1
                     pq.queue.extend(temp.queue)
@@ -85,64 +86,66 @@ class algorithms:
                 # print('bdfs:'+str(qs))
 
     ##Call this method when you want an iterative algorithm
-    # input: start node, goal node, algorithm, iterate deep. Heuristic is not necessary when calling UCS, but necessary when calling A*
+    # input:@arg1 start node, @arg2 goal node, @arg3 algorithm, @arg4 iterate deep.
     #output: the final path as a list
-    def iterative(self,start, goal,switch,it,heuristic=None):
+    def iterative(self,start, goal,algorithm,it):
         self.qsLog=[]
         self.visitedLog =[]
         # self.layerDict={}
         for i in range(it):
             rtn=None
             self.maxDepth=i+1
-            if switch in ('BFS','DFS'):
-                rtn = self.bdfs(start,goal,switch,it)
-            elif switch in ('UCS','aStar'):
-                rtn = self.ucsAStar(start,goal,switch,it,heuristic)
+            if algorithm in ('BFS','DFS'):
+                rtn = self.bdfs(start,goal,algorithm,it)
+            elif algorithm in ('UCS','aStar'):
+                rtn = self.ucsAStar(start,goal,algorithm,it)
             if rtn:
                 return rtn
         return None
-    ##The miniMax algorithm
-    #input: the root node, how many layers it will goes, the heuristic dictionary
+    ##The miniMax and alphaBeta algorithm
+    #input:@arg1 the root node, @arg2 how many layers it will goes, @arg3 algorithm
     #output: a list [{id: utility}, ...] the root node is always on depth 0
-    def miniMax(self,id,depth,heuristic,switch):
+    def miniMaxAlphaBeta(self,id,depth,algorithm):
         self.utilityLog=[]#[{id: utility}, ...]
-        self.partOfminiMax(id,depth,depth,True,heuristic,switch)
+        self.partOfminiMax(id,depth,depth,True,algorithm)
         return self.utilityLog
     #the iterative part of the miniMax algorithm
-    def partOfminiMax(self,id,depth,oriDepth,player,heuristic,switch,ab=-math.inf):
+    def partOfminiMax(self,id,depth,oriDepth,player,algorithm,ab=math.inf):#ab=inf so the root is impossible to be pruned
+        heu=self.graph[id].heuristic
         if depth==0 or not self.graph[id].get_connections():#depth==0 or the id is the terminate.
             if not self.utilityLog:#if it is empty
-                self.utilityLog.append({id: heuristic[id]})
+                self.utilityLog.append({id: heu})
             else:
                 temp=dict(self.utilityLog[-1])#clone the last one
-                temp[id]=heuristic[id]#add key / value into dictionary
+                temp[id]=heu#add key / value into dictionary
                 self.utilityLog.append(temp)#append into log before return
-            return heuristic[id]
-        if player:# if player==True
+            return heu
+        if player==True:# if player==True
             bestValue= -math.inf
             for n in self.graph[id].get_connections():#for every child
-                if switch=='alphaBeta':
-                    val=self.partOfminiMax(n,depth-1,oriDepth,False,heuristic,switch,bestValue)
-                    if oriDepth-depth!=0 and val>ab:#skip this section when layer=0 (which means root)
-                        if bestValue<val:
-                            temp=dict(self.utilityLog[-1])
-                            temp[id]=val
-                            self.utilityLog.append(temp)
+                if algorithm=='alphaBeta':
+                    val=self.partOfminiMax(n,depth-1,oriDepth,False,algorithm,bestValue)
+                    if val>ab:#the upper layer will choose the smallest one, so if val>ab means it can be pruned
+                        if bestValue<val:#(find the bigger one)
+                            temp=dict(self.utilityLog[-1])#clone
+                            temp[id]=val#add key / value into dictionary
+                            self.utilityLog.append(temp)#append into log before return
                             bestValue=val
                         break#prune
                 else:#miniMax
-                    val=self.partOfminiMax(n,depth-1,oriDepth,False,heuristic,switch)
+                    val=self.partOfminiMax(n,depth-1,oriDepth,False,algorithm)
+
                 if bestValue<val:
                     temp=dict(self.utilityLog[-1])
                     temp[id]=val
                     self.utilityLog.append(temp)
                     bestValue=val
             return bestValue
-        else:#player== False
+        elif player==False:
             bestValue= math.inf
             for n in self.graph[id].get_connections():#for every child
-                if switch=='alphaBeta':
-                    val=self.partOfminiMax(n,depth-1,oriDepth,True,heuristic,switch,bestValue)
+                if algorithm=='alphaBeta':
+                    val=self.partOfminiMax(n,depth-1,oriDepth,True,algorithm,bestValue)
                     if val<ab:#if val < the bestValue of parent means it can be pruned
                         if bestValue>val:
                             temp=dict(self.utilityLog[-1])
@@ -151,7 +154,8 @@ class algorithms:
                             bestValue=val
                         break#prune
                 else:#miniMax
-                    val=self.partOfminiMax(n,depth-1,oriDepth,True,heuristic,switch)
+                    val=self.partOfminiMax(n,depth-1,oriDepth,True,algorithm)
+        # elif
                 if bestValue>val:
                     temp=dict(self.utilityLog[-1])
                     temp[id]=val
