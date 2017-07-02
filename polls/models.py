@@ -23,10 +23,10 @@ class Question(models.Model):
 
 class Choice(models.Model):
     question = models.ForeignKey(Question)
-    choice_test = models.CharField(max_length= 200)
+    choice_text = models.CharField(max_length= 200)
     votes = models.IntegerField(default=0)
 
     def _str_(self):
-        return self.choice_test
+        return self.choice_text
 
 
