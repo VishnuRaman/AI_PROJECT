@@ -2,7 +2,7 @@ import unittest,Algorithms,pickle,Linking,os
 
 class Test_linking(unittest.TestCase):
 
-
+#For Vertex
     def test_v_check_neighbor_existed(self):
         v=Linking.Vertex(6)# vertex 6
         for i in range(6):# vertex 6 is connected to 0~5
@@ -30,7 +30,7 @@ class Test_linking(unittest.TestCase):
         v=Linking.Vertex(0)
         for i in range(6):# vertex 0 is connected to 0~5
             v.adjacent[i]=1
-        self.assertEqual('dict_keys([0, 1, 2, 3, 4, 5])',str(v.get_connections()))
+        self.assertListEqual([0, 1, 2, 3, 4, 5],v.get_connections())
     def test_v_get_id(self):
         v=Linking.Vertex(0)
         self.assertTrue(v.get_id()==0)
@@ -42,6 +42,12 @@ class Test_linking(unittest.TestCase):
             v.adjacent[i]=i
         for i in range(6):
             self.assertTrue(v.get_weight(i)==i)
+    def test_v_set_heuristic(self):
+        v=Linking.Vertex(0)
+        v.set_heuristic(3)
+        self.assertEqual(v.heuristic,3)
+
+ #For Graph
     def test_g_add_vertex(self):
         g=Linking.Graph()
         g.add_vertex(0)#add vertex
@@ -102,16 +108,29 @@ class Test_linking(unittest.TestCase):
         self.assertListEqual(g.get_vertices(),[0,1])
         g.add_vertex(2)
         self.assertListEqual(g.get_vertices(),[0,1,2])
-    def test_g_saveFile_and_loadFile_and_fileNames(self):
+    # def test_g_saveFile_and_loadFile_and_fileNames(self):
+    #     g=Linking.Graph()
+    #     newDict=g.vert_dict#create a vert_dict
+    #     output = open('junk2'+'.pkl', 'wb')
+    #     pickle.dump(newDict, output)#store it into disk
+    #     output.close()
+    #     self.assertTrue('junk2.pkl' in g.fileNames())# is there a file called junk2?
+    #     os.remove('junk2.pkl')#now delete it
+    #     self.assertFalse('junk2.pkl' in g.fileNames())# is there a file called junk2?
+    def test_g_setManualHeuristic(self):
         g=Linking.Graph()
-        newDict=g.vert_dict#create a vert_dict
-        output = open('junk2'+'.pkl', 'wb')
-        pickle.dump(newDict, output)#store it into disk
-        output.close()
-        self.assertTrue('junk2.pkl' in g.fileNames())# is there a file called junk2?
-        os.remove('junk2.pkl')#now delete it
-        self.assertFalse('junk2.pkl' in g.fileNames())# is there a file called junk2?
+        g.add_vertex(0)
+        g.add_vertex(1)
+        g.setManualHeuristic(0,1)
+        g.setManualHeuristic(1,2)
+        self.assertTrue(g.vert_dict[0].heuristic==1)
+        self.assertTrue(g.vert_dict[1].heuristic==2)
+        g.setManualHeuristic(0,0)
+        g.setManualHeuristic(1,0)
+        self.assertTrue(g.vert_dict[0].heuristic==0)
+        self.assertTrue(g.vert_dict[1].heuristic==0)
 
+#For Grid
     def test_gd_init(self):
         gd=Linking.Grid(3,3)
         self.assertTrue(8 in gd.grid_dict.keys())
@@ -156,3 +175,35 @@ class Test_linking(unittest.TestCase):
         for i in [1,7,3,5]:#after removeObstacle, 4 is connecting to 1,7,3,5
             self.assertTrue(4 in gd.grid_dict[i].adjacent.keys())
             self.assertTrue(i in gd.grid_dict[4].adjacent.keys())
+    def test_gd_setGridWeight(self):
+        gd=Linking.Grid(3,3)
+        self.assertTrue(gd.grid_weight[6]==1)#cost of unit grid6 is 1 (default)
+        self.assertTrue(gd.grid_dict[3].adjacent[6]==1)#the weight of physical neighbors connecting to it is also 1
+        self.assertTrue(gd.grid_dict[7].adjacent[6]==1)
+        gd.setGridWeight(6,2)#after setting cost to 2
+        self.assertTrue(gd.grid_weight[6]==2)#cost of unit grid6 is 2
+        self.assertTrue(gd.grid_dict[3].adjacent[6]==2)#the weight of physical neighbors connecting to it is also 2
+        self.assertTrue(gd.grid_dict[7].adjacent[6]==2)
+    def test_gd_setManhattanDist(self):
+        gd=Linking.Grid(3,3)
+        dict={0:1,1:0,2:1,
+              3:2,4:1,5:2,
+              6:3,7:2,8:3}
+        gd.setManhattanDist(1)
+        for i in range(9):
+            self.assertEqual(gd.grid_dict[i].heuristic,dict[i])
+        dict={0:2,1:1,2:2,
+              3:1,4:0,5:1,
+              6:2,7:1,8:2}
+        gd.setManhattanDist(4)
+        for i in range(9):
+            self.assertEqual(gd.grid_dict[i].heuristic,dict[i])
+    # def test_gd_saveFile_and_loadFile_and_fileNames(self):
+    #     gd=Linking.Grid(3,3)
+    #     newDict=gd.grid_dict#create a vert_dict
+    #     output = open('junk2'+'.pkl', 'wb')
+    #     pickle.dump(newDict, output)#store it into disk
+    #     output.close()
+    #     self.assertTrue('junk2.pkl' in gd.fileNames())# is there a file called junk2?
+    #     os.remove('junk2.pkl')#now delete it
+    #     self.assertFalse('junk2.pkl' in gd.fileNames())# is there a file called junk2?
