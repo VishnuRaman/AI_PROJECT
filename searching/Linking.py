@@ -7,7 +7,9 @@ class Vertex:
     def __init__(self, node):
         # this gives the node a number
         self.id = node
-        self.heuristic=0
+        self.heuristic=0#default value=0
+        self.utility=0#default value=0
+        self.probability=1#default value=1
         # a dictionary like a map in JAVA which stores all adjacent nodes
         self.adjacent = {}
 
@@ -47,10 +49,6 @@ class Vertex:
     #output: weight
     def get_weight(self, neighbor):
         return self.adjacent[neighbor]
-    ##set the heuristic to the given value
-    #input: @arg1 heuristic value
-    def set_heuristic(self,value):
-        self.heuristic=value
 
 ##Graph is the object which can be used to manage vertex. There is a dictionary called 'ver_dict' storing the node id as the key and the vertex object as the value.
 #Read through the vert_dict we can know how many nodes are in a graph, and read through each vertex we can know the connection between them.
@@ -111,7 +109,7 @@ class Graph:
     #input:@arg1  fileName as a string
     def saveFile(self,fileName):
         newDict=self.vert_dict
-        output = open(fileName+'.pkl', 'wb')
+        output = open(fileName+'_g.pkl', 'wb')
         pickle.dump(newDict, output)
         output.close()
 
@@ -120,7 +118,7 @@ class Graph:
     #output: vert_dict
     def loadFile(self,fileName):
         # read python dict back from the file
-        file = open(fileName+'.pkl', 'rb')
+        file = open(fileName+'_g.pkl', 'rb')
         dict = pickle.load(file)
         file.close()
         return dict
@@ -130,14 +128,18 @@ class Graph:
     def fileNames(self):
         temp=[]
         for i in os.listdir(os.getcwd()):
-            if '.pkl' in i:
+            if '_g.pkl' in i:
                 temp.append(i)
         return temp
-    ##allows user to set the heuristic manually within graph structure. If you need the dictionary of Heuristic, call Graph.heustic
-    #input:@arg1  node id,@arg2  the value of the new heuristic
-    def setManualHeuristic(self,node,value):
-        if node in self.vert_dict:
-            self.get_vertex(node).set_heuristic(value)
+    #reset all heuristic to 0
+    def resetAllHeuristic(self):
+        for node in self.vert_dict:
+            self.get_vertex(node).heuristic=0
+    ##reset all utility to default
+    def resetAllUtility(self):
+        for node in self.vert_dict:
+            self.get_vertex(node).utility=0
+
 
 ##Grid is the object which can be used to manage vertex. There is a dictionary called 'grid_dict' storing the unit grid id as the key and the vertex object as the value.
 class Grid:
@@ -213,13 +215,13 @@ class Grid:
     def removeObstacle(self,id):
         for n in self.physicalNeighbor(id):
             self.breakWall(id,n)
-    ##set the cost of beging connected for other unit grids.
+    ##set the cost of beging connected by other unit grids.
     #input:@arg1  the id of itself, @arg2  The weight
     def setGridWeight(self,id,weight):
         self.grid_weight[id]=weight
         for n in self.physicalNeighbor(id):
             if id in self.grid_dict[n].adjacent.keys():
-                self.grid_dict[n].add_neighbor(id,weight)
+                self.grid_dict[n].add_neighbor(id,weight)#add_neighbor can also be used to reset the value
     ## generate the Manhattan Distance for every unit grid to the goal
     #input: @arg1 the goal
     def setManhattanDist(self,goal):
@@ -227,14 +229,14 @@ class Grid:
         for j in range(self.y):
             for i in range(self.x):
                 id=self.x*j+i
-                self.grid_dict[id].set_heuristic(abs(i-xCoordinate)+abs(j-yCoordinate))
+                self.grid_dict[id].heuristic=abs(i-xCoordinate)+abs(j-yCoordinate)
 
 
     ##save the current vert_dict with given fileName
     #input: @arg1 fileName as a string
     def saveFile(self,fileName):
         newDict=self.grid_dict
-        output = open(fileName+'.pkl', 'wb')
+        output = open(fileName+'_gd.pkl', 'wb')
         pickle.dump(newDict, output)
         output.close()
 
@@ -243,7 +245,7 @@ class Grid:
     #output: dictionary
     def loadFile(self,fileName):
         # read python dict back from the file
-        file = open(fileName+'.pkl', 'rb')
+        file = open(fileName+'_gd.pkl', 'rb')
         dict = pickle.load(file)
         file.close()
         return dict
@@ -253,6 +255,10 @@ class Grid:
     def fileNames(self):
         temp=[]
         for i in os.listdir(os.getcwd()):
-            if '.pkl' in i:
+            if '_gd.pkl' in i:
                 temp.append(i)
         return temp
+    ##reset all utility to default
+    def resetAllUtility(self):
+        for node in self.grid_dict:
+            self.grid_dict[node].utility=0

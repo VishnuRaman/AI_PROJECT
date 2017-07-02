@@ -104,63 +104,65 @@ class algorithms:
         return None
     ##The miniMax and alphaBeta algorithm
     #input:@arg1 the root node, @arg2 how many layers it will goes, @arg3 algorithm
-    #output: a list [{id: utility}, ...] the root node is always on depth 0
+    #output: a list [[expending node, alpha, beta], ...] the root node is always on depth 0
     def miniMaxAlphaBeta(self,id,depth,algorithm):
-        self.utilityLog=[]#[{id: utility}, ...]
-        self.partOfminiMax(id,depth,depth,True,algorithm)
+        self.utilityLog=[]#[[expending node,{id: utility}], ...]
+        self.partOfminiMax(id,depth,True,algorithm)
         return self.utilityLog
     #the iterative part of the miniMax algorithm
-    def partOfminiMax(self,id,depth,oriDepth,player,algorithm,ab=math.inf):#ab=inf so the root is impossible to be pruned
-        heu=self.graph[id].heuristic
+    def partOfminiMax(self,id,depth,player,algorithm,ab=math.inf):#ab=inf so the root is impossible to be pruned
+        uti=self.graph[id].utility
+        pro=self.graph[id].probability
+
         if depth==0 or not self.graph[id].get_connections():#depth==0 or the id is the terminate.
-            if not self.utilityLog:#if it is empty
-                self.utilityLog.append({id: heu})
-            else:
-                temp=dict(self.utilityLog[-1])#clone the last one
-                temp[id]=heu#add key / value into dictionary
-                self.utilityLog.append(temp)#append into log before return
-            return heu
+            # temp={}
+            # for n in self.graph:
+            #     temp[n]=self.graph[n].utility
+            self.utilityLog.append([id,uti,uti])#for our term, bestValue is alpha, ab is beta
+            return uti
         if player==True:# if player==True
             bestValue= -math.inf
+            self.utilityLog.append([id,bestValue,math.inf])#for our term, bestValue is alpha, inf is beta
             for n in self.graph[id].get_connections():#for every child
                 if algorithm=='alphaBeta':
-                    val=self.partOfminiMax(n,depth-1,oriDepth,False,algorithm,bestValue)
+                    val=self.partOfminiMax(n,depth-1,False,algorithm,bestValue)
                     if val>ab:#the upper layer will choose the smallest one, so if val>ab means it can be pruned
                         if bestValue<val:#(find the bigger one)
-                            temp=dict(self.utilityLog[-1])#clone
-                            temp[id]=val#add key / value into dictionary
-                            self.utilityLog.append(temp)#append into log before return
+                            self.graph[id].utility=val
                             bestValue=val
-                        break#prune
+                            self.utilityLog.append([id,val,math.inf])
+                        return bestValue#prune
                 else:#miniMax
-                    val=self.partOfminiMax(n,depth-1,oriDepth,False,algorithm)
+                    val=self.partOfminiMax(n,depth-1,False,algorithm)
 
                 if bestValue<val:
-                    temp=dict(self.utilityLog[-1])
-                    temp[id]=val
-                    self.utilityLog.append(temp)
+                    self.graph[id].utility=val
                     bestValue=val
+                    if n!=self.graph[id].get_connections()[-1]:
+                        self.utilityLog.append([id,val,math.inf])
+            self.utilityLog.append([id,bestValue,bestValue])#for the last element,  both alpha and beta is bestValue
             return bestValue
         elif player==False:
             bestValue= math.inf
+            self.utilityLog.append([id,-math.inf,bestValue])#for opponent's term, -inf is alpha, bestvalue is beta
             for n in self.graph[id].get_connections():#for every child
                 if algorithm=='alphaBeta':
-                    val=self.partOfminiMax(n,depth-1,oriDepth,True,algorithm,bestValue)
+                    val=self.partOfminiMax(n,depth-1,True,algorithm,bestValue)
                     if val<ab:#if val < the bestValue of parent means it can be pruned
                         if bestValue>val:
-                            temp=dict(self.utilityLog[-1])
-                            temp[id]=val
-                            self.utilityLog.append(temp)
+                            self.graph[id].utility=val
                             bestValue=val
-                        break#prune
+                            self.utilityLog.append([id,-math.inf,val])
+                        return bestValue#prune
                 else:#miniMax
-                    val=self.partOfminiMax(n,depth-1,oriDepth,True,algorithm)
+                    val=self.partOfminiMax(n,depth-1,True,algorithm)
         # elif
                 if bestValue>val:
-                    temp=dict(self.utilityLog[-1])
-                    temp[id]=val
-                    self.utilityLog.append(temp)
+                    self.graph[id].utility=val
                     bestValue=val
+                    if n!=self.graph[id].get_connections()[-1]:#if it is not the last element
+                        self.utilityLog.append([id,-math.inf,val])#alpha is -inf
+            self.utilityLog.append([id,bestValue,bestValue])#for the last element, both alpha and beta is bestValue
             return bestValue
 
     ##after an algorithm executed, it will generate a log of expending node and corresponding queue/stack for each step from the begining to the end.

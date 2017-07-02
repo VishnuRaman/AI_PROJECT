@@ -42,10 +42,6 @@ class Test_linking(unittest.TestCase):
             v.adjacent[i]=i
         for i in range(6):
             self.assertTrue(v.get_weight(i)==i)
-    def test_v_set_heuristic(self):
-        v=Linking.Vertex(0)
-        v.set_heuristic(3)
-        self.assertEqual(v.heuristic,3)
 
  #For Graph
     def test_g_add_vertex(self):
@@ -117,18 +113,26 @@ class Test_linking(unittest.TestCase):
     #     self.assertTrue('junk2.pkl' in g.fileNames())# is there a file called junk2?
     #     os.remove('junk2.pkl')#now delete it
     #     self.assertFalse('junk2.pkl' in g.fileNames())# is there a file called junk2?
-    def test_g_setManualHeuristic(self):
+
+    def test_g_resetAllHeuristic(self):
         g=Linking.Graph()
         g.add_vertex(0)
         g.add_vertex(1)
-        g.setManualHeuristic(0,1)
-        g.setManualHeuristic(1,2)
-        self.assertTrue(g.vert_dict[0].heuristic==1)
-        self.assertTrue(g.vert_dict[1].heuristic==2)
-        g.setManualHeuristic(0,0)
-        g.setManualHeuristic(1,0)
+        g.get_vertex(0).heuristic=1
+        g.get_vertex(1).heuristic=2
+        g.resetAllHeuristic()
         self.assertTrue(g.vert_dict[0].heuristic==0)
         self.assertTrue(g.vert_dict[1].heuristic==0)
+
+    def test_g_resetAllUtility(self):
+        g=Linking.Graph()
+        g.add_vertex(0)
+        g.add_vertex(1)
+        g.get_vertex(0).utility=2
+        g.get_vertex(1).utility=3
+        g.resetAllUtility()
+        self.assertEqual(g.get_vertex(0).utility,0)
+        self.assertEqual(g.get_vertex(1).utility,0)
 
 #For Grid
     def test_gd_init(self):
@@ -207,3 +211,11 @@ class Test_linking(unittest.TestCase):
     #     self.assertTrue('junk2.pkl' in gd.fileNames())# is there a file called junk2?
     #     os.remove('junk2.pkl')#now delete it
     #     self.assertFalse('junk2.pkl' in gd.fileNames())# is there a file called junk2?
+
+    def test_gd_resetAllUtility(self):
+        gd=Linking.Grid(3,3)
+        gd.grid_dict[0].utility=3
+        gd.grid_dict[2].utility=4
+        gd.resetAllUtility()
+        self.assertEqual(gd.grid_dict[0].utility,0)
+        self.assertEqual(gd.grid_dict[2].utility,0)
