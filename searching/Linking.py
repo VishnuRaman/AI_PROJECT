@@ -4,12 +4,11 @@ import  math,numpy,pickle,os
 # and the dictionary called 'adjacent' is used to store the id of the nodes which it is connecting to. The id as the key, while the weight of the connection as the value.
 class Vertex:
     ## a constructor to initialize the class
-    def __init__(self, node):
+    def __init__(self, id):
         # this gives the node a number
-        self.id = node
+        self.id = id
         self.heuristic=0#default value=0
         self.utility=0#default value=0
-        self.probability=1#default value=1
         # a dictionary like a map in JAVA which stores all adjacent nodes
         self.adjacent = {}
 
@@ -19,27 +18,26 @@ class Vertex:
     ##checks if the given node is already connected
     #input: @arg1 node needed to be check
     #output: Boolean
-    def check_neighbor_existed(self,node):
+    def check_neighbor_existed(self,id):
 
-        if node in self.adjacent:
+        if id in self.adjacent:
             return True
         else:
             return False
     ##adds a connection to the given neighbor.  It can also be used to set up the cost again
     #input:@arg1  node needed to be add a connection to, @arg2 the weight of the connection
-    def add_neighbor(self, neighbor, weight=1):
-
-        self.adjacent[neighbor] = weight
+    def add_neighbor(self, id, weight=1):
+        self.adjacent[id] = weight
     ##Delete the connection
     #input:@arg1 node needed to be delete the connection
-    def delete_neighbor(self, neighbor):
-        self.adjacent.pop(neighbor)
+    def delete_neighbor(self, id):
+        self.adjacent.pop(id)
     ##return the list of nodes that connected to itself
     #output: list
     def get_connections(self):
         temp=[i for i in self.adjacent.keys()]
-        temp.sort()
-        return temp
+        temp=sorted(temp,key=lambda x: str(x))#use lamda expression to sort them as string
+        return temp#but when output, they are stll int
     ##get the id of itself
     #output: id number
     def get_id(self):
@@ -47,8 +45,24 @@ class Vertex:
     ##get the weight of a neighbor
     #input: @arg1 node id
     #output: weight
-    def get_weight(self, neighbor):
-        return self.adjacent[neighbor]
+    def get_weight(self, id):
+        return self.adjacent[id]
+
+
+##Action is the object contains several probabilities and corresponding vertex object.
+# Action can be seem as another kind of vertex, it can be connected by vertex, and it can also connect to vertex.
+class Action:
+    def __init__(self,id):
+        self.id=id
+        self.probability_dict={}
+    ##connect this action to a vertex (with chance)
+    #input: @arg1 chance, @arg2 vertex id
+    def add_probability(self,chance,vertid):
+        self.probability_dict[vertid]=chance
+    def delete_probability(self,id):
+        self.probability_dict.pop(id)
+
+
 
 ##Graph is the object which can be used to manage vertex. There is a dictionary called 'ver_dict' storing the node id as the key and the vertex object as the value.
 #Read through the vert_dict we can know how many nodes are in a graph, and read through each vertex we can know the connection between them.
@@ -68,7 +82,24 @@ class Graph:
         self.num_vertices += 1
         new_vertex = Vertex(node)
         self.vert_dict[node] = new_vertex
-        return new_vertex
+    ##just like add_vertex, this method create a new action object.
+    #input:@arg1 id of the action. ie 'a0', 'a1' ...
+    def add_action(self,actionId):
+        new_action= Action(actionId)
+        self.vert_dict[actionId]=new_action
+    ##this method will delete the action object from vert_dict and remove all the related connection
+    #input: @arg1 action id
+    def delete_action(self,actionId):
+        for n in self.vert_dict:
+            if type(self.vert_dict[n]) is Vertex and actionId in self.vert_dict[n].adjacent:
+                self.vert_dict[n].adjacent.pop(actionId)
+        self.vert_dict.pop(actionId)
+    ##just like add_edge, but it can only be used to add the connection between node(as child) and action(as parent)
+    #input: @arg1 action id, @arg2 the chance of the vertex, @arg3 the vertex object
+    def add_action_vert_connection(self,actionId,chance,vertObj):
+        self.vert_dict[actionId].add_probability(chance,vertObj)
+    def delete_action_vert_connection(self,actionId,vertId):
+        self.vert_dict[actionId].delete_probability(vertId)
     ##delete a node and every connection with it
     #input:@arg1 node id
     def delete_vertex(self,node):
@@ -85,8 +116,8 @@ class Graph:
             return self.vert_dict[n]
         else:
             return None
-    ##add a linking. It can also be used to set up the cost again
-    #input:@arg1  from 'node id' to 'node id', and the 'cost' of the linking
+    ##add a linking. It can also be used to set up the cost again.
+    #input:@arg1  from 'node id', @arg2 to 'node id',  @arg3  the 'cost' of the linking
     def add_edge(self, frm, to, cost=1):
         self.vert_dict[frm].add_neighbor(to, cost)
     ##delete a linking

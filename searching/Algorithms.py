@@ -102,7 +102,7 @@ class algorithms:
             if rtn:
                 return rtn
         return None
-    ##The miniMax and alphaBeta algorithm
+    ##The miniMax, expectiMiniMax, and alphaBeta algorithm (expectiMiniMax algorithm key word is 'exMiniMax')
     #input:@arg1 the root node, @arg2 how many layers it will goes, @arg3 algorithm
     #output: a list [[expending node, alpha, beta], ...] the root node is always on depth 0
     def miniMaxAlphaBeta(self,id,depth,algorithm):
@@ -111,8 +111,9 @@ class algorithms:
         return self.utilityLog
     #the iterative part of the miniMax algorithm
     def partOfminiMax(self,id,depth,player,algorithm,ab=math.inf):#ab=inf so the root is impossible to be pruned
-        uti=self.graph[id].utility
-        pro=self.graph[id].probability
+        if type(self.graph[id]) is Linking.Vertex:#type is vertex
+            uti=self.graph[id].utility
+            # pro=self.graph[id].probability
 
         if depth==0 or not self.graph[id].get_connections():#depth==0 or the id is the terminate.
             # temp={}
@@ -124,44 +125,53 @@ class algorithms:
             bestValue= -math.inf
             self.utilityLog.append([id,bestValue,math.inf])#for our term, bestValue is alpha, inf is beta
             for n in self.graph[id].get_connections():#for every child
-                if algorithm=='alphaBeta':
-                    val=self.partOfminiMax(n,depth-1,False,algorithm,bestValue)
-                    if val>ab:#the upper layer will choose the smallest one, so if val>ab means it can be pruned
-                        if bestValue<val:#(find the bigger one)
-                            self.graph[id].utility=val
-                            bestValue=val
-                            self.utilityLog.append([id,val,math.inf])
-                        return bestValue#prune
-                else:#miniMax
-                    val=self.partOfminiMax(n,depth-1,False,algorithm)
+                if type(self.graph[n]) is Linking.Vertex:#type is vertex
+                    if algorithm=='alphaBeta':
+                        val=self.partOfminiMax(n,depth-1,False,algorithm,bestValue)
+                        if val>ab:#the upper layer will choose the smallest one, so if val>ab means it can be pruned
+                            if bestValue<val:#(find the bigger one)
+                                self.graph[id].utility=val
+                                bestValue=val
+                                self.utilityLog.append([id,val,math.inf])
+                            return bestValue#prune
+                    else:#miniMax & exMiniMax
+                        val=self.partOfminiMax(n,depth-1,False,algorithm)
 
-                if bestValue<val:
-                    self.graph[id].utility=val
-                    bestValue=val
-                    if n!=self.graph[id].get_connections()[-1]:
-                        self.utilityLog.append([id,val,math.inf])
+                    if bestValue<val:
+                        self.graph[id].utility=val
+                        bestValue=val
+                        if n!=self.graph[id].get_connections()[-1]:
+                            self.utilityLog.append([id,val,math.inf])
+                else:# type is Action, for exMiniMax
+                    bestValue=0
+                    for vertid in self.graph[n].probability_dict.keys():#go through every child
+                        bestValue+=self.graph[n].probability_dict[vertid]*self.partOfminiMax(vertid,depth-1,False,algorithm)
             self.utilityLog.append([id,bestValue,bestValue])#for the last element,  both alpha and beta is bestValue
             return bestValue
         elif player==False:
             bestValue= math.inf
             self.utilityLog.append([id,-math.inf,bestValue])#for opponent's term, -inf is alpha, bestvalue is beta
             for n in self.graph[id].get_connections():#for every child
-                if algorithm=='alphaBeta':
-                    val=self.partOfminiMax(n,depth-1,True,algorithm,bestValue)
-                    if val<ab:#if val < the bestValue of parent means it can be pruned
-                        if bestValue>val:
-                            self.graph[id].utility=val
-                            bestValue=val
-                            self.utilityLog.append([id,-math.inf,val])
-                        return bestValue#prune
-                else:#miniMax
-                    val=self.partOfminiMax(n,depth-1,True,algorithm)
-        # elif
-                if bestValue>val:
-                    self.graph[id].utility=val
-                    bestValue=val
-                    if n!=self.graph[id].get_connections()[-1]:#if it is not the last element
-                        self.utilityLog.append([id,-math.inf,val])#alpha is -inf
+                if type(self.graph[n]) is Linking.Vertex:#type is vertex
+                    if algorithm=='alphaBeta':
+                        val=self.partOfminiMax(n,depth-1,True,algorithm,bestValue)
+                        if val<ab:#if val < the bestValue of parent means it can be pruned
+                            if bestValue>val:
+                                self.graph[id].utility=val
+                                bestValue=val
+                                self.utilityLog.append([id,-math.inf,val])
+                            return bestValue#prune
+                    else:#miniMax & exMiniMax
+                        val=self.partOfminiMax(n,depth-1,True,algorithm)
+                    if bestValue>val:
+                        self.graph[id].utility=val
+                        bestValue=val
+                        if n!=self.graph[id].get_connections()[-1]:#if it is not the last element
+                            self.utilityLog.append([id,-math.inf,val])#alpha is -inf
+                else:# type is Action, for exMiniMax
+                    bestValue=0
+                    for vertid in self.graph[n].probability_dict.keys():#go through every child
+                        bestValue+=self.graph[n].probability_dict[vertid]*self.partOfminiMax(vertid,depth-1,True,algorithm)
             self.utilityLog.append([id,bestValue,bestValue])#for the last element, both alpha and beta is bestValue
             return bestValue
 

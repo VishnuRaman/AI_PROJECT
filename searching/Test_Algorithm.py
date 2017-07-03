@@ -153,23 +153,29 @@ class Test_algorithm(unittest.TestCase):
         self.assertEqual(qsExpect,self.AL_gd.getQsLog())#Test A* qsLog
         visitedExpect=[[0], [0, 1], [0, 1, 3], [0], [0, 1], [0, 1, 3], [0, 1, 3, 4]]
         self.assertEqual(visitedExpect,self.AL_gd.getVisitedLog())#Test A* visitedLog
-    # def test_miniMaxAlphaBeta_miniMax(self):
-    #     for i in range(7):
-    #         self.g.setUtility(i,0)
-    #     self.g.setUtility(3,20)
-    #     self.g.setUtility(4,10)
-    #     self.g.setUtility(5,5)
-    #     self.g.setUtility(6,15)
-    #     expect=[[0, -math.inf, math.inf, {0: 0, 1: 0, 2: 0, 3: 20, 4: 10, 5: 5, 6: 15}],
-    #             [1, 20, math.inf, {0: 0, 1: 20, 2: 0, 3: 20, 4: 10, 5: 5, 6: 15}],
-    #             [1, 10, math.inf, {0: 0, 1: 10, 2: 0, 3: 20, 4: 10, 5: 5, 6: 15}],
-    #             [0, 10, 10, {0: 10, 1: 10, 2: 0, 3: 20, 4: 10, 5: 5, 6: 15}],
-    #             [2, 5, math.inf, {0: 10, 1: 10, 2: 5, 3: 20, 4: 10, 5: 5, 6: 15}]]
-    #     self.assertListEqual(self.AL.miniMaxAlphaBeta(0,3,'miniMax'),expect)
+    def test_miniMaxAlphaBeta_miniMax(self):
+        self.g.resetAllUtility()
+        self.g.get_vertex(3).utility=20
+        self.g.get_vertex(4).utility=10
+        self.g.get_vertex(5).utility=5
+        self.g.get_vertex(6).utility=15
+        expect=[[0, -math.inf, math.inf],
+                 [1, -math.inf, math.inf],
+                 [3, 20, 20],
+                 [1, -math.inf, 20],
+                 [4, 10, 10],
+                 [1, 10, 10],
+                 [0, 10, math.inf],
+                 [2, -math.inf, math.inf],
+                 [5, 5, 5],
+                 [2, -math.inf, 5],
+                 [6, 15, 15],
+                 [2, 5, 5],
+                 [0, 10, 10]]
+        self.assertListEqual(self.AL.miniMaxAlphaBeta(0,3,'miniMax'),expect)
 
     def test_miniMaxAlphaBeta_alphaBeta(self):
-        for i in range(7):
-            self.g.get_vertex(i).utility=0
+        self.g.resetAllUtility()
         self.g.get_vertex(3).utility=20
         self.g.get_vertex(4).utility=1
         self.g.get_vertex(5).utility=5
@@ -191,19 +197,49 @@ class Test_algorithm(unittest.TestCase):
 
         self.assertListEqual(self.AL.miniMaxAlphaBeta(0,3,'alphaBeta'),expect)
         # #with prune
-        # self.g.setUtility(3,20)
-        # self.g.setUtility(4,10)
-        # self.g.setUtility(5,5)
-        # self.g.setUtility(6,15)
-        # expect=[[3, {0: 0, 1: 0, 2: 0, 3: 20, 4: 10, 5: 5, 6: 15}],
-        #         [4, {0: 0, 1: 0, 2: 0, 3: 20, 4: 10, 5: 5, 6: 15}],
-        #         [1, {0: 0, 1: 10, 2: 0, 3: 20, 4: 10, 5: 5, 6: 15}],
-        #         [5, {0: 0, 1: 10, 2: 0, 3: 20, 4: 10, 5: 5, 6: 15}],
-        #         [6, {0: 0, 1: 10, 2: 0, 3: 20, 4: 10, 5: 5, 6: 15}],
-        #         [2, {0: 0, 1: 10, 2: 15, 3: 20, 4: 10, 5: 5, 6: 15}],
-        #         [0, {0: 15, 1: 10, 2: 15, 3: 20, 4: 10, 5: 5, 6: 15}]]
-        # print('fff')
-        # print(self.AL.miniMaxAlphaBeta(0,3,'alphaBeta'))
-        # self.assertListEqual(self.AL.miniMaxAlphaBeta(0,3,'alphaBeta'),expect)#node 6 is pruned
-        # for i in range(7):
-        #     self.g.setUtility(i,0)
+        self.g.resetAllUtility()
+        self.g.get_vertex(3).utility=20
+        self.g.get_vertex(4).utility=10
+        self.g.get_vertex(5).utility=5
+        self.g.get_vertex(6).utility=15
+        expect=[[0, -math.inf, math.inf],
+                [1, -math.inf, math.inf],
+                [3, 20, 20],
+                [1, -math.inf, 20],
+                [4, 10, 10],
+                [1, 10, 10],
+                [0, 10, math.inf],
+                [2, -math.inf, math.inf],
+                [5, 5, 5],
+                [2, -math.inf, 5],
+                [0, 10, 10]]
+        self.assertListEqual(self.AL.miniMaxAlphaBeta(0,3,'alphaBeta'),expect)#node 6 is pruned
+    def test_miniMaxAlphaBeta_exMiniMax(self):
+        self.g.resetAllUtility()
+        self.g.get_vertex(3).utility=20
+        self.g.get_vertex(4).utility=1
+        self.g.get_vertex(5).utility=10
+        self.g.get_vertex(6).utility=4
+        self.g.add_action('a0')
+        self.g.add_edge(2,'a0')
+        self.g.delete_edge(2,5)
+        self.g.delete_edge(2,6)
+        self.g.add_action_vert_connection('a0',0.3,5)#utility of node 5 =10, 10*0.3=3
+        self.g.add_action_vert_connection('a0',0.5,6)#utility of node 6 =4, 4*0.5=2
+        #so now the total utility of action0 = 5
+        expect=[[0, -math.inf, math.inf],
+                [1, -math.inf, math.inf],
+                [3, 20, 20],
+                [1, -math.inf, 20],
+                [4, 1, 1],
+                [1, 1, 1],
+                [0, 1, math.inf],
+                [2, -math.inf, math.inf],
+                [5, 10, 10],
+                [6, 4, 4],
+                [2, 5.0, 5.0],
+                [0, 5.0, 5.0]]
+        self.assertListEqual(self.AL.miniMaxAlphaBeta(0,3,'exMiniMax'),expect)
+        self.g.add_edge(2,5)
+        self.g.add_edge(2,6)
+        self.g.delete_action('a0')
