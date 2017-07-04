@@ -130,7 +130,7 @@ class algorithms:
                         val=self.partOfminiMax(n,depth-1,False,algorithm,bestValue)
                         if val>ab:#the upper layer will choose the smallest one, so if val>ab means it can be pruned
                             if bestValue<val:#(find the bigger one)
-                                self.graph[id].utility=val
+                                # self.graph[id].utility=val
                                 bestValue=val
                                 self.utilityLog.append([id,val,math.inf])
                             return bestValue#prune
@@ -138,7 +138,7 @@ class algorithms:
                         val=self.partOfminiMax(n,depth-1,False,algorithm)
 
                     if bestValue<val:
-                        self.graph[id].utility=val
+                        # self.graph[id].utility=val
                         bestValue=val
                         if n!=self.graph[id].get_connections()[-1]:
                             self.utilityLog.append([id,val,math.inf])
@@ -157,14 +157,14 @@ class algorithms:
                         val=self.partOfminiMax(n,depth-1,True,algorithm,bestValue)
                         if val<ab:#if val < the bestValue of parent means it can be pruned
                             if bestValue>val:
-                                self.graph[id].utility=val
+                                # self.graph[id].utility=val
                                 bestValue=val
                                 self.utilityLog.append([id,-math.inf,val])
                             return bestValue#prune
                     else:#miniMax & exMiniMax
                         val=self.partOfminiMax(n,depth-1,True,algorithm)
                     if bestValue>val:
-                        self.graph[id].utility=val
+                        # self.graph[id].utility=val
                         bestValue=val
                         if n!=self.graph[id].get_connections()[-1]:#if it is not the last element
                             self.utilityLog.append([id,-math.inf,val])#alpha is -inf

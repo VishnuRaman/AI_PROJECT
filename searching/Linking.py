@@ -48,7 +48,6 @@ class Vertex:
     def get_weight(self, id):
         return self.adjacent[id]
 
-
 ##Action is the object contains several probabilities and corresponding vertex object.
 # Action can be seem as another kind of vertex, it can be connected by vertex, and it can also connect to vertex.
 class Action:
@@ -133,7 +132,7 @@ class Graph:
     #output: list
     def get_vertices(self):
         temp=[n for n in self.vert_dict.keys()]
-        temp.sort()
+        temp=sorted(temp,key=lambda x: str(x))
         return temp
 
     ##save the current vert_dict with given fileName

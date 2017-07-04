@@ -1,4 +1,4 @@
-import unittest,Algorithms,Linking,math
+import unittest,Algorithms,Linking,math,RandomGenerator
 
 class Test_algorithm(unittest.TestCase):
     g=Linking.Graph()
