@@ -9,6 +9,7 @@ class Vertex:
         self.id = id
         self.heuristic=0#default value=0
         self.utility=0#default value=0
+        self.propability=1#default value=1
         # a dictionary like a map in JAVA which stores all adjacent nodes
         self.adjacent = {}
 
@@ -48,18 +49,17 @@ class Vertex:
     def get_weight(self, id):
         return self.adjacent[id]
 
-##Action is the object contains several probabilities and corresponding vertex object.
-# Action can be seem as another kind of vertex, it can be connected by vertex, and it can also connect to vertex.
-class Action:
+##Edge is the object contains several probabilities and corresponding vertex object. It's a bridge between vertexs.
+class Edge:
     def __init__(self,id):
         self.id=id
-        self.probability_dict={}
+        self.neighbor=[]
     ##connect this action to a vertex (with chance)
     #input: @arg1 chance, @arg2 vertex id
-    def add_probability(self,chance,vertid):
-        self.probability_dict[vertid]=chance
-    def delete_probability(self,id):
-        self.probability_dict.pop(id)
+    def add_neighbor(self,id):
+        self.neighbor.append(id)
+    def delete_neighbor(self,id):
+        self.neighbor.remove(id)
 
 
 
@@ -83,22 +83,22 @@ class Graph:
         self.vert_dict[node] = new_vertex
     ##just like add_vertex, this method create a new action object.
     #input:@arg1 id of the action. ie 'a0', 'a1' ...
-    def add_action(self,actionId):
-        new_action= Action(actionId)
-        self.vert_dict[actionId]=new_action
+    def add_objEdge(self,actionId):
+        new_edge= Edge(actionId)
+        self.vert_dict[actionId]=new_edge
     ##this method will delete the action object from vert_dict and remove all the related connection
     #input: @arg1 action id
-    def delete_action(self,actionId):
+    def delete_objEdge(self,actionId):
         for n in self.vert_dict:
-            if type(self.vert_dict[n]) is Vertex and actionId in self.vert_dict[n].adjacent:
+            if type(self.vert_dict[n]) is Vertex and actionId in self.vert_dict[n].adjacent:#delete all connections from vertex
                 self.vert_dict[n].adjacent.pop(actionId)
-        self.vert_dict.pop(actionId)
+        self.vert_dict.pop(actionId)#delete itself from vert_dict
     ##just like add_edge, but it can only be used to add the connection between node(as child) and action(as parent)
     #input: @arg1 action id, @arg2 the chance of the vertex, @arg3 the vertex object
-    def add_action_vert_connection(self,actionId,chance,vertObj):
-        self.vert_dict[actionId].add_probability(chance,vertObj)
-    def delete_action_vert_connection(self,actionId,vertId):
-        self.vert_dict[actionId].delete_probability(vertId)
+    def add_objEdge_vert_connection(self,edgeId,nodeId):
+        self.vert_dict[edgeId].add_neighbor(nodeId)
+    def delete_objEdge_vert_connection(self,edgeId,nodeId):
+        self.vert_dict[edgeId].delete_neighbor(nodeId)
     ##delete a node and every connection with it
     #input:@arg1 node id
     def delete_vertex(self,node):

@@ -102,6 +102,16 @@ class algorithms:
             if rtn:
                 return rtn
         return None
+    ##after an algorithm executed, it will generate a log of expending node and corresponding queue/stack for each step from the begining to the end.
+    #output: queue log/ stack log  ie. [[expending node,[queue/stack]],...]
+    def getQsLog(self):
+        return self.qsLog
+    ##after an algorithm executed, it will generate a log of visited nodes for each step from the begining to the end.
+    #output: visited nodes log  ie. [[visited nodes],...]
+    def getVisitedLog(self):
+        return  self.visitedLog
+
+
     ##The miniMax, expectiMiniMax, and alphaBeta algorithm (expectiMiniMax algorithm key word is 'exMiniMax')
     #input:@arg1 the root node, @arg2 how many layers it will goes, @arg3 algorithm
     #output: a list [[expending node, alpha, beta], ...] the root node is always on depth 0
@@ -144,8 +154,8 @@ class algorithms:
                             self.utilityLog.append([id,val,math.inf])
                 else:# type is Action, for exMiniMax
                     bestValue=0
-                    for vertid in self.graph[n].probability_dict.keys():#go through every child
-                        bestValue+=self.graph[n].probability_dict[vertid]*self.partOfminiMax(vertid,depth-1,False,algorithm)
+                    for vertid in self.graph[n].neighbor:#go through every child
+                        bestValue+=self.graph[vertid].probability*self.partOfminiMax(vertid,depth-1,False,algorithm)
             self.utilityLog.append([id,bestValue,bestValue])#for the last element,  both alpha and beta is bestValue
             return bestValue
         elif player==False:
@@ -170,16 +180,14 @@ class algorithms:
                             self.utilityLog.append([id,-math.inf,val])#alpha is -inf
                 else:# type is Action, for exMiniMax
                     bestValue=0
-                    for vertid in self.graph[n].probability_dict.keys():#go through every child
-                        bestValue+=self.graph[n].probability_dict[vertid]*self.partOfminiMax(vertid,depth-1,True,algorithm)
+                    for vertid in self.graph[n].neighbor:#go through every child
+                        bestValue+=self.graph[vertid].probability*self.partOfminiMax(vertid,depth-1,True,algorithm)
             self.utilityLog.append([id,bestValue,bestValue])#for the last element, both alpha and beta is bestValue
             return bestValue
 
-    ##after an algorithm executed, it will generate a log of expending node and corresponding queue/stack for each step from the begining to the end.
-    #output: queue log/ stack log  ie. [[expending node,[queue/stack]],...]
-    def getQsLog(self):
-        return self.qsLog
-    ##after an algorithm executed, it will generate a log of visited nodes for each step from the begining to the end.
-    #output: visited nodes log  ie. [[visited nodes],...]
-    def getVisitedLog(self):
-        return  self.visitedLog
+    ##This will calculate probability values which weren't given in the question, but can be inferred from the information which is given.
+    #input: @arg1 list contains the observation variables. ie [id1, id2, ...], @arg2 the id of the node needs to be figured out.
+    #output:the probability value of the query node
+    def believeNet(self,observation,query):
+        self.graph
+
