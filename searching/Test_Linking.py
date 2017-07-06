@@ -132,34 +132,31 @@ class Test_linking(unittest.TestCase):
         g.resetAllUtility()
         self.assertEqual(g.get_vertex(0).utility,0)
         self.assertEqual(g.get_vertex(1).utility,0)
-    def test_g_add_action(self):
+    def test_g_add_objEdge(self):
         g=Linking.Graph()
-        g.add_vertex(0)
-        g.add_vertex(1)
-        g.add_action('a0')
-        g.add_edge(0,1)
+        g.add_objEdge('a0')
         self.assertEqual(g.vert_dict['a0'].id,'a0')
-    def test_g_add_action_vert_connection(self):
+    def test_g_add_objEdge_vert_connection(self):
         g=Linking.Graph()
         g.add_vertex(0)
         g.add_vertex(1)
-        g.add_action('a0')
-        g.add_action_vert_connection('a0',0.5,0)
-        self.assertEqual(g.vert_dict['a0'].probability_dict[0],0.5)
-    def test_g_delete_action_vert_connection(self):
+        g.add_objEdge('a0')
+        g.add_objEdge_vert_connection('a0',0)
+        self.assertEqual(g.vert_dict['a0'].neighbor[0],0)
+    def test_g_delete_objEdge_vert_connection(self):
         g=Linking.Graph()
         g.add_vertex(0)
         g.add_vertex(1)
-        g.add_action('a0')
-        g.add_action_vert_connection('a0',0.5,0)
+        g.add_objEdge('a0')
+        g.add_objEdge_vert_connection('a0',0)
         g.add_edge(0,1)
-        g.delete_action_vert_connection('a0',0)
-        self.assertDictEqual(g.vert_dict['a0'].probability_dict,{})#  empty
+        g.delete_objEdge_vert_connection('a0',0)
+        self.assertListEqual(g.vert_dict['a0'].neighbor,[])#  empty
         self.assertDictEqual(g.vert_dict[0].adjacent,{1:1})
-    def test_g_add_edge2(self):#for adding connection from node(as parent) to action(as chile)
+    def test_g_add_objEdge2(self):#for adding connection from node(as parent) to action(as chile)
         g=Linking.Graph()
         g.add_vertex(0)
-        g.add_action('a0')
+        g.add_objEdge('a0')
         g.add_edge(0,'a0')
         self.assertDictEqual(g.vert_dict[0].adjacent,{'a0':1})
 

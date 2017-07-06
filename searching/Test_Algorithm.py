@@ -1,4 +1,4 @@
-import unittest,Algorithms,Linking,math
+import unittest,Algorithms,Linking,math,RandomGenerator
 
 class Test_algorithm(unittest.TestCase):
     g=Linking.Graph()
@@ -220,12 +220,14 @@ class Test_algorithm(unittest.TestCase):
         self.g.get_vertex(4).utility=1
         self.g.get_vertex(5).utility=10
         self.g.get_vertex(6).utility=4
-        self.g.add_action('a0')
+        self.g.add_objEdge('a0')
         self.g.add_edge(2,'a0')
         self.g.delete_edge(2,5)
         self.g.delete_edge(2,6)
-        self.g.add_action_vert_connection('a0',0.3,5)#utility of node 5 =10, 10*0.3=3
-        self.g.add_action_vert_connection('a0',0.5,6)#utility of node 6 =4, 4*0.5=2
+        self.g.get_vertex(5).probability=0.3
+        self.g.get_vertex(6).probability=0.5
+        self.g.add_objEdge_vert_connection('a0',5)#utility of node 5 =10, 10*0.3=3
+        self.g.add_objEdge_vert_connection('a0',6)#utility of node 6 =4, 4*0.5=2
         #so now the total utility of action0 = 5
         expect=[[0, -math.inf, math.inf],
                 [1, -math.inf, math.inf],
@@ -242,4 +244,4 @@ class Test_algorithm(unittest.TestCase):
         self.assertListEqual(self.AL.miniMaxAlphaBeta(0,3,'exMiniMax'),expect)
         self.g.add_edge(2,5)
         self.g.add_edge(2,6)
-        self.g.delete_action('a0')
+        self.g.delete_objEdge('a0')
