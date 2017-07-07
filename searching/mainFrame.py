@@ -1,5 +1,5 @@
 import ManageNode,Linking,GuiArray,Algorithms
-
+import pickle
 from tkinter import *
 # import Tkinter
 import tkinter.filedialog
@@ -40,11 +40,16 @@ def saveFile():
     if filename:
         LK.saveFile(filename)
 
+    def getFilename():
+        return filename
+
 
 def loadFile():
-    LK.loadFile(filename)
+    openFile = pickle.load( open(saveFile.getFilename, "rb"))
 
-    #need a pop up to load the file name
+    LK.loadFile(saveFile.getFilename)
+
+    # need a pop up to load the file name
 
 fileMenu = Menu(myMenu)
 myMenu.add_cascade(label="File", menu=fileMenu)
