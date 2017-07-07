@@ -54,7 +54,10 @@ def loadFile():
         #need to change so it prints to canvas and not console
         # print(openFilename.name)
 
-        LK.loadFile(openFilename)
+        fileTitle = str(openFilename)
+
+        #currrently cannot find file despite it being there
+        LK.loadFile(fileTitle)
 
     # seperate method to above
     # f=open(openFile)
