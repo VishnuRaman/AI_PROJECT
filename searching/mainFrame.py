@@ -46,11 +46,14 @@ root.config(menu=myMenu)
 #     popup.close()
 
 def saveFile():
-    myFormats = [('Windows Bitmap', '*.bmp'), \
+    #format types to save the file as
+    fileFormats = [('Windows Bitmap', '*.bmp'), \
                  ('Portable Network Graphics', '*.png'), \
                  ('JPEG / JFIF', '*.jpg'), ('CompuServer GIF', '*.gif'), ]
-    filename = tkinter.filedialog.asksaveasfilename(filetypes=myFormats)
+    #dialog box
+    filename = tkinter.filedialog.asksaveasfilename(filetypes=fileFormats)
 
+    #saving method
     if filename:
         LK.saveFile()
 
