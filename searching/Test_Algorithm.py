@@ -245,3 +245,49 @@ class Test_algorithm(unittest.TestCase):
         self.g.add_edge(2,5)
         self.g.add_edge(2,6)
         self.g.delete_objEdge('a0')
+    def test_generateProbabilityTable(self):
+        self.g.add_edge(1,2)
+        self.g.add_edge(1,5)
+        self.g.add_edge(4,5)
+        self.AL.generateProbabilityTable()
+        expect={2: '[0, 1] : P',
+                        'TT': [0,0],
+                        'TF': [0,0],
+                        'FT': [0,0],
+                        'FF': [0,0]}
+        self.assertDictEqual(self.g.get_vertex(2).probabilityTable,expect)
+        expect={5: '[1, 2, 4] : P',
+                        'TTT': [0,0],
+                        'TTF': [0,0],
+                        'TFT': [0,0],
+                        'TFF': [0,0],
+                        'FTT': [0,0],
+                        'FTF': [0,0],
+                        'FFT': [0,0],
+                        'FFF': [0,0]}
+        self.assertDictEqual(self.g.get_vertex(5).probabilityTable,expect)
+        self.g.delete_edge(1,2)
+        self.g.delete_edge(1,5)
+        self.g.delete_edge(4,5)
+    def test_simulateData(self):
+        g=Linking.Graph()
+        for i in range(5):
+            g.add_vertex(i)
+            g.get_vertex(i).probability=0.5#assume all probability=0.5
+        g.add_edge(0,2)
+        g.add_edge(1,2)
+        g.add_edge(1,3)
+        g.add_edge(2,4)
+        al=Algorithms.algorithms(g.vert_dict)
+        al.generateProbabilityTable()
+        al.simulateData(10000)
+        v=g.get_vertex(2).probabilityTable['TT'][0]
+        self.assertTrue(v>0.115 and v<0.135)#expect v = 0.125
+        v=g.get_vertex(3).probabilityTable['T'][0]
+        self.assertTrue(v>0.24 and v<0.26)#expect v = 0.25
+        v=g.get_vertex(4).probabilityTable['T'][0]
+        self.assertTrue(v>0.24 and v<0.26)#expect v = 0.25
+        v=g.get_vertex(0).probabilityTable['T'][0]
+        self.assertTrue(v>0.49 and v<0.51)#expect v = 0.5
+        v=g.get_vertex(1).probabilityTable['T'][0]
+        self.assertTrue(v>0.49 and v<0.51)#expect v = 0.5

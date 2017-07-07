@@ -9,9 +9,10 @@ class Vertex:
         self.id = id
         self.heuristic=0#default value=0
         self.utility=0#default value=0
-        self.propability=1#default value=1
+        self.probability=1#default value=1
         # a dictionary like a map in JAVA which stores all adjacent nodes
         self.adjacent = {}
+        self.probabilityTable={}
 
     def __iter__(self):
         return iter(self.adjacent.keys())
