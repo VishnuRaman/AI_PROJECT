@@ -29,20 +29,31 @@ myMenu = Menu(root)
 root.config(menu=myMenu)
 
 #need to fix as currently saving an empty file :(
+# def saveFile(self):
+#     #produces the widget which allows the save as to appear
+#     #set file type to be saved as a png
+#     popup = tkinter.filedialog.asksaveasfile(mode='w', defaultextension=".png")
+#     #if its cancelled return to screen
+#     if popup is None:
+#         return
+#     #enter file name to save it
+#     filename = str(text(0.0, END))
+#     LK.saveFile()
+#     #name file its name
+#     popup.write(filename)
+#     #LK.saveFile()
+#     #close box
+#     popup.close()
+
 def saveFile():
-    #produces the widget which allows the save as to appear
-    #set file type to be saved as a png
-    popup = tkinter.filedialog.asksaveasfile(mode='w', defaultextension=".png")
-    #if its cancelled return to screen
-    if popup is None:
-        return
-    #enter file name to save it
-    filename = str(text.get(0.0, END))
-    #name file its name
-    popup.write(filename)
-    LK.saveFile()
-    #close box
-    popup.close()
+    myFormats = [('Windows Bitmap', '*.bmp'), \
+                 ('Portable Network Graphics', '*.png'), \
+                 ('JPEG / JFIF', '*.jpg'), ('CompuServer GIF', '*.gif'), ]
+    filename = tkinter.filedialog.asksaveasfilename(filetypes=myFormats)
+
+    if filename:
+        LK.saveFile()
+
 
 def loadFile():
     LK.loadFile()
