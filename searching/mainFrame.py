@@ -1,4 +1,5 @@
 import ManageNode,Linking,GuiArray,Algorithms
+
 import pickle
 from tkinter import *
 # import Tkinter
@@ -39,15 +40,28 @@ def saveFile():
     #saving method
     if filename:
         LK.saveFile(filename)
+        filetitle = LK.saveFile.output
 
-    def getFilename():
+    def getFiletitle():
+        return filetitle
+
+    def getFile():
         return filename
 
 
 def loadFile():
-    openFile = pickle.load( open(saveFile.getFilename, "rb"))
+    openFile=tkinter.filedialog.askopenfile()
 
-    LK.loadFile(saveFile.getFilename)
+    f=open(openFile)
+    f.read()
+    f.close()
+
+
+
+    # produces save file window
+    # openFile = pickle.load(open(saveFile().filename, 'rb'))
+
+    LK.loadFile()
 
     # need a pop up to load the file name
 
