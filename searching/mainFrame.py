@@ -1,6 +1,9 @@
+from pydoc import text
+
 import ManageNode,Linking,GuiArray,Algorithms
 from tkinter import *
-import tkinter.messagebox
+# import Tkinter
+import tkinter.filedialog
 
 from searching.Algorithms import algorithms
 
@@ -25,27 +28,14 @@ LK=Linking.Graph()
 myMenu = Menu(root)
 root.config(menu=myMenu)
 
-def saveFile():
-    e1=Entry(canvas)
-    window=canvas.create_rectangle(window=e1, width=10, height=10, bg='light gray')
-    window.pack()
-    Label(window, text="Enter file name").pack()
-    filename= Entry(window)
-    filename.pack()
-    def submit(filename, topFrame):
-        root.destroy()
-        #
-        # root = Tk()
-        # Label(root, text="save" % name).pack()
-        # BubbleFrame(root, name).loop(root)
 
-    Button(window, text="Ok", command=lambda: submit(filename.get(), window)).pack()
-
-    # tkinter.messagebox.askquestion('Save File', 'Do you want to save this file?')
-
-    LK.saveFile()
-
-    #need a pop up box to enter file name
+def file_save():
+    f = tkinter.filedialog.asksaveasfile(mode='w', defaultextension=".txt")
+    if f is None:
+        return
+    text2save = str(text.get(0.0, END))
+    f.write(text2save)
+    f.close()
 
 def loadFile():
     LK.loadFile()
@@ -54,7 +44,7 @@ def loadFile():
 
 fileMenu = Menu(myMenu)
 myMenu.add_cascade(label="File", menu=fileMenu)
-fileMenu.add_command(label="Save", command=saveFile)
+fileMenu.add_command(label="Save", command=file_save)
 fileMenu.add_command(label="Load", command=loadFile)
 
 def chooseBFS():
