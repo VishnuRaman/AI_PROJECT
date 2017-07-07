@@ -42,10 +42,6 @@ def saveFile():
     #saving method
     if filename:
         LK.saveFile(filename)
-        filetitle = LK.saveFile.output
-
-    def getFiletitle():
-        return filetitle
 
     def getFile():
         return filename
@@ -55,8 +51,12 @@ def loadFile():
     openFilename = tkinter.filedialog.askopenfile()
 
     if openFilename:
-        print(openFilename.name)
+        #need to change so it prints to canvas and not console
+        # print(openFilename.name)
 
+        LK.loadFile(openFilename)
+
+    # seperate method to above
     # f=open(openFile)
     # f.read()
     # f.close()
@@ -66,7 +66,7 @@ def loadFile():
     # produces save file window
     # openFile = pickle.load(open(saveFile().filename, 'rb'))
 
-    LK.loadFile(openFilename)
+    # LK.loadFile(openFilename)
 
     # need a pop up to load the file name
 
