@@ -1,9 +1,9 @@
-from pydoc import text
-
 import ManageNode,Linking,GuiArray,Algorithms
+
 from tkinter import *
 # import Tkinter
 import tkinter.filedialog
+
 
 from searching.Algorithms import algorithms
 
@@ -47,15 +47,15 @@ root.config(menu=myMenu)
 
 def saveFile():
     #format types to save the file as
-    fileFormats = [('Windows Bitmap', '*.bmp'), \
+    fileFormats = [('Windows Bitmap', '*.bmp'),\
                    ('Portable Network Graphics', '*.png'),\
-                 ('JPEG / JFIF', '*.jpg'), ('CompuServer GIF', '*.gif'),]
+                 ('JPEG / JFIF', '*.jpg'), ('CompuServer GIF', '*.gif')]
     #dialog box
     filename = tkinter.filedialog.asksaveasfilename(filetypes=fileFormats)
 
     #saving method
     if filename:
-        LK.saveFile()
+        LK.saveFile(filename)
 
 
 def loadFile():
