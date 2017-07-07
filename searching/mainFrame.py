@@ -30,7 +30,7 @@ root.config(menu=myMenu)
 
 
 def file_save():
-    f = tkinter.filedialog.asksaveasfile(mode='w', defaultextension=".txt")
+    f = tkinter.filedialog.asksaveasfile(mode='w', defaultextension=".png")
     if f is None:
         return
     text2save = str(text.get(0.0, END))
