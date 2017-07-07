@@ -1,5 +1,6 @@
 import ManageNode,Linking,GuiArray,Algorithms
 from tkinter import *
+import tkinter.messagebox
 
 from searching.Algorithms import algorithms
 
@@ -25,6 +26,23 @@ myMenu = Menu(root)
 root.config(menu=myMenu)
 
 def saveFile():
+    e1=Entry(canvas)
+    window=canvas.create_rectangle(window=e1, width=10, height=10, bg='light gray')
+    window.pack()
+    Label(window, text="Enter file name").pack()
+    filename= Entry(window)
+    filename.pack()
+    def submit(filename, topFrame):
+        root.destroy()
+        #
+        # root = Tk()
+        # Label(root, text="save" % name).pack()
+        # BubbleFrame(root, name).loop(root)
+
+    Button(window, text="Ok", command=lambda: submit(filename.get(), window)).pack()
+
+    # tkinter.messagebox.askquestion('Save File', 'Do you want to save this file?')
+
     LK.saveFile()
 
     #need a pop up box to enter file name
@@ -62,22 +80,6 @@ editMenu.add_command(label="DFS", command=chooseDFS)
 editMenu.add_command(label="UCS", command=chooseUCS)
 editMenu.add_command(label="A*", command=chooseAstar)
 
-# def saveFile():
-#     LK.saveFile()
-#
-#     #need a pop up box to enter file name
-#
-# def loadFile():
-#     LK.loadFile()
-#
-#     #need a pop up to load the file name
-#
-# fileMenu = Menu(myMenu)
-# myMenu.add_cascade(label="File", menu=fileMenu)
-# fileMenu.add_command(label="Save", command=saveFile)
-# fileMenu.add_command(label="Load", command=loadFile)
-
-
 # create buttons
 button1 = Button(topFrame,text="Create Node ")
 button2 = Button(topFrame,text="Create Arc")
@@ -113,6 +115,7 @@ button8.pack(side=LEFT)
 button9.pack(side=LEFT)
 text4.pack(side=LEFT)
 heuristics.pack(side=LEFT)
+
 
 # methods called by buttons
 node_id_Dic={}
@@ -254,8 +257,10 @@ def Run(event):
     xTh=0
     if algorithm in ('UCS','aStar'):
         finalPath = AL.ucsAStar(int(startNode.get()),int(endNode.get()),algorithm)
-    else:
+    elif algorithm in ('BFS', 'DFS'):
         finalPath = AL.bdfs(int(startNode.get()),int(endNode.get()),algorithm)
+    # else:
+    #     tkinter.messagebox('error','Please select a search')
 
     if not delay.get():
         display()
