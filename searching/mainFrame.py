@@ -47,7 +47,7 @@ root.config(menu=myMenu)
 
 def saveFile():
     #format types to save the file as
-    fileFormats = [('Windows Bitmap', '*.bmp'),\
+    fileFormats = [('Windows Bitmap', '*.bmp'), \
                    ('Portable Network Graphics', '*.png'),\
                  ('JPEG / JFIF', '*.jpg'), ('CompuServer GIF', '*.gif'),]
     #dialog box
