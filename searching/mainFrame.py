@@ -1,3 +1,5 @@
+from io import TextIOWrapper
+
 import ManageNode,Linking,GuiArray,Algorithms
 
 import pickle
@@ -50,18 +52,21 @@ def saveFile():
 
 
 def loadFile():
-    openFile=tkinter.filedialog.askopenfile()
+    openFilename = tkinter.filedialog.askopenfile()
 
-    f=open(openFile)
-    f.read()
-    f.close()
+    if openFilename:
+        print(openFilename.name)
+
+    # f=open(openFile)
+    # f.read()
+    # f.close()
 
 
 
     # produces save file window
     # openFile = pickle.load(open(saveFile().filename, 'rb'))
 
-    LK.loadFile()
+    LK.loadFile(openFilename)
 
     # need a pop up to load the file name
 
