@@ -47,9 +47,9 @@ root.config(menu=myMenu)
 
 def saveFile():
     #format types to save the file as
-    fileFormats = [('Windows Bitmap', '*.bmp'), \
-                 ('Portable Network Graphics', '*.png'), \
-                 ('JPEG / JFIF', '*.jpg'), ('CompuServer GIF', '*.gif'), ]
+    fileFormats = [('Windows Bitmap', '*.bmp'),\
+                   ('Portable Network Graphics', '*.png'),\
+                 ('JPEG / JFIF', '*.jpg'), ('CompuServer GIF', '*.gif'),]
     #dialog box
     filename = tkinter.filedialog.asksaveasfilename(filetypes=fileFormats)
 
