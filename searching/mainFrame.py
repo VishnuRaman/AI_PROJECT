@@ -28,13 +28,19 @@ LK=Linking.Graph()
 myMenu = Menu(root)
 root.config(menu=myMenu)
 
-
+#need to fix as currently saving an empty file :(
 def file_save():
+    #produces the widget which allows the save as to appear
+    #set file type to be saved as a png
     f = tkinter.filedialog.asksaveasfile(mode='w', defaultextension=".png")
+    #if its cancelled return to screen
     if f is None:
         return
+    #enter file name to save it
     text2save = str(text.get(0.0, END))
+    #name file its name
     f.write(text2save)
+    #close box
     f.close()
 
 def loadFile():
