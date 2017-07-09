@@ -39,7 +39,7 @@ def saveFile():
     #dialog box
     filename = tkinter.filedialog.asksaveasfilename(filetypes=fileFormats)
 
-    #saving method
+    # #saving method
     if filename:
         LK.saveFile(filename)
 
@@ -48,19 +48,29 @@ def saveFile():
 
 
 def loadFile():
-    openFilename = tkinter.filedialog.askopenfile()
+    openFilename = tkinter.filedialog.askopenfile(parent=root)
+    # f=open(openFilename)
+    # f.read()
+    # f.close()
+    #saveFile.fileName + '_gd.pkl', 'rb'
+    file = open(openFilename)
+    dict = pickle.load(file)
+    file.close()
+    return dict
 
-    if openFilename:
+    #
+    # if openFilename:
         #need to change so it prints to canvas and not console
         # print(openFilename.name)
-
-        fileTitle = str(openFilename)
-
-        #currrently cannot find file despite it being there
-        LK.loadFile(fileTitle)
+        #
+        # fileTitle = str(openFilename)
+        #
+        # #currrently cannot find file despite it being there
+        # LK.loadFile(fileTitle)
 
     # seperate method to above
-    # f=open(openFile)
+    #
+    # f=open(openFilename)
     # f.read()
     # f.close()
 
