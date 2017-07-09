@@ -171,10 +171,13 @@ def ArcPoint2(e):
             arrow = canvas.create_line(x,y,e.x,e.y,arrow="last")#fill="turquoise" can change color
             #use -->  canvas.itemconfig(arrow,fill="red") <-- to change color after created
 
-            weight = canvas.create_text(0.5*(x+e.x),0.5*(y+e.y)-10,text=1)
+            # need to change this so text corresponds to the custom entry made by the user
+            # weight = canvas.create_text(0.5*(x+e.x),0.5*(y+e.y)-10,text=1)
 
-            GA.addArrow(fromNode,toNode,arrow,weight)
-            #this method produces the connection and provides a cost
+            # GA.addArrow(fromNode,toNode,arrow,weight) - inc when sorted weight out
+            GA.addArrow(fromNode, toNode, arrow)
+
+            # #this method produces the connection and provides a cost
 
             LK.add_edge(fromNode,toNode,1)
             #inf means infinity so hasnt been assigned a cost/value yet
