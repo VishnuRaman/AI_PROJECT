@@ -209,34 +209,35 @@ class algorithms:
                 self.graph[n].probabilityTable={n: l}#the attribute row of the table
                 for i in range(2**len(l)-1,-1,-1):
                     key=bin(i)[2:].zfill(len(l)).replace('1','T').replace('0','F')
-                    self.graph[n].probabilityTable[key]=[0,0,0]#ratio, true, expected ratio
+                    self.graph[n].probabilityTable[key]=[0,0,0,0]#ratio, true,based, expected ratio
             else:
                 self.graph[n].probabilityTable={n: ' : P'}#the attribute row of the table
-                self.graph[n].probabilityTable['T']=[0,0,0]
+                self.graph[n].probabilityTable['T']=[0,0,0,0]
 
     ##set up the ProbabilityTable manually
     #input: @arg1 the node, @arg2  key of the row as a string ie. 'TT', @arg3 probability
     def setProbabilityTable(self,id,key,value):
-        self.graph[id].probabilityTable[key][2]=value
+        self.graph[id].probabilityTable[key][3]=value
 
     def simulateData(self,times):
         for t in range(times):
             temp={}
             for n in self.noParent:
                 temp[n]='F'
-                if random.random()<=self.graph[n].probabilityTable['T'][2]:
+                if random.random()<=self.graph[n].probabilityTable['T'][3]:
                     temp[n]='T'
                     self.graph[n].probabilityTable['T'][1]+=1
+                self.graph[n].probabilityTable['T'][2]+=1
+                a=self.graph[n].probabilityTable['T'][1]/self.graph[n].probabilityTable['T'][2]
+                self.graph[n].probabilityTable['T'][0]=math.floor(a*100)/100
             for n in self.parent:
                 st=''
                 temp[n]='F'
                 for i in self.parent[n]:
                     st+=str(temp[i])
-                if random.random()<=self.graph[n].probabilityTable[st][2]:
+                if random.random()<=self.graph[n].probabilityTable[st][3]:
                     temp[n]='T'
                     self.graph[n].probabilityTable[st][1]+=1
-        for n in self.graph:
-            for i in self.graph[n].probabilityTable:
-                if i !=n:#skip the attribute row
-                    self.graph[n].probabilityTable[i][0]=self.graph[n].probabilityTable[i][1]/times
-
+                self.graph[n].probabilityTable[st][2]+=1
+                a=self.graph[n].probabilityTable[st][1]/self.graph[n].probabilityTable[st][2]
+                self.graph[n].probabilityTable[st][0]=math.floor(a*100)/100

@@ -25,20 +25,20 @@ class randomGenerator:
         return LK
 
 
-g=randomGenerator().randomGraph(2,2,-2,2)
-g.delete_edge(2,5)
-g.delete_edge(2,6)
-g.add_objEdge('a0')
-g.add_edge(2,'a0')
-g.add_objEdge_vert_connection('a0',5)
-g.add_objEdge_vert_connection('a0',6)
-g.get_vertex(5).probability=0.2
-g.get_vertex(6).probability=0.8
-a=Algorithms.algorithms(g.vert_dict).miniMaxAlphaBeta(0,2,'exMiniMax')
-for n in g:
-    if type(n) is Linking.Vertex:
-        if not n.get_connections():
-            print(str(n.id)+'\'s utility is '+str(n.utility))
-print()
-for e in a:
-    print(e)
+# g=randomGenerator().randomGraph(2,2,-2,2)
+# g.delete_edge(2,5)
+# g.delete_edge(2,6)
+# g.add_objEdge('a0')
+# g.add_edge(2,'a0')
+# g.add_objEdge_vert_connection('a0',5)
+# g.add_objEdge_vert_connection('a0',6)
+# g.get_vertex(5).probability=0.2
+# g.get_vertex(6).probability=0.8
+# a=Algorithms.algorithms(g.vert_dict).miniMaxAlphaBeta(0,2,'exMiniMax')
+# for n in g:
+#     if type(n) is Linking.Vertex:
+#         if not n.get_connections():
+#             print(str(n.id)+'\'s utility is '+str(n.utility))
+# print()
+# for e in a:
+#     print(e)
