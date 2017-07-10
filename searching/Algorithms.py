@@ -193,9 +193,12 @@ class algorithms:
 
     def generateProbabilityTable(self):
         self.parent={}#{node id: [parent...], ...}
+        self.noParent={i for i in self.graph}#set
         for n in self.graph:#for each node in the graph
             self.graph[n].probabilityTable.clear()#clean up table
             for i in self.graph[n].adjacent:#find each adjacent
+                if i in self.noParent:
+                    self.noParent.remove(i)
                 if i not in self.parent:
                     self.parent[i]=[n]
                 else:
@@ -203,30 +206,35 @@ class algorithms:
         for n in self.graph:
             if n in self.parent:#for those who have child
                 l=self.parent[n]
-                self.graph[n].probabilityTable={n: str(l)+' : P'}#the attribute row of the table
+                self.graph[n].probabilityTable={n: l}#the attribute row of the table
                 for i in range(2**len(l)-1,-1,-1):
                     key=bin(i)[2:].zfill(len(l)).replace('1','T').replace('0','F')
-                    self.graph[n].probabilityTable[key]=[0,0]#ratio, true
+                    self.graph[n].probabilityTable[key]=[0,0,0]#ratio, true, expected ratio
             else:
                 self.graph[n].probabilityTable={n: ' : P'}#the attribute row of the table
-                self.graph[n].probabilityTable['T']=[0,0]
+                self.graph[n].probabilityTable['T']=[0,0,0]
+
+    ##set up the ProbabilityTable manually
+    #input: @arg1 the node, @arg2  key of the row as a string ie. 'TT', @arg3 probability
+    def setProbabilityTable(self,id,key,value):
+        self.graph[id].probabilityTable[key][2]=value
 
     def simulateData(self,times):
         for t in range(times):
             temp={}
-            for n in self.graph:
+            for n in self.noParent:
                 temp[n]='F'
-                if random.random()<=self.graph[n].probability:
+                if random.random()<=self.graph[n].probabilityTable['T'][2]:
                     temp[n]='T'
-            for n in self.graph:
-                if temp[n]=='T':
-                    st=''
-                    if n in self.parent:
-                        for i in self.parent[n]:
-                            st+=str(temp[i])
-                        self.graph[n].probabilityTable[st][1]+=1
-                    else:
-                        self.graph[n].probabilityTable['T'][1]+=1
+                    self.graph[n].probabilityTable['T'][1]+=1
+            for n in self.parent:
+                st=''
+                temp[n]='F'
+                for i in self.parent[n]:
+                    st+=str(temp[i])
+                if random.random()<=self.graph[n].probabilityTable[st][2]:
+                    temp[n]='T'
+                    self.graph[n].probabilityTable[st][1]+=1
         for n in self.graph:
             for i in self.graph[n].probabilityTable:
                 if i !=n:#skip the attribute row

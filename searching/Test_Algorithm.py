@@ -250,21 +250,21 @@ class Test_algorithm(unittest.TestCase):
         self.g.add_edge(1,5)
         self.g.add_edge(4,5)
         self.AL.generateProbabilityTable()
-        expect={2: '[0, 1] : P',
-                        'TT': [0,0],
-                        'TF': [0,0],
-                        'FT': [0,0],
-                        'FF': [0,0]}
+        expect={2: [0, 1],
+                        'TT': [0,0,0],
+                        'TF': [0,0,0],
+                        'FT': [0,0,0],
+                        'FF': [0,0,0]}
         self.assertDictEqual(self.g.get_vertex(2).probabilityTable,expect)
-        expect={5: '[1, 2, 4] : P',
-                        'TTT': [0,0],
-                        'TTF': [0,0],
-                        'TFT': [0,0],
-                        'TFF': [0,0],
-                        'FTT': [0,0],
-                        'FTF': [0,0],
-                        'FFT': [0,0],
-                        'FFF': [0,0]}
+        expect={5: [1, 2, 4],
+                        'TTT': [0,0,0],
+                        'TTF': [0,0,0],
+                        'TFT': [0,0,0],
+                        'TFF': [0,0,0],
+                        'FTT': [0,0,0],
+                        'FTF': [0,0,0],
+                        'FFT': [0,0,0],
+                        'FFF': [0,0,0]}
         self.assertDictEqual(self.g.get_vertex(5).probabilityTable,expect)
         self.g.delete_edge(1,2)
         self.g.delete_edge(1,5)
@@ -273,21 +273,72 @@ class Test_algorithm(unittest.TestCase):
         g=Linking.Graph()
         for i in range(5):
             g.add_vertex(i)
-            g.get_vertex(i).probability=0.5#assume all probability=0.5
+        #    0    1
+        #       \ /  \
+        #        2   3
+        #       /
+        #      4
         g.add_edge(0,2)
         g.add_edge(1,2)
         g.add_edge(1,3)
         g.add_edge(2,4)
         al=Algorithms.algorithms(g.vert_dict)
         al.generateProbabilityTable()
+        al.setProbabilityTable(0,'T',0.1)
+        al.setProbabilityTable(1,'T',0.5)
+        al.setProbabilityTable(2,'TT',1)
+        al.setProbabilityTable(2,'TF',1)
+        al.setProbabilityTable(2,'FT',0.5)
+        al.setProbabilityTable(2,'FF',0.01)
+        al.setProbabilityTable(3,'T',0.8)
+        al.setProbabilityTable(3,'F',0.01)
+        al.setProbabilityTable(4,'T',0.1)
+        al.setProbabilityTable(4,'F',0.01)
         al.simulateData(10000)
-        v=g.get_vertex(2).probabilityTable['TT'][0]
-        self.assertTrue(v>0.115 and v<0.135)#expect v = 0.125
-        v=g.get_vertex(3).probabilityTable['T'][0]
-        self.assertTrue(v>0.24 and v<0.26)#expect v = 0.25
-        v=g.get_vertex(4).probabilityTable['T'][0]
-        self.assertTrue(v>0.24 and v<0.26)#expect v = 0.25
-        v=g.get_vertex(0).probabilityTable['T'][0]
-        self.assertTrue(v>0.49 and v<0.51)#expect v = 0.5
-        v=g.get_vertex(1).probabilityTable['T'][0]
-        self.assertTrue(v>0.49 and v<0.51)#expect v = 0.5
+        v=g.get_vertex(0).probabilityTable['T'][0]#node 0
+        self.assertAlmostEqual(v,0.1,1)#expect v =0.1
+        v=g.get_vertex(1).probabilityTable['T'][0]#node 1
+        self.assertAlmostEqual(v,0.5,1)#expect v = 0.5
+        v=g.get_vertex(2).probabilityTable['TT'][0]#node 2
+        self.assertAlmostEqual(v,0.05,1)#expect v =0.05 hint: 0.1*0.5=0.05
+        v=g.get_vertex(3).probabilityTable['T'][0]#node 3
+        self.assertAlmostEqual(v,0.4,1)#expect v = 0.4 hint: 0.5*0.8=0.4
+        v=g.get_vertex(4).probabilityTable['T'][0]#node 4
+        self.assertAlmostEqual(0.032,v,1)#expect v = 0.032
+
+
+    def test_setProbabilityTable(self):
+        g=Linking.Graph()
+        for i in range(5):
+            g.add_vertex(i)
+        #    0    1
+        #       \ /  \
+        #        2   3
+        #       /
+        #      4
+        g.add_edge(0,2)
+        g.add_edge(1,2)
+        g.add_edge(1,3)
+        g.add_edge(2,4)
+        al=Algorithms.algorithms(g.vert_dict)
+        al.generateProbabilityTable()
+        al.setProbabilityTable(0,'T',0.1)
+        al.setProbabilityTable(1,'T',0.5)
+        al.setProbabilityTable(2,'TT',1)
+        al.setProbabilityTable(2,'TF',1)
+        al.setProbabilityTable(2,'FT',0.5)
+        al.setProbabilityTable(2,'FF',0.01)
+        al.setProbabilityTable(3,'T',0.8)
+        al.setProbabilityTable(3,'F',0.01)
+        al.setProbabilityTable(4,'T',0.1)
+        al.setProbabilityTable(4,'F',0.01)
+        v=g.get_vertex(2).probabilityTable['TT'][2]#node 2
+        self.assertTrue(v==1)#expect v =1
+        v=g.get_vertex(3).probabilityTable['T'][2]#node 3
+        self.assertTrue(v==0.8)#expect v = 0.8
+        v=g.get_vertex(4).probabilityTable['T'][2]#node 4
+        self.assertTrue(v==0.1)#expect v = 0.1
+        v=g.get_vertex(0).probabilityTable['T'][2]#node 0
+        self.assertTrue(v==0.1)#expect v = 0.1
+        v=g.get_vertex(1).probabilityTable['T'][2]#node 1
+        self.assertTrue(v==0.5)#expect v = 0.5
