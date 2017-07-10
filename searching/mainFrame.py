@@ -39,7 +39,7 @@ def saveFile():
     #dialog box
     filename = tkinter.filedialog.asksaveasfilename(filetypes=fileFormats)
 
-    #saving method
+    # #saving method
     if filename:
         LK.saveFile(filename)
 
@@ -48,19 +48,29 @@ def saveFile():
 
 
 def loadFile():
-    openFilename = tkinter.filedialog.askopenfile()
+    openFilename = tkinter.filedialog.askopenfile(parent=root)
+    # f=open(openFilename)
+    # f.read()
+    # f.close()
+    #saveFile.fileName + '_gd.pkl', 'rb'
+    file = open(openFilename)
+    dict = pickle.load(file)
+    file.close()
+    return dict
 
-    if openFilename:
+    #
+    # if openFilename:
         #need to change so it prints to canvas and not console
         # print(openFilename.name)
-
-        fileTitle = str(openFilename)
-
-        #currrently cannot find file despite it being there
-        LK.loadFile(fileTitle)
+        #
+        # fileTitle = str(openFilename)
+        #
+        # #currrently cannot find file despite it being there
+        # LK.loadFile(fileTitle)
 
     # seperate method to above
-    # f=open(openFile)
+    #
+    # f=open(openFilename)
     # f.read()
     # f.close()
 
@@ -171,10 +181,13 @@ def ArcPoint2(e):
             arrow = canvas.create_line(x,y,e.x,e.y,arrow="last")#fill="turquoise" can change color
             #use -->  canvas.itemconfig(arrow,fill="red") <-- to change color after created
 
-            weight = canvas.create_text(0.5*(x+e.x),0.5*(y+e.y)-10,text=1)
+            # need to change this so text corresponds to the custom entry made by the user
+            # weight = canvas.create_text(0.5*(x+e.x),0.5*(y+e.y)-10,text=1)
 
-            GA.addArrow(fromNode,toNode,arrow,weight)
-            #this method produces the connection and provides a cost
+            # GA.addArrow(fromNode,toNode,arrow,weight) - inc when sorted weight out
+            GA.addArrow(fromNode, toNode, arrow)
+
+            # #this method produces the connection and provides a cost
 
             LK.add_edge(fromNode,toNode,1)
             #inf means infinity so hasnt been assigned a cost/value yet
