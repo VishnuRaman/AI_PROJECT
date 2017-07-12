@@ -82,11 +82,6 @@ def ArcPoint2(e):
             # #this method produces the connection and provides a cost
 
             LK.add_edge(fromNode,toNode)
-            #inf means infinity so hasnt been assigned a cost/value yet
-            #this one shows the individual costs of travel between nodes (the weight variable in the class)
-
-            # for v in LK.vert_dict:#####
-            #     print(str(LK.vert_dict[v].get_id())+' is connected to '+str([g for g in LK.vert_dict[v]]))
 
             canvas.bind("<Button-1>",ArcPoint1)
 # listen to the first click for the line
