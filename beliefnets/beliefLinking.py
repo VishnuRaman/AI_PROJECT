@@ -97,7 +97,7 @@ class Graph:
         else:
             return None
     ##add a linking. It can also be used to set up the cost again.
-    #input:@arg1  from 'node id', @arg2 to 'node id',  @arg3  the 'cost' of the linking
+    #input:@arg1  from 'node id', @arg2 to 'node id',
     def add_edge(self, frm, to):
         self.vert_dict[frm].add_neighbor(to)
     ##delete a linking

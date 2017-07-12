@@ -84,6 +84,7 @@ def ArcPoint2(e):
             LK.add_edge(fromNode,toNode)
 
             canvas.bind("<Button-1>",ArcPoint1)
+
 # listen to the first click for the line
 def ArcPoint1(e):
     #==2 means must only have one node and node number in that range to catch the arrow else cant click
