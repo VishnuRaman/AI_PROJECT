@@ -79,7 +79,7 @@ def ArcPoint2(e):
 
             GA.addArrow(fromNode, toNode, arrow)
 
-            # #this method produces the connection and provides a cost
+            # #this method produces the connection
 
             LK.add_edge(fromNode,toNode)
 
