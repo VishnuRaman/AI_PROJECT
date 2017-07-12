@@ -52,7 +52,7 @@ def drawNode(e):
 
     #if is empty then creates the oval
 
-    if not canvas.find_enclosed(e.x-50,e.y-50,e.x+50,e.y+50):
+    if not canvas.find_enclosed(e.x-100,e.y-100,e.x+100,e.y+100):
         oval=canvas.create_oval(e.x-50,e.y-40,e.x+50,e.y+40)
       #MN.inc means increase that method by 1 as new node was created
         nodeID=MN.inc()
@@ -70,8 +70,8 @@ def CreateNode(event):
     canvas.bind("<Button-1>",drawNode)
 # listen to second click and draw the line on the canvas
 def ArcPoint2(e):
-    if len(canvas.find_enclosed(e.x-50,e.y-50,e.x+50,e.y+50))==2:
-        toNode=node_id_Dic[canvas.find_enclosed(e.x-50,e.y-50,e.x+50,e.y+50)[0]]#the node is created before num so it is at [0]
+    if len(canvas.find_enclosed(e.x-100,e.y-100,e.x+100,e.y+100))==2:
+        toNode=node_id_Dic[canvas.find_enclosed(e.x-100,e.y-100,e.x+100,e.y+100)[0]]#the node is created before num so it is at [0]
         if (fromNode is not toNode)and(LK.check_edge_existed(fromNode,toNode)==False):
             root.config(cursor="")
             arrow = canvas.create_line(x,y,e.x,e.y,arrow="last")#fill="turquoise" can change color
@@ -93,13 +93,13 @@ def ArcPoint2(e):
 def ArcPoint1(e):
     #==2 means must only have one node and node number in that range to catch the arrow else cant click
     #provides 1st number for the method above
-    if len(canvas.find_enclosed(e.x-50,e.y-50,e.x+50,e.y+50))==2:
+    if len(canvas.find_enclosed(e.x-100,e.y-100,e.x+100,e.y+100))==2:
     #global equivalent of instance variable
     #used this so its able to be used by different methods
     #x,y =location and fromNode = the id of the node you pick up - the one you draw FROM
         global x,y,fromNode
         x,y=e.x,e.y
-        fromNode=node_id_Dic[canvas.find_enclosed(e.x-50,e.y-50,e.x+50,e.y+50)[0]]
+        fromNode=node_id_Dic[canvas.find_enclosed(e.x-100,e.y-100,e.x+100,e.y+100)[0]]
         root.config(cursor="cross")
         canvas.bind("<Button-1>",ArcPoint2)
 # listen to the mouse action
