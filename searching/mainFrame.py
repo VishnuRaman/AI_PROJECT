@@ -35,7 +35,7 @@ def saveFile():
     #format types to save the file as
     fileFormats = [('Windows Bitmap', '*.bmp'),\
                    ('Portable Network Graphics', '*.png'),\
-                 ('JPEG / JFIF', '*.jpg'), ('CompuServer GIF', '*.gif')]
+                 ('JPEG / JFIF', '*.jpg'), ('CompuServer GIF', '*.gif'), ('Pickle', "*.pkl")]
     #dialog box
     filename = tkinter.filedialog.asksaveasfilename(filetypes=fileFormats)
 
@@ -48,15 +48,22 @@ def saveFile():
 
 
 def loadFile():
-    openFilename = tkinter.filedialog.askopenfile(parent=root)
+    fileFormats = [('Pickle', "*.pkl")]
+
+    openFilename = tkinter.filedialog.askopenfile(filetypes=fileFormats)
+    LK.loadFile(openFilename)
+
+
+    #sepearate method
     # f=open(openFilename)
     # f.read()
     # f.close()
-    #saveFile.fileName + '_gd.pkl', 'rb'
-    file = open(openFilename)
-    dict = pickle.load(file)
-    file.close()
-    return dict
+
+    #seperate method
+    # file = open(saveFile.fileName + '_gd.pkl', 'rb')
+    # dict = pickle.load(file)
+    # file.close()
+    # return dict
 
     #
     # if openFilename:
@@ -126,10 +133,10 @@ delay=Entry(topFrame2, width=2)
 button8 = Button(topFrame2,text="<<",bg="light blue")
 button9 = Button(topFrame2,text=">>",bg="light blue")
 
-text4=Label(topFrame2,text="Heuristics")
+# text4=Label(topFrame2,text="Heuristics")
 #enter linking.value???
-#do pop up box idea instead - see notebook
-heuristics=Entry(topFrame2, width=4)
+# #do pop up box idea instead - see notebook
+# heuristics=Entry(topFrame2, width=4)
 
 button1.pack(side=LEFT)
 button2.pack(side=LEFT)
@@ -144,8 +151,8 @@ text3.pack(side=LEFT)
 delay.pack(side=LEFT)
 button8.pack(side=LEFT)
 button9.pack(side=LEFT)
-text4.pack(side=LEFT)
-heuristics.pack(side=LEFT)
+# text4.pack(side=LEFT)
+# heuristics.pack(side=LEFT)
 
 
 # methods called by buttons
@@ -182,10 +189,10 @@ def ArcPoint2(e):
             #use -->  canvas.itemconfig(arrow,fill="red") <-- to change color after created
 
             # need to change this so text corresponds to the custom entry made by the user
-            # weight = canvas.create_text(0.5*(x+e.x),0.5*(y+e.y)-10,text=1)
+            weight = canvas.create_text(0.5*(x+e.x),0.5*(y+e.y)-10,text=1)
 
             # GA.addArrow(fromNode,toNode,arrow,weight) - inc when sorted weight out
-            GA.addArrow(fromNode, toNode, arrow)
+            GA.addArrow(fromNode, toNode, arrow, weight)
 
             # #this method produces the connection and provides a cost
 
