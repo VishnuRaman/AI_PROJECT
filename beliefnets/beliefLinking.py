@@ -1,7 +1,7 @@
 import  math,numpy,pickle,os
 
 ##Vertex is a basic object representing the conception of node. The id is the identity of the node,
-# and the dictionary called 'adjacent' is used to store the id of the nodes which it is connecting to. The id as the key, while the weight of the connection as the value.
+# and the dictionary called 'adjacent' is used to store the id of the nodes which it is connecting to. The id as the key,
 class Vertex:
     ## a constructor to initialize the class
     def __init__(self, id):
@@ -96,7 +96,7 @@ class Graph:
             return self.vert_dict[n]
         else:
             return None
-    ##add a linking. It can also be used to set up the cost again.
+    ##add a linking.
     #input:@arg1  from 'node id', @arg2 to 'node id',
     def add_edge(self, frm, to):
         self.vert_dict[frm].add_neighbor(to)
