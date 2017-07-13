@@ -31,6 +31,7 @@ button1 = Button(topFrame,text="Create Node")
 button2 = Button(topFrame,text="Create Link")
 button3 = Button(topFrame,text="Move Node")
 button4 = Button(topFrame,text="Delete Node")
+button5 = Button(topFrame,text="Set Probability")
 button7 = Button(topFrame2,text="Previous step",bg="light blue")
 button8 = Button(topFrame2,text="Next step",bg="light blue")
 
@@ -38,6 +39,7 @@ button1.pack(side=LEFT)
 button2.pack(side=LEFT)
 button3.pack(side=LEFT)
 button4.pack(side=LEFT)
+button5.pack(side=LEFT)
 button7.pack(side=LEFT)
 button8.pack(side=LEFT)
 
@@ -174,13 +176,7 @@ def Run(): #next step button produces this so method below
         resultcanvas.pack(side=BOTTOM)
 
 def NextStep(e):
-    #global variable because otherwise cant be called in new methods as it
-    #would be a local variable
-    #xth is 1st,2nd,3rd,4th etc
-    global xTh
-    # if xTh<len(AL.getQsLog())-1:
-    #     #add 1 to go forward
-    #     xTh+=1
+    #produce the canvas to display the probability table here
     root.update()
 def PreStep(e):
     global xTh
@@ -191,6 +187,7 @@ button1.bind("<Button-1>",CreateNode)
 button2.bind("<Button-1>",CreateArc)
 button3.bind("<Button-1>",Move)
 button4.bind("<Button-1>",Delete)
+#button5.bind("<Button-1",)
 button7.bind("<Button-1>",PreStep)
 button8.bind("<Button-1>",NextStep)
 
