@@ -65,7 +65,6 @@ def loadFile():
     # file.close()
     # return dict
 
-    #
     # if openFilename:
         #need to change so it prints to canvas and not console
         # print(openFilename.name)
@@ -80,8 +79,6 @@ def loadFile():
     # f=open(openFilename)
     # f.read()
     # f.close()
-
-
 
     # produces save file window
     # openFile = pickle.load(open(saveFile().filename, 'rb'))
@@ -133,11 +130,6 @@ delay=Entry(topFrame2, width=2)
 button8 = Button(topFrame2,text="<<",bg="light blue")
 button9 = Button(topFrame2,text=">>",bg="light blue")
 
-# text4=Label(topFrame2,text="Heuristics")
-#enter linking.value???
-# #do pop up box idea instead - see notebook
-# heuristics=Entry(topFrame2, width=4)
-
 button1.pack(side=LEFT)
 button2.pack(side=LEFT)
 button3.pack(side=LEFT)
@@ -151,9 +143,6 @@ text3.pack(side=LEFT)
 delay.pack(side=LEFT)
 button8.pack(side=LEFT)
 button9.pack(side=LEFT)
-# text4.pack(side=LEFT)
-# heuristics.pack(side=LEFT)
-
 
 # methods called by buttons
 node_id_Dic={}
@@ -201,7 +190,7 @@ def ArcPoint2(e):
             #this one shows the individual costs of travel between nodes (the weight variable in the class)
 
             # for v in LK.vert_dict:#####
-            #     print(str(LK.vert_dict[v].get_id())+' is connected to '+str([g for g in LK.vert_dict[v]]))
+            # print(str(LK.vert_dict[v].get_id())+' is connected to '+str([g for g in LK.vert_dict[v]]))
 
             canvas.bind("<Button-1>",ArcPoint1)
 # listen to the first click for the line
@@ -300,6 +289,7 @@ def Run(event):
         finalPath = AL.ucsAStar(int(startNode.get()),int(endNode.get()),algorithm)
     elif algorithm in ('BFS', 'DFS'):
         finalPath = AL.bdfs(int(startNode.get()),int(endNode.get()),algorithm)
+    # elif then the iterative searches
     # else:
     #     tkinter.messagebox('error','Please select a search')
 

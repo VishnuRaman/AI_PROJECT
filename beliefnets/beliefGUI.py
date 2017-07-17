@@ -187,7 +187,7 @@ button1.bind("<Button-1>",CreateNode)
 button2.bind("<Button-1>",CreateArc)
 button3.bind("<Button-1>",Move)
 button4.bind("<Button-1>",Delete)
-#button5.bind("<Button-1",)
+#button5.bind("<Button-1", set probabilty method - pop up box select link select probability)
 button7.bind("<Button-1>",PreStep)
 button8.bind("<Button-1>",NextStep)
 
