@@ -1,4 +1,4 @@
-import math, numpy,Linking,queue,random
+import math, numpy,Linking,queue,random,re
 
 class algorithms:
     def __init__(self,dict):
@@ -63,12 +63,12 @@ class algorithms:
             if node == goal:
                 self.qsLog.append([node,[n[1] for n in pq.queue]])
                 visited.append(node)
-                self.visitedLog.append([n for n in visited])
+                self.visitedLog.append(list(visited))
                 return path
             # enumerate all adjacent nodes, construct a new path and push it into the queue
             elif node not in visited:
                 visited.append(node)
-                self.visitedLog.append([n for n in visited])
+                self.visitedLog.append(list(visited))
                 if (it!=-1 and self.maxDepth>self.layerDict[node]) or (it==-1):#max layer > current layer
                     temp=queue.PriorityQueue()
                     for adj in self.graph[node]:
@@ -184,34 +184,129 @@ class algorithms:
                         bestValue+=self.graph[vertid].probability*self.partOfminiMax(vertid,depth-1,True,algorithm)
             self.utilityLog.append([id,bestValue,bestValue])#for the last element, both alpha and beta is bestValue
             return bestValue
-
     ##This will calculate probability values which weren't given in the question, but can be inferred from the information which is given.
-    #input: @arg1 list contains the observation variables. ie [id1, id2, ...], @arg2 the id of the node needs to be figured out.
+    #input: @arg1 dictionary contains the observation variables and its boolean. ie {id:'T', ...}, @arg2 the id of the node needs to be figured out.
     #output:the probability value of the query node
-    def believeNet(self,observation,query):
-        self.graph
+    def query(self,observation,query):
+        self.observation=observation
+        self.tempPT={}
+        for i in self.graph:
+            self.tempPT[i]=self.graph[i].probability
+        for i in observation:
+            if observation[i]=='T':
+                self.tempPT[i]=1
+            else:
+                self.tempPT[i]=0
+        if query in observation:
+            if observation[query]=='T':
+                return 1
+            else:
+                return 0
+        return self.believeNet(query)
+    ##the recursive part of query
+    def believeNet(self,query,visited=[]):
+        visited.append(query)
+        if not self.observation:#empty
+            return self.tempPT[query]
+        if query in self.parent:#have parent
+            for p in self.parent[query]:#for every parent not in visited
+                if p not in visited:
+                    if p in self.observation:
+                        self.tempPT[query]=self.updateSelfProbabilityFromParent(query)
+                    else:
+                        ori=self.tempPT[p]
+                        new=self.believeNet(p,visited)
+                        if ori!=new:#it changed
+                            self.tempPT[query]=self.updateSelfProbabilityFromParent(query)
+        for a in self.graph[query].get_connections():
+            if a not in visited:
+                if a in self.observation:
+                    self.tempPT[query]=self.updateParentProbability(a,query)
+                else:
+                    ori=self.tempPT[a]
+                    new=self.believeNet(a,visited)
+                    if ori!=new:#non observation and changed
+                        self.tempPT[query]=self.updateParentProbability(a,query)*new+self.updateParentProbability(a,query,True)*(1-new)
+        return self.tempPT[query]
+
+    def updateParentProbability(self,id,parentId,non=False):
+        parent=self.parent[id]
+        st=''
+        for i in range(len(parent)):
+            if parent[i]==parentId:
+                if non==False:
+                    st+='T'
+                else:
+                    st+='F'
+            else:
+                st=st+'.'
+        nu=0
+        de=0
+        for k in self.graph[id].probabilityTable:
+            if k != id:#skip title row
+                pro=1
+                for m in range(len(k)):
+                    if k[m]=='T':
+                        pro*=self.tempPT[self.parent[id][m]]
+                    elif k[m]=='F':
+                        pro*=(1-self.tempPT[self.parent[id][m]])
+                if id in self.observation:
+                    if self.observation[id]=='T':
+                        pro*=self.graph[id].probabilityTable[k][0]#happening ratio*simulated ratio
+                    else:
+                        pro*=(1-self.graph[id].probabilityTable[k][0])
+                else:
+                    pro*=self.graph[id].probabilityTable[k][0]#happening ratio*simulated ratio
+                if re.match(st,k)!=None:
+                    nu+=pro
+                else:
+                    de+=pro
+        return nu/(nu+de)
+    def updateSelfProbabilityFromParent(self,id):
+        st=''
+        for p in self.parent[id]:
+            if p in self.observation:
+                st+=self.observation[p]
+            else:
+                st+='.'
+        nu=0
+        de=0
+        for k in self.graph[id].probabilityTable:
+            if k != id:#skip title row
+                pro=1
+                pro2=1
+                for m in range(len(k)):
+                    if k[m]=='T':
+                        pro*=self.tempPT[self.parent[id][m]]
+                    elif k[m]=='F':
+                        pro*=(1-self.tempPT[self.parent[id][m]])
+                pro2*=pro*(1-self.graph[id].probabilityTable[k][0])
+                pro*=self.graph[id].probabilityTable[k][0]#happening ratio*simulated ratio
+
+                if re.match(st,k)!=None:
+                    nu+=pro
+                    de+=pro2
+        return nu/(nu+de)
 
     def generateProbabilityTable(self):
-        self.parent={}#{node id: [parent...], ...}
-        self.noParent={i for i in self.graph}#set
+        self.parent={}#{node id: [parent...], ...} the nodes which have parent
         for n in self.graph:#for each node in the graph
             self.graph[n].probabilityTable.clear()#clean up table
             for i in self.graph[n].adjacent:#find each adjacent
-                if i in self.noParent:
-                    self.noParent.remove(i)
                 if i not in self.parent:
                     self.parent[i]=[n]
                 else:
                     self.parent[i].append(n)
+        self.noParent={i for i in self.graph if i not in self.parent}#set, the nodes have no parent
         for n in self.graph:
-            if n in self.parent:#for those who have child
+            if n in self.parent:#for those who have parent
                 l=self.parent[n]
                 self.graph[n].probabilityTable={n: l}#the attribute row of the table
                 for i in range(2**len(l)-1,-1,-1):
                     key=bin(i)[2:].zfill(len(l)).replace('1','T').replace('0','F')
                     self.graph[n].probabilityTable[key]=[0,0,0,0]#ratio, true,based, expected ratio
-            else:
-                self.graph[n].probabilityTable={n: ' : P'}#the attribute row of the table
+            else:#prior
+                self.graph[n].probabilityTable={n:[]}#the attribute row of the table
                 self.graph[n].probabilityTable['T']=[0,0,0,0]
 
     ##set up the ProbabilityTable manually
@@ -222,22 +317,46 @@ class algorithms:
     def simulateData(self,times):
         for t in range(times):
             temp={}
-            for n in self.noParent:
+            for n in self.noParent:#prior
                 temp[n]='F'
-                if random.random()<=self.graph[n].probabilityTable['T'][3]:
+                rowT=self.graph[n].probabilityTable['T']
+                if random.random()<=rowT[3]:
                     temp[n]='T'
-                    self.graph[n].probabilityTable['T'][1]+=1
-                self.graph[n].probabilityTable['T'][2]+=1
-                a=self.graph[n].probabilityTable['T'][1]/self.graph[n].probabilityTable['T'][2]
-                self.graph[n].probabilityTable['T'][0]=math.floor(a*100)/100
-            for n in self.parent:
-                st=''
-                temp[n]='F'
-                for i in self.parent[n]:
-                    st+=str(temp[i])
-                if random.random()<=self.graph[n].probabilityTable[st][3]:
-                    temp[n]='T'
-                    self.graph[n].probabilityTable[st][1]+=1
-                self.graph[n].probabilityTable[st][2]+=1
-                a=self.graph[n].probabilityTable[st][1]/self.graph[n].probabilityTable[st][2]
-                self.graph[n].probabilityTable[st][0]=math.floor(a*100)/100
+                    rowT[1]+=1
+                rowT[2]+=1
+                a=rowT[1]/rowT[2]
+                rowT[0]=math.floor(a*100)/100
+            queue=list(self.parent)#clone it and become a queue
+            while queue:#is not empty
+                q=queue.pop(0)#pop from head
+                if set(self.parent[q]).issubset(temp):#if all parents are ready
+                    st=''
+                    temp[q]='F'
+                    table=self.graph[q].probabilityTable
+                    for i in self.parent[q]:
+                        st+=str(temp[i])
+                    if random.random()<=table[st][3]:
+                        temp[q]='T'
+                        table[st][1]+=1
+                    table[st][2]+=1
+                    a=table[st][1]/table[st][2]
+                    table[st][0]=math.floor(a*1000)/1000
+                else:
+                    queue.append(q)#add to tail
+        #after all simulating, update the probability of each node  (without given condition)
+        self.order=[]#the order that all parents of node are ready
+        for n in self.noParent:
+            self.graph[n].probability=self.graph[n].probabilityTable['T'][0]
+            self.order.append(n)
+        queue=list(self.parent)#clone it and become a queue
+        while queue:#is not empty
+            q=queue.pop(0)#pop from head
+            if set(self.parent[q]).issubset(self.order):#if all parents are ready
+                self.order.append(q)
+                k=0
+                for j in self.graph[q].probabilityTable:
+                    if j != q:
+                        k+=self.graph[q].probabilityTable[j][1]
+                        self.graph[q].probability=k/(t+1)
+            else:
+                queue.append(q)
