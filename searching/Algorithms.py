@@ -184,6 +184,11 @@ class algorithms:
                         bestValue+=self.graph[vertid].probability*self.partOfminiMax(vertid,depth-1,True,algorithm)
             self.utilityLog.append([id,bestValue,bestValue])#for the last element, both alpha and beta is bestValue
             return bestValue
+    def refreshP(self,observation):
+        PT={}
+        for i in self.graph:
+            PT[i]=self.query(observation,i)
+        return PT
     ##This will calculate probability values which weren't given in the question, but can be inferred from the information which is given.
     #input: @arg1 dictionary contains the observation variables and its boolean. ie {id:'T', ...}, @arg2 the id of the node needs to be figured out.
     #output:the probability value of the query node
@@ -198,13 +203,10 @@ class algorithms:
             else:
                 self.tempPT[i]=0
         if query in observation:
-            if observation[query]=='T':
-                return 1
-            else:
-                return 0
-        return self.believeNet(query)
+            return self.tempPT[query]
+        return self.believeNet(query,[])
     ##the recursive part of query
-    def believeNet(self,query,visited=[]):
+    def believeNet(self,query,visited):
         visited.append(query)
         if not self.observation:#empty
             return self.tempPT[query]
@@ -221,15 +223,39 @@ class algorithms:
         for a in self.graph[query].get_connections():
             if a not in visited:
                 if a in self.observation:
-                    self.tempPT[query]=self.updateParentProbability(a,query)
+                    self.tempPT[query]=self.updateParentObs(a,query)
                 else:
-                    ori=self.tempPT[a]
-                    new=self.believeNet(a,visited)
-                    if ori!=new:#non observation and changed
-                        self.tempPT[query]=self.updateParentProbability(a,query)*new+self.updateParentProbability(a,query,True)*(1-new)
+                    self.findParentAndChild(query)
+                    boolean=False
+                    for o in self.observation:
+                        if o in self.relatedChild:
+                            boolean=True
+                    if boolean:
+                        ori=self.tempPT[a]
+                        new=self.believeNet(a,visited)
+                        if ori!=new:#non observation and changed
+                            self.tempPT[query]=self.updateParentObs(a,query)*new+self.updateParentObs(a,query,True)*(1-new)
         return self.tempPT[query]
-
-    def updateParentProbability(self,id,parentId,non=False):
+    def findParentAndChild(self,query):
+        self.relatedParent=[]#a list of nodes that will affect the value of query node
+        if query in self.parent:
+            q=list(self.parent[query])
+            self.relatedParent.extend(q)
+            while q:
+                p=q.pop(0)
+                if p in self.parent:
+                    l=list(self.parent[p])
+                    q.extend(l)
+                    self.relatedParent.extend(l)
+        self.relatedChild=[]
+        q=list(self.graph[query].adjacent)
+        self.relatedChild.extend(q)
+        while q:
+            a=q.pop(0)
+            c=list(self.graph[a].adjacent)
+            q.extend(c)
+            self.relatedChild.extend(c)
+    def updateParentObs(self,id,parentId,non=False):
         parent=self.parent[id]
         st=''
         for i in range(len(parent)):
@@ -343,7 +369,7 @@ class algorithms:
                     table[st][0]=math.floor(a*1000)/1000
                 else:
                     queue.append(q)#add to tail
-        #after all simulating, update the probability of each node  (without given condition)
+        #after all simulating, update the prior probability of each node  (without given condition)
         self.order=[]#the order that all parents of node are ready
         for n in self.noParent:
             self.graph[n].probability=self.graph[n].probabilityTable['T'][0]
@@ -357,6 +383,40 @@ class algorithms:
                 for j in self.graph[q].probabilityTable:
                     if j != q:
                         k+=self.graph[q].probabilityTable[j][1]
-                        self.graph[q].probability=k/(t+1)
+                        self.graph[q].probability=k/(times)
+            else:
+                queue.append(q)
+    ##manually set up the ratio in probability table, after set up, setKnownPT should be called
+    #input:@arg1 the node, @arg2  key of the row as a string ie. 'TT', @arg3 probability
+    def setKnownPT(self,id,key,value):
+        self.graph[id].probabilityTable[key][0]=value
+
+    ##update the probability of each node  (without given condition)
+    def generatePriorProbability(self):
+        self.order=[]#the order that all parents of node are ready
+        for n in self.noParent:
+            self.graph[n].probability=self.graph[n].probabilityTable['T'][0]
+            self.order.append(n)
+        queue=list(self.parent)#clone it and become a queue
+        while queue:#is not empty
+            q=queue.pop(0)#pop from head
+            if set(self.parent[q]).issubset(self.order):#if all parents are ready
+                self.order.append(q)
+                nu=0
+                de=0
+                for k in self.graph[q].probabilityTable:
+                    if k != q:#skip title row
+                        pro=1
+                        pro2=1
+                        for m in range(len(k)):
+                            if k[m]=='T':
+                                pro*=self.graph[self.parent[q][m]].probability
+                            elif k[m]=='F':
+                                pro*=(1-self.graph[self.parent[q][m]].probability)
+                        pro2*=pro*(1-self.graph[q].probabilityTable[k][0])
+                        pro*=self.graph[q].probabilityTable[k][0]#happening ratio*simulated ratio
+                        nu+=pro
+                        de+=pro2
+                self.graph[q].probability=nu/(nu+de)
             else:
                 queue.append(q)
