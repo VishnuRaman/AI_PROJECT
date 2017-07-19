@@ -305,8 +305,7 @@ class Test_algorithm(unittest.TestCase):
         self.assertAlmostEqual(v,0.8,1)#expect v = 0.8
         v=g.get_vertex(4).probabilityTable['T'][0]#node 4
         self.assertAlmostEqual(0.1,v,1)#expect v = 0.1
-        for i in range(5):
-            print(g.get_vertex(i).probabilityTable)
+
 
 
     def test_setProbabilityTable(self):
@@ -344,3 +343,39 @@ class Test_algorithm(unittest.TestCase):
         self.assertTrue(v==0.1)#expect v = 0.1
         v=g.get_vertex(1).probabilityTable['T'][3]#node 1
         self.assertTrue(v==0.5)#expect v = 0.5
+
+    def test_beliefnet(self):
+        g=Linking.Graph()
+        for i in range(5):
+            g.add_vertex(i)
+        #    0    1
+        #       \ /  \
+        #        2   3
+        #       /
+        #      4
+        g.add_edge(0,2)
+        g.add_edge(1,2)
+        g.add_edge(1,3)
+        g.add_edge(2,4)
+        al=Algorithms.algorithms(g.vert_dict)
+        al.generateProbabilityTable()
+        al.setProbabilityTable(0,'T',0.1)
+        al.setProbabilityTable(1,'T',0.5)
+        al.setProbabilityTable(2,'TT',1)
+        al.setProbabilityTable(2,'TF',1)
+        al.setProbabilityTable(2,'FT',0.5)
+        al.setProbabilityTable(2,'FF',0.01)
+        al.setProbabilityTable(3,'T',0.8)
+        al.setProbabilityTable(3,'F',0.01)
+        al.setProbabilityTable(4,'T',0.1)
+        al.setProbabilityTable(4,'F',0.01)
+        al.simulateData(10000)
+        obs={0:'T'}
+        self.assertTrue(math.fabs(al.query(obs,0)-1)<=0.1)
+        print(al.tempPT)
+        self.assertTrue(math.fabs(al.query(obs,1)-0.5)<=0.1)
+        self.assertTrue(math.fabs(al.query(obs,2)-1)<=0.1)
+        print(al.tempPT)
+        self.assertTrue(math.fabs(al.query(obs,3)-0.41)<=0.1)
+        self.assertTrue(math.fabs(al.query(obs,4)-0.1)<=0.1)
+        print(al.tempPT)

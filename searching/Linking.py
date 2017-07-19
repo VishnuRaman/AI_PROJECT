@@ -9,8 +9,7 @@ class Vertex:
         self.id = id
         self.heuristic=0#default value=0
         self.utility=0#default value=0
-        self.probability=1#default value=1
-        # a dictionary like a map in JAVA which stores all adjacent nodes
+        self.probability=1#default value=1, for expetiminimax and belief net algorithms
         self.adjacent = {}
         self.probabilityTable={}
 
@@ -37,7 +36,7 @@ class Vertex:
     ##return the list of nodes that connected to itself
     #output: list
     def get_connections(self):
-        temp=[i for i in self.adjacent.keys()]
+        temp=list(self.adjacent)
         temp=sorted(temp,key=lambda x: str(x))#use lamda expression to sort them as string
         return temp#but when output, they are stll int
     ##get the id of itself
@@ -132,7 +131,7 @@ class Graph:
     ##get the list of vertex that already created
     #output: list
     def get_vertices(self):
-        temp=[n for n in self.vert_dict.keys()]
+        temp=list(self.vert_dict)
         temp=sorted(temp,key=lambda x: str(x))
         return temp
 
