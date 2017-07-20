@@ -195,25 +195,25 @@ class algorithms:
     def query(self,observation,query):
         self.observation=observation
         self.tempPT={}
+        if not self.observation:#empty
+            return self.graph[query].probability
+        elif query in observation:
+            if observation[query]=='T':
+                return 1
+            else:
+                return 0
         for i in self.graph:
             self.tempPT[i]=self.graph[i].probability
-        for i in observation:
-            if observation[i]=='T':
-                self.tempPT[i]=1
-            else:
-                self.tempPT[i]=0
-        if query in observation:
-            return self.tempPT[query]
+
         return self.believeNet(query,[])
     ##the recursive part of query
     def believeNet(self,query,visited):
         visited.append(query)
-        if not self.observation:#empty
-            return self.tempPT[query]
         if query in self.parent:#have parent
             for p in self.parent[query]:#for every parent not in visited
                 if p not in visited:
                     if p in self.observation:
+                        self.believeNet(p,visited)#even it is observed, we still need to go through it, to update its conditional probabiity
                         self.tempPT[query]=self.updateSelfProbabilityFromParent(query)
                     else:
                         ori=self.tempPT[p]
@@ -223,7 +223,12 @@ class algorithms:
         for a in self.graph[query].get_connections():
             if a not in visited:
                 if a in self.observation:
-                    self.tempPT[query]=self.updateParentObs(a,query)
+                    self.believeNet(a,visited)
+                    if self.observation[a]=='T':
+                        reverse=False
+                    else:
+                        reverse=True
+                    self.tempPT[query]=self.updateParentObs(a,query,reverse)
                 else:
                     self.findParentAndChild(query)
                     boolean=False
@@ -234,8 +239,9 @@ class algorithms:
                         ori=self.tempPT[a]
                         new=self.believeNet(a,visited)
                         if ori!=new:#non observation and changed
-                            self.tempPT[query]=self.updateParentObs(a,query)*new+self.updateParentObs(a,query,True)*(1-new)
+                            self.tempPT[query]=self.updateParentNonObs(a,query,new)
         return self.tempPT[query]
+
     def findParentAndChild(self,query):
         self.relatedParent=[]#a list of nodes that will affect the value of query node
         if query in self.parent:
@@ -255,15 +261,12 @@ class algorithms:
             c=list(self.graph[a].adjacent)
             q.extend(c)
             self.relatedChild.extend(c)
-    def updateParentObs(self,id,parentId,non=False):
+    def updateParentObs(self,id,parentId,reverse=False):
         parent=self.parent[id]
         st=''
         for i in range(len(parent)):
             if parent[i]==parentId:
-                if non==False:
-                    st+='T'
-                else:
-                    st+='F'
+                st+='T'
             else:
                 st=st+'.'
         nu=0
@@ -276,18 +279,21 @@ class algorithms:
                         pro*=self.tempPT[self.parent[id][m]]
                     elif k[m]=='F':
                         pro*=(1-self.tempPT[self.parent[id][m]])
-                if id in self.observation:
-                    if self.observation[id]=='T':
-                        pro*=self.graph[id].probabilityTable[k][0]#happening ratio*simulated ratio
-                    else:
-                        pro*=(1-self.graph[id].probabilityTable[k][0])
-                else:
+
+                if not reverse:#reverse == False
                     pro*=self.graph[id].probabilityTable[k][0]#happening ratio*simulated ratio
+                else:
+                    pro*=(1-self.graph[id].probabilityTable[k][0])
+
                 if re.match(st,k)!=None:
                     nu+=pro
                 else:
                     de+=pro
         return nu/(nu+de)
+    def updateParentNonObs(self,id,parentId,newP):
+        r=self.updateParentObs(id,parentId)
+        notR=self.updateParentObs(id,parentId,True)
+        return r*newP+notR*(1-newP)
     def updateSelfProbabilityFromParent(self,id):
         st=''
         for p in self.parent[id]:

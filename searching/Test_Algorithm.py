@@ -403,11 +403,11 @@ class Test_algorithm(unittest.TestCase):
         al.setKnownPT(4,'T',0.1)
         al.setKnownPT(4,'F',0.01)
         al.generatePriorProbability()
-        self.assertTrue(math.fabs(g.get_vertex(0).probability-0.1)<0.01)
-        self.assertTrue(math.fabs(g.get_vertex(1).probability-0.5)<0.01)
-        self.assertTrue(math.fabs(g.get_vertex(2).probability-0.3295)<0.01)
-        self.assertTrue(math.fabs(g.get_vertex(3).probability-0.41)<0.01)
-        self.assertTrue(math.fabs(g.get_vertex(4).probability-0.041)<0.01)
+        self.assertTrue(g.get_vertex(0).probability==0.1)
+        self.assertTrue(g.get_vertex(1).probability==0.5)
+        self.assertTrue(g.get_vertex(2).probability==0.3295)
+        self.assertTrue(g.get_vertex(3).probability==0.405)
+        self.assertTrue(g.get_vertex(4).probability==0.039655)
     def test_query_simulating(self):
         g=Linking.Graph()
         for i in range(5):
@@ -435,12 +435,13 @@ class Test_algorithm(unittest.TestCase):
         al.setProbabilityTable(4,'F',0.01)
         al.simulateData(10000)
 
-        # obs={3:'T',4:'T'}
-        # a=al.query(obs,0)
-        # print(al.tempPT)
-        # self.assertTrue(math.fabs(a-0.17)<=0.1)
-        obs={}
-        print(al.refreshP(obs))
+        obs={3:'T',4:'T'}
+        self.assertTrue(math.fabs(al.query(obs,0)-0.17)<=0.1)
+        self.assertTrue(math.fabs(al.query(obs,1)-1)<=0.1)
+        self.assertTrue(math.fabs(al.query(obs,2)-0.92)<=0.1)
+        self.assertTrue(math.fabs(al.query(obs,3)-1)<=0.1)
+        self.assertTrue(math.fabs(al.query(obs,4)-1)<=0.1)
+        # print(al.refreshP(obs))
     def test_query_known(self):
         g=Linking.Graph()
         for i in range(5):
@@ -467,8 +468,24 @@ class Test_algorithm(unittest.TestCase):
         al.setKnownPT(4,'T',0.1)
         al.setKnownPT(4,'F',0.01)
         al.generatePriorProbability()
-        self.assertTrue(g.get_vertex(0).probability==0.1)
-        self.assertTrue(g.get_vertex(1).probability==0.5)
-        self.assertTrue(g.get_vertex(2).probability==0.3295)
-        self.assertTrue(g.get_vertex(3).probability==0.405)
-        self.assertTrue(g.get_vertex(4).probability==0.039655)
+        obs={3:'T',4:'T'}
+        expected={0: 0.1694628029147602, 1: 0.9958554837953809, 2: 0.9228191078724887, 3: 1, 4: 1}
+        self.assertDictEqual(al.refreshP(obs),expected)
+        obs={3:'F',4:'F'}
+        expected={0: 0.09244807952710092, 1: 0.16236679513583266, 2: 0.1692887479810971, 3: 0, 4: 0}
+        self.assertDictEqual(al.refreshP(obs),expected)
+        obs={3:'T',4:'F'}
+        expected={0: 0.09564394945748625, 1: 0.9871400215612162, 2: 0.520834440323489, 3: 1, 4: 0}
+        self.assertDictEqual(al.refreshP(obs),expected)
+        obs={1:'T',3:'T',4:'F'}#3(true) is conditional independant
+        expected={0: 0.09665052244976859, 1: 1, 2: 0.5263157894736843, 3: 1, 4: 0}
+        self.assertDictEqual(al.refreshP(obs),expected)
+        obs={1:'T',4:'F'}#3(not given) is conditional independant
+        expected={0: 0.1597316508266113, 1: 1, 2: 0.5263157894736843, 3: 0.8, 4: 0}
+        self.assertDictEqual(al.refreshP(obs),expected)
+        obs={1:'T',3:'T',4:'F'}#3(False) is conditional independant
+        expected={0: 0.09665052244976859, 1: 1, 2: 0.5263157894736843, 3: 1, 4: 0}
+        self.assertDictEqual(al.refreshP(obs),expected)
+        obs={}#empty
+        expected={0: 0.1, 1: 0.5, 2: 0.3295, 3: 0.405, 4: 0.039655}
+        self.assertDictEqual(al.refreshP(obs),expected)
