@@ -305,9 +305,6 @@ class Test_algorithm(unittest.TestCase):
         self.assertAlmostEqual(v,0.8,1)#expect v = 0.8
         v=g.get_vertex(4).probabilityTable['T'][0]#node 4
         self.assertAlmostEqual(0.1,v,1)#expect v = 0.1
-        for i in range(5):
-            print(g.get_vertex(i).probabilityTable)
-
 
     def test_setProbabilityTable(self):
         g=Linking.Graph()
@@ -344,3 +341,134 @@ class Test_algorithm(unittest.TestCase):
         self.assertTrue(v==0.1)#expect v = 0.1
         v=g.get_vertex(1).probabilityTable['T'][3]#node 1
         self.assertTrue(v==0.5)#expect v = 0.5
+
+    def test_setKnownPT(self):
+        g=Linking.Graph()
+        for i in range(5):
+            g.add_vertex(i)
+        #    0    1
+        #       \ /  \
+        #        2   3
+        #       /
+        #      4
+        g.add_edge(0,2)
+        g.add_edge(1,2)
+        g.add_edge(1,3)
+        g.add_edge(2,4)
+        al=Algorithms.algorithms(g.vert_dict)
+        al.generateProbabilityTable()
+        al.setKnownPT(0,'T',0.1)
+        al.setKnownPT(1,'T',0.5)
+        al.setKnownPT(2,'TT',1)
+        al.setKnownPT(2,'TF',1)
+        al.setKnownPT(2,'FT',0.5)
+        al.setKnownPT(2,'FF',0.01)
+        al.setKnownPT(3,'T',0.8)
+        al.setKnownPT(3,'F',0.01)
+        al.setKnownPT(4,'T',0.1)
+        al.setKnownPT(4,'F',0.01)
+        v=g.get_vertex(2).probabilityTable['TT'][0]#node 2
+        self.assertTrue(v==1)#expect v =1
+        v=g.get_vertex(3).probabilityTable['T'][0]#node 3
+        self.assertTrue(v==0.8)#expect v = 0.8
+        v=g.get_vertex(4).probabilityTable['T'][0]#node 4
+        self.assertTrue(v==0.1)#expect v = 0.1
+        v=g.get_vertex(0).probabilityTable['T'][0]#node 0
+        self.assertTrue(v==0.1)#expect v = 0.1
+        v=g.get_vertex(1).probabilityTable['T'][0]#node 1
+        self.assertTrue(v==0.5)#expect v = 0.5
+    def test_generatePriorProbability(self):
+        g=Linking.Graph()
+        for i in range(5):
+            g.add_vertex(i)
+        #    0    1
+        #       \ /  \
+        #        2   3
+        #       /
+        #      4
+        g.add_edge(0,2)
+        g.add_edge(1,2)
+        g.add_edge(1,3)
+        g.add_edge(2,4)
+        al=Algorithms.algorithms(g.vert_dict)
+        al.generateProbabilityTable()
+        al.setKnownPT(0,'T',0.1)
+        al.setKnownPT(1,'T',0.5)
+        al.setKnownPT(2,'TT',1)
+        al.setKnownPT(2,'TF',1)
+        al.setKnownPT(2,'FT',0.5)
+        al.setKnownPT(2,'FF',0.01)
+        al.setKnownPT(3,'T',0.8)
+        al.setKnownPT(3,'F',0.01)
+        al.setKnownPT(4,'T',0.1)
+        al.setKnownPT(4,'F',0.01)
+        al.generatePriorProbability()
+        self.assertTrue(math.fabs(g.get_vertex(0).probability-0.1)<0.01)
+        self.assertTrue(math.fabs(g.get_vertex(1).probability-0.5)<0.01)
+        self.assertTrue(math.fabs(g.get_vertex(2).probability-0.3295)<0.01)
+        self.assertTrue(math.fabs(g.get_vertex(3).probability-0.41)<0.01)
+        self.assertTrue(math.fabs(g.get_vertex(4).probability-0.041)<0.01)
+    def test_query_simulating(self):
+        g=Linking.Graph()
+        for i in range(5):
+            g.add_vertex(i)
+        #    0    1
+        #       \ /  \
+        #        2   3
+        #       /
+        #      4
+        g.add_edge(0,2)
+        g.add_edge(1,2)
+        g.add_edge(1,3)
+        g.add_edge(2,4)
+        al=Algorithms.algorithms(g.vert_dict)
+        al.generateProbabilityTable()
+        al.setProbabilityTable(0,'T',0.1)
+        al.setProbabilityTable(1,'T',0.5)
+        al.setProbabilityTable(2,'TT',1)
+        al.setProbabilityTable(2,'TF',1)
+        al.setProbabilityTable(2,'FT',0.5)
+        al.setProbabilityTable(2,'FF',0.01)
+        al.setProbabilityTable(3,'T',0.8)
+        al.setProbabilityTable(3,'F',0.01)
+        al.setProbabilityTable(4,'T',0.1)
+        al.setProbabilityTable(4,'F',0.01)
+        al.simulateData(10000)
+
+        # obs={3:'T',4:'T'}
+        # a=al.query(obs,0)
+        # print(al.tempPT)
+        # self.assertTrue(math.fabs(a-0.17)<=0.1)
+        obs={}
+        print(al.refreshP(obs))
+    def test_query_known(self):
+        g=Linking.Graph()
+        for i in range(5):
+            g.add_vertex(i)
+        #    0    1
+        #       \ /  \
+        #        2   3
+        #       /
+        #      4
+        g.add_edge(0,2)
+        g.add_edge(1,2)
+        g.add_edge(1,3)
+        g.add_edge(2,4)
+        al=Algorithms.algorithms(g.vert_dict)
+        al.generateProbabilityTable()
+        al.setKnownPT(0,'T',0.1)
+        al.setKnownPT(1,'T',0.5)
+        al.setKnownPT(2,'TT',1)
+        al.setKnownPT(2,'TF',1)
+        al.setKnownPT(2,'FT',0.5)
+        al.setKnownPT(2,'FF',0.01)
+        al.setKnownPT(3,'T',0.8)
+        al.setKnownPT(3,'F',0.01)
+        al.setKnownPT(4,'T',0.1)
+        al.setKnownPT(4,'F',0.01)
+        al.generatePriorProbability()
+        self.assertTrue(g.get_vertex(0).probability==0.1)
+        self.assertTrue(g.get_vertex(1).probability==0.5)
+        self.assertTrue(g.get_vertex(2).probability==0.3295)
+        self.assertTrue(g.get_vertex(3).probability==0.405)
+        self.assertTrue(g.get_vertex(4).probability==0.039655)
