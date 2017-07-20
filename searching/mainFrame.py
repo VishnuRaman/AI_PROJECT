@@ -317,7 +317,7 @@ def Run(event):
         finalPath = AL.bdfs(int(startNode.get()),int(endNode.get()),algorithm)
     # elif then the iterative searches
     elif algorithm in ('IBFS', 'IDFS', 'IUCS', 'IaStar'):
-        finalPath = AL.iterative(int(startNode.get()),int(endNode.get()),algorithm,AL.it.get())
+        finalPath = AL.iterative(int(startNode.get()),int(endNode.get()),algorithm)
 
 
     # else:
