@@ -50,7 +50,7 @@ def loadFile():
 
     #maybe try loading a python file instead???
 
-    openFilename = tkinter.filedialog.askopenfile(filetypes=fileFormats)
+    openFilename = tkinter.filedialog.askopenfile(filetypes=fileFormats).name
     #
     # f=open(openFilename)
     # f.read()
