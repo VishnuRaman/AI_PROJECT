@@ -1,6 +1,6 @@
 from io import TextIOWrapper
 
-import beliefManageNode,beliefLinking,beliefGuiStore
+import ManageNode,Linking,GuiArray
 
 import pickle
 from tkinter import *
@@ -20,9 +20,9 @@ canvas = Canvas(root, width=1000,height=600,bg="light gray")
 canvas.pack(expand=1,fill=BOTH)
 
 #creating objects - link to the classes in the folder
-GA=beliefGuiStore.beliefGuiStore(canvas)
-MN=beliefManageNode.beliefManageNode()
-LK=beliefLinking.Graph()
+GA=GuiArray.guiArray(canvas)
+MN=ManageNode.manageNode()
+LK=Linking.Graph()
 
 #drop down list
 

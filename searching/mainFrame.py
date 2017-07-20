@@ -50,20 +50,19 @@ def saveFile():
 def loadFile():
     fileFormats = [('Pickle', "*.pkl")]
 
+    #maybe try loading a python file instead???
+
     openFilename = tkinter.filedialog.askopenfile(filetypes=fileFormats)
-    LK.loadFile(openFilename)
-
-
-    #sepearate method
+    #
     # f=open(openFilename)
     # f.read()
     # f.close()
-
+    #
     #seperate method
-    # file = open(saveFile.fileName + '_gd.pkl', 'rb')
-    # dict = pickle.load(file)
-    # file.close()
-    # return dict
+    file = open(openFilename + '_gd.pkl', 'rb')
+    dict = pickle.load(file)
+    file.close()
+    return dict
 
     # if openFilename:
         #need to change so it prints to canvas and not console
