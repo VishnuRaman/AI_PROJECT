@@ -170,7 +170,6 @@ def Delete(event):
     root.config(cursor="spider")
     canvas.bind("<Button-1>",removeFromCanvas)
 
-
 def Run(): #next step button produces this so method below
     # canvas - make pop up probability table like video
         resultcanvas = Frame(root)
