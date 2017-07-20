@@ -1,6 +1,6 @@
 from io import TextIOWrapper
 
-import beliefManageNode,beliefLinking,beliefGuiStore
+import ManageNode,Linking,GuiArray
 
 import pickle
 from tkinter import *
@@ -20,9 +20,9 @@ canvas = Canvas(root, width=1000,height=600,bg="light gray")
 canvas.pack(expand=1,fill=BOTH)
 
 #creating objects - link to the classes in the folder
-GA=beliefGuiStore.beliefGuiStore(canvas)
-MN=beliefManageNode.beliefManageNode()
-LK=beliefLinking.Graph()
+GA=GuiArray.guiArray(canvas)
+MN=ManageNode.manageNode()
+LK=Linking.Graph()
 
 #drop down list
 
@@ -32,6 +32,7 @@ button2 = Button(topFrame,text="Create Link")
 button3 = Button(topFrame,text="Move Node")
 button4 = Button(topFrame,text="Delete Node")
 button5 = Button(topFrame,text="Set Probability")
+button6 = Button(topFrame,text="Set Observation")
 button7 = Button(topFrame2,text="Previous step",bg="light blue")
 button8 = Button(topFrame2,text="Next step",bg="light blue")
 
@@ -178,7 +179,7 @@ def Run(): #next step button produces this so method below
 def NextStep(e):
     #produce the canvas to display the probability table here
     root.update()
-def PreStep(e):
+def PreStep(e): #takes you back to the canvas where you can then adjust the values you have given
     global xTh
 
     root.update()
@@ -187,7 +188,8 @@ button1.bind("<Button-1>",CreateNode)
 button2.bind("<Button-1>",CreateArc)
 button3.bind("<Button-1>",Move)
 button4.bind("<Button-1>",Delete)
-#button5.bind("<Button-1", set probabilty method - pop up box select link select probability)
+#button5.bind("<Button-1>", set probabilty method - pop up box select link select probability)
+# button6.bind("<Button-1>", set observation method - ie set it as true or false)
 button7.bind("<Button-1>",PreStep)
 button8.bind("<Button-1>",NextStep)
 

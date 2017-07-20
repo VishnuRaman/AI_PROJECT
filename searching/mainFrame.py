@@ -33,9 +33,7 @@ root.config(menu=myMenu)
 
 def saveFile():
     #format types to save the file as
-    fileFormats = [('Windows Bitmap', '*.bmp'),\
-                   ('Portable Network Graphics', '*.png'),\
-                 ('JPEG / JFIF', '*.jpg'), ('CompuServer GIF', '*.gif'), ('Pickle', "*.pkl")]
+    fileFormats = [('Pickle', "*.pkl")]
     #dialog box
     filename = tkinter.filedialog.asksaveasfilename(filetypes=fileFormats)
 
@@ -50,20 +48,19 @@ def saveFile():
 def loadFile():
     fileFormats = [('Pickle', "*.pkl")]
 
+    #maybe try loading a python file instead???
+
     openFilename = tkinter.filedialog.askopenfile(filetypes=fileFormats)
-    LK.loadFile(openFilename)
-
-
-    #sepearate method
+    #
     # f=open(openFilename)
     # f.read()
     # f.close()
-
+    #
     #seperate method
-    # file = open(saveFile.fileName + '_gd.pkl', 'rb')
-    # dict = pickle.load(file)
-    # file.close()
-    # return dict
+    file = open(openFilename + '_gd.pkl', 'rb')
+    dict = pickle.load(file)
+    file.close()
+    return dict
 
     # if openFilename:
         #need to change so it prints to canvas and not console
@@ -87,11 +84,13 @@ def loadFile():
 
     # need a pop up to load the file name
 
+#drop down file menu
 fileMenu = Menu(myMenu)
 myMenu.add_cascade(label="File", menu=fileMenu)
 fileMenu.add_command(label="Save", command=saveFile)
 fileMenu.add_command(label="Load", command=loadFile)
 
+#methods for search drop down menu
 def chooseBFS():
     global algorithm
     algorithm='BFS'
@@ -108,8 +107,35 @@ def chooseAstar():
     global algorithm
     algorithm ='aStar'
 
+#search drop down menu
 editMenu = Menu(myMenu)
-myMenu.add_cascade(label="Run by", menu=editMenu)
+myMenu.add_cascade(label="Searches", menu=editMenu)
+editMenu.add_command(label="BFS", command=chooseBFS)
+editMenu.add_command(label="DFS", command=chooseDFS)
+editMenu.add_command(label="UCS", command=chooseUCS)
+editMenu.add_command(label="A*", command=chooseAstar)
+
+#iterative search menu methods
+def chooseIBFS():
+    global algorithm
+    algorithm='IBFS'
+
+def chooseIDFS():
+    global algorithm
+    algorithm='IDFS'
+
+def chooseIUCS():
+    global algorithm
+    algorithm='IUCS'
+
+def chooseIaStar():
+    global algorithm
+    algorithm='IaStar'
+
+#iterative search drop down menu - see if you can change this to a tick box option
+
+editMenu = Menu(myMenu)
+myMenu.add_cascade(label="Iterative Searches", menu=editMenu)
 editMenu.add_command(label="BFS", command=chooseBFS)
 editMenu.add_command(label="DFS", command=chooseDFS)
 editMenu.add_command(label="UCS", command=chooseUCS)
@@ -290,6 +316,10 @@ def Run(event):
     elif algorithm in ('BFS', 'DFS'):
         finalPath = AL.bdfs(int(startNode.get()),int(endNode.get()),algorithm)
     # elif then the iterative searches
+    elif algorithm in ('IBFS', 'IDFS', 'IUCS', 'IaStar'):
+        finalPath = AL.iterative(int(startNode.get()),int(endNode.get()),algorithm,AL.it.get())
+
+
     # else:
     #     tkinter.messagebox('error','Please select a search')
 
@@ -309,18 +339,26 @@ def display():
         resultcanvas = Frame(root)
         resultcanvas.pack(side=BOTTOM)
 
-        # buttonDisp = Button(resultcanvas,text="disp",bg="light green")
-        # buttonDisp.grid(column=0,row=4)
-
         if algorithm=='BFS':
             #queue label
+            qsLabel=Label(resultcanvas,bg="yellow",text="Queue: ")
+        elif algorithm=='IBFS':
             qsLabel=Label(resultcanvas,bg="yellow",text="Queue: ")
         elif algorithm=='DFS':
             # stack label
             qsLabel = Label(resultcanvas,bg="yellow", text="Stack: ")
+        elif algorithm=='IDFS':
+            qsLabel = Label(resultcanvas,bg="yellow", text="Stack: ")
         elif algorithm=='UCS':
             #priotity queue label
             qsLabel=Label(resultcanvas,bg="yellow",text="Priority Queue: ")
+        elif algorithm=='IUCS':
+            qsLabel = Label(resultcanvas, bg="yellow", text="Priority Queue: ")
+        elif algorithm=='aStar':
+            qsLabel = Label(resultcanvas, bg="yellow", text="Priority Queue: ")
+        elif algorithm=='IaSTar':
+            qsLabel = Label(resultcanvas, bg="yellow", text="Priority Queue: ")
+
         qsLabel.grid(column=0,row=2,sticky=W)
         #final path label
         finalPathLabel=Label(resultcanvas, bg="red", text="Final path: ")
