@@ -2,7 +2,7 @@ from io import TextIOWrapper
 
 import ManageNode,Linking,GuiArray,Algorithms
 
-import pickle
+import pickle,os
 from tkinter import *
 # import Tkinter
 import tkinter.filedialog
@@ -41,8 +41,8 @@ def saveFile():
     if filename:
         LK.saveFile(filename)
 
-    def getFile():
-        return filename
+    # def getFile():
+    #     return filename
 
 
 def loadFile():
@@ -50,18 +50,19 @@ def loadFile():
 
     #maybe try loading a python file instead???
 
-    openFilename = tkinter.filedialog.askopenfile(filetypes=fileFormats)
+    openFilename = tkinter.filedialog.askopenfile(filetypes=fileFormats).name
     #
     # f=open(openFilename)
     # f.read()
     # f.close()
     #
     #seperate method
-    file = open(openFilename + '_gd.pkl', 'rb')
+
+    print(openFilename)
+    file = open(openFilename, 'rb')
     dict = pickle.load(file)
     file.close()
-    return dict
-
+    print(dict)
     # if openFilename:
         #need to change so it prints to canvas and not console
         # print(openFilename.name)

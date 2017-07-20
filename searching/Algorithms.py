@@ -320,6 +320,7 @@ class algorithms:
                     de+=pro2
         return nu/(nu+de)
 
+    ##after the graph finished or changed, this method needs to be called in order to generate the probability table for each node
     def generateProbabilityTable(self):
         self.parent={}#{node id: [parent...], ...} the nodes which have parent
         for n in self.graph:#for each node in the graph
