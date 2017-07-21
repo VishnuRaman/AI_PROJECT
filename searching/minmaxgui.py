@@ -1,4 +1,4 @@
-import GuiArray,ManageNode,
+import GuiArray,ManageNode,Algorithms
 
 from tkinter import *
 
@@ -26,6 +26,7 @@ button1=Button(bottomFrame,text="Run")
 button1.pack(side=BOTTOM)
 
 #square entry boxes
+box=canvas.create_rectangle(50,50,800,550)
 
 def Run(event):
     root.config(cursor="")
