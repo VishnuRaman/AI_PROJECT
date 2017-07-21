@@ -1,6 +1,5 @@
-from io import TextIOWrapper
 
-import ManageNode,Linking,GuiArray
+import ManageNode,Linking,GuiArray,Algorithms
 
 import pickle
 from tkinter import *
