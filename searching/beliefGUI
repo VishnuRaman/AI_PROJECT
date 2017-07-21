@@ -1,6 +1,5 @@
-from io import TextIOWrapper
 
-import ManageNode,Linking,GuiArray
+import ManageNode,Linking,GuiArray,Algorithms
 
 import pickle
 from tkinter import *
@@ -169,7 +168,6 @@ def removeFromCanvas(e):
 def Delete(event):
     root.config(cursor="spider")
     canvas.bind("<Button-1>",removeFromCanvas)
-
 
 def Run(): #next step button produces this so method below
     # canvas - make pop up probability table like video

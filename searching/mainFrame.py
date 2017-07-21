@@ -2,13 +2,15 @@ from io import TextIOWrapper
 
 import ManageNode,Linking,GuiArray,Algorithms
 
-import pickle,os
+import pickle
 from tkinter import *
 # import Tkinter
 import tkinter.filedialog
 
 
 from searching.Algorithms import algorithms
+global iter
+iter = False
 
 root = Tk()
 topFrame = Frame(root)
@@ -39,51 +41,22 @@ def saveFile():
 
     # #saving method
     if filename:
-        LK.saveFile(filename)
-
-    # def getFile():
-    #     return filename
-
+        #LK.saveFile(filename)
+        newDict = GA.nodeList
+        output = open(filename + '_g.pkl', 'wb')
+        pickle.dump(newDict, output)
+        output.close()
 
 def loadFile():
     fileFormats = [('Pickle', "*.pkl")]
 
-    #maybe try loading a python file instead???
-
     openFilename = tkinter.filedialog.askopenfile(filetypes=fileFormats).name
-    #
-    # f=open(openFilename)
-    # f.read()
-    # f.close()
-    #
-    #seperate method
 
-    print(openFilename)
+    #seperate method
     file = open(openFilename, 'rb')
     dict = pickle.load(file)
     file.close()
-    print(dict)
-    # if openFilename:
-        #need to change so it prints to canvas and not console
-        # print(openFilename.name)
-        #
-        # fileTitle = str(openFilename)
-        #
-        # #currrently cannot find file despite it being there
-        # LK.loadFile(fileTitle)
-
-    # seperate method to above
-    #
-    # f=open(openFilename)
-    # f.read()
-    # f.close()
-
-    # produces save file window
-    # openFile = pickle.load(open(saveFile().filename, 'rb'))
-
-    # LK.loadFile(openFilename)
-
-    # need a pop up to load the file name
+    GA.nodeList=dict
 
 #drop down file menu
 fileMenu = Menu(myMenu)
@@ -119,41 +92,55 @@ editMenu.add_command(label="A*", command=chooseAstar)
 #iterative search menu methods
 def chooseIBFS():
     global algorithm
-    algorithm='IBFS'
+    algorithm='BFS'
+
+    global iter
+    iter = True
 
 def chooseIDFS():
     global algorithm
-    algorithm='IDFS'
+    algorithm='DFS'
+
+    global iter
+    iter = True
 
 def chooseIUCS():
     global algorithm
-    algorithm='IUCS'
+    algorithm='UCS'
+
+    global iter
+    iter = True
 
 def chooseIaStar():
     global algorithm
-    algorithm='IaStar'
+    algorithm='aStar'
+
+    global iter
+    iter = True
 
 #iterative search drop down menu - see if you can change this to a tick box option
 
 editMenu = Menu(myMenu)
 myMenu.add_cascade(label="Iterative Searches", menu=editMenu)
-editMenu.add_command(label="BFS", command=chooseBFS)
-editMenu.add_command(label="DFS", command=chooseDFS)
-editMenu.add_command(label="UCS", command=chooseUCS)
-editMenu.add_command(label="A*", command=chooseAstar)
+editMenu.add_command(label="BFS", command=chooseIBFS)
+editMenu.add_command(label="DFS", command=chooseIDFS)
+editMenu.add_command(label="UCS", command=chooseIUCS)
+editMenu.add_command(label="A*", command=chooseIaStar)
 
 # create buttons
 button1 = Button(topFrame,text="Create Node ")
 button2 = Button(topFrame,text="Create Arc")
 button3 = Button(topFrame,text="Move")
 button4 = Button(topFrame,text="Delete")
-button7 = Button(bottomFrame,text="Run",bg="green")
+button7 = Button(bottomFrame,text="Run")
 text1=Label(topFrame2,text="Start node")
 startNode=Entry(topFrame2, width=2)
 text2=Label(topFrame2,text="End node")
 endNode=Entry(topFrame2, width=2)
 text3=Label(topFrame2,text="Delay seconds")
 delay=Entry(topFrame2, width=2)
+text4=Label(topFrame2,text="Limit for Iterative Deep Searches")
+it = Entry(topFrame2, width=2)
 button8 = Button(topFrame2,text="<<",bg="light blue")
 button9 = Button(topFrame2,text=">>",bg="light blue")
 
@@ -168,6 +155,8 @@ text2.pack(side=LEFT)
 endNode.pack(side=LEFT)
 text3.pack(side=LEFT)
 delay.pack(side=LEFT)
+text4.pack(side=LEFT)
+it.pack(side=LEFT)
 button8.pack(side=LEFT)
 button9.pack(side=LEFT)
 
@@ -310,15 +299,17 @@ result=[]
 
 def Run(event):
     root.config(cursor="")
-    global finalPath,xTh,delaytime
+    global finalPath,xTh,delaytime,iter
     xTh=0
-    if algorithm in ('UCS','aStar'):
+    if iter == True and algorithm in ('BFS', 'DFS', 'UCS', 'aStar'): #algorithm mentioned here =
+        # print('ffffff')
+        finalPath = AL.iterative(int(startNode.get()),int(endNode.get()),algorithm,int(it.get())) #make a box to gain user input from )
+    elif iter==False and algorithm in ('UCS','aStar'):
+        # print('gggg')
         finalPath = AL.ucsAStar(int(startNode.get()),int(endNode.get()),algorithm)
-    elif algorithm in ('BFS', 'DFS'):
+    elif iter==False and algorithm in ('BFS', 'DFS'):
+        # print('hhhh')
         finalPath = AL.bdfs(int(startNode.get()),int(endNode.get()),algorithm)
-    # elif then the iterative searches
-    elif algorithm in ('IBFS', 'IDFS', 'IUCS', 'IaStar'):
-        finalPath = AL.iterative(int(startNode.get()),int(endNode.get()),algorithm,AL.it.get())
 
 
     # else:
@@ -340,24 +331,24 @@ def display():
         resultcanvas = Frame(root)
         resultcanvas.pack(side=BOTTOM)
 
-        if algorithm=='BFS':
+        if iter==False and algorithm=='BFS':
             #queue label
             qsLabel=Label(resultcanvas,bg="yellow",text="Queue: ")
-        elif algorithm=='IBFS':
+        elif iter==True and algorithm=='BFS':
             qsLabel=Label(resultcanvas,bg="yellow",text="Queue: ")
-        elif algorithm=='DFS':
+        elif iter==False and algorithm=='DFS':
             # stack label
             qsLabel = Label(resultcanvas,bg="yellow", text="Stack: ")
-        elif algorithm=='IDFS':
+        elif iter==True and algorithm=='DFS':
             qsLabel = Label(resultcanvas,bg="yellow", text="Stack: ")
-        elif algorithm=='UCS':
+        elif iter==False and algorithm=='UCS':
             #priotity queue label
             qsLabel=Label(resultcanvas,bg="yellow",text="Priority Queue: ")
-        elif algorithm=='IUCS':
+        elif iter==True and algorithm=='UCS':
             qsLabel = Label(resultcanvas, bg="yellow", text="Priority Queue: ")
-        elif algorithm=='aStar':
+        elif iter==False and algorithm=='aStar':
             qsLabel = Label(resultcanvas, bg="yellow", text="Priority Queue: ")
-        elif algorithm=='IaSTar':
+        elif iter==True and algorithm=='aSTar':
             qsLabel = Label(resultcanvas, bg="yellow", text="Priority Queue: ")
 
         qsLabel.grid(column=0,row=2,sticky=W)
@@ -399,6 +390,9 @@ def display():
         result[4]['text']=str(AL.getVisitedLog()[xTh])#visitedValue
 
     if AL.getQsLog()[xTh][0]==finalPath[-1]:#meet the goal then color the final path
+
+        #if goal isnt met = produce an error message
+
         # for i in the range of range= number of final path nodes
         for a in range(len(finalPath)-1):
             canvas.itemconfig(GA.nodeList[finalPath[a]][2][finalPath[a+1]][0],fill="red")#final path arrow

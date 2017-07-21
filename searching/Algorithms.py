@@ -112,6 +112,7 @@ class algorithms:
         return  self.visitedLog
 
 
+
     ##The miniMax, expectiMiniMax, and alphaBeta algorithm (expectiMiniMax algorithm key word is 'exMiniMax')
     #input:@arg1 the root node, @arg2 how many layers it will goes, @arg3 algorithm
     #output: a list [[expending node, alpha, beta], ...] the root node is always on depth 0

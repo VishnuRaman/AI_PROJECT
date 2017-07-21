@@ -32,3 +32,5 @@ class guiArray:
                 self.canvas.delete(self.nodeList[n][2][node][1])#delete text
                 self.nodeList[n][2].pop(node)
 
+
+#add in the methods for the boxes with the minmax gui
