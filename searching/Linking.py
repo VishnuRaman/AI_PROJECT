@@ -135,32 +135,32 @@ class Graph:
         temp=sorted(temp,key=lambda x: str(x))
         return temp
 
-    ##save the current vert_dict with given fileName
-    #input:@arg1  fileName as a string
-    def saveFile(self,fileName):
-        newDict=self.vert_dict
-        output = open(fileName+'_g.pkl', 'wb')
-        pickle.dump(newDict, output)
-        output.close()
-
-    ##load the stored vert_dict with having the name fileName
-    #input:@arg1  fileName as a string
-    #output: vert_dict
-    def loadFile(self,fileName):
-        # read python dict back from the file
-        file = open(fileName+'_g.pkl', 'rb')
-        dict = pickle.load(file)
-        file.close()
-        return dict
-
-    ##see all the .pkl files name
-    #output: all the names as a list [name1.pkl, name2.pkl, ...]
-    def fileNames(self):
-        temp=[]
-        for i in os.listdir(os.getcwd()):
-            if '_g.pkl' in i:
-                temp.append(i)
-        return temp
+    # ##save the current vert_dict with given fileName
+    # #input:@arg1  fileName as a string
+    # def saveFile(self,fileName):
+    #     newDict=self.vert_dict
+    #     output = open(fileName+'_g.pkl', 'wb')
+    #     pickle.dump(newDict, output)
+    #     output.close()
+    #
+    # ##load the stored vert_dict with having the name fileName
+    # #input:@arg1  fileName as a string
+    # #output: vert_dict
+    # def loadFile(self,fileName):
+    #     # read python dict back from the file
+    #     file = open(fileName+'_g.pkl', 'rb')
+    #     dict = pickle.load(file)
+    #     file.close()
+    #     return dict
+    #
+    # ##see all the .pkl files name
+    # #output: all the names as a list [name1.pkl, name2.pkl, ...]
+    # def fileNames(self):
+    #     temp=[]
+    #     for i in os.listdir(os.getcwd()):
+    #         if '_g.pkl' in i:
+    #             temp.append(i)
+    #     return temp
     #reset all heuristic to 0
     def resetAllHeuristic(self):
         for node in self.vert_dict:
@@ -262,32 +262,32 @@ class Grid:
                 self.grid_dict[id].heuristic=abs(i-xCoordinate)+abs(j-yCoordinate)
 
 
-    ##save the current vert_dict with given fileName
-    #input: @arg1 fileName as a string
-    def saveFile(self,fileName):
-        newDict=self.grid_dict
-        output = open(fileName+'_gd.pkl', 'wb')
-        pickle.dump(newDict, output)
-        output.close()
-
-    ##load the stored vert_dict with having the name fileName
-    #input: @arg1 fileName as a string
-    #output: dictionary
-    def loadFile(self,fileName):
-        # read python dict back from the file
-        file = open(fileName+'_gd.pkl', 'rb')
-        dict = pickle.load(file)
-        file.close()
-        return dict
-
-    ##see all the .pkl files name
-    #output: all the names as a list
-    def fileNames(self):
-        temp=[]
-        for i in os.listdir(os.getcwd()):
-            if '_gd.pkl' in i:
-                temp.append(i)
-        return temp
+    # ##save the current vert_dict with given fileName
+    # #input: @arg1 fileName as a string
+    # def saveFile(self,fileName):
+    #     newDict=self.grid_dict
+    #     output = open(fileName+'_gd.pkl', 'wb')
+    #     pickle.dump(newDict, output)
+    #     output.close()
+    #
+    # ##load the stored vert_dict with having the name fileName
+    # #input: @arg1 fileName as a string
+    # #output: dictionary
+    # def loadFile(self,fileName):
+    #     # read python dict back from the file
+    #     file = open(fileName+'_gd.pkl', 'rb')
+    #     dict = pickle.load(file)
+    #     file.close()
+    #     return dict
+    #
+    # ##see all the .pkl files name
+    # #output: all the names as a list
+    # def fileNames(self):
+    #     temp=[]
+    #     for i in os.listdir(os.getcwd()):
+    #         if '_gd.pkl' in i:
+    #             temp.append(i)
+    #     return temp
     ##reset all utility to default
     def resetAllUtility(self):
         for node in self.grid_dict:
