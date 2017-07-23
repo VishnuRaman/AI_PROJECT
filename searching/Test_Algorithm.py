@@ -471,6 +471,9 @@ class Test_algorithm(unittest.TestCase):
         obs={3:'T',4:'T'}
         expected={0: 0.1694628029147602, 1: 0.9958554837953809, 2: 0.9228191078724887, 3: 1, 4: 1}
         self.assertDictEqual(al.refreshP(obs),expected)
+        obs={3:'T'}
+        expected={0: 0.1, 1: 0.9876543209876543, 2: 0.5445555555555555, 3: 1, 4: 0.05900999999999999}
+        self.assertDictEqual(al.refreshP(obs),expected)
         obs={3:'F',4:'F'}
         expected={0: 0.09244807952710092, 1: 0.16236679513583266, 2: 0.1692887479810971, 3: 0, 4: 0}
         self.assertDictEqual(al.refreshP(obs),expected)

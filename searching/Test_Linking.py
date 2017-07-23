@@ -106,13 +106,11 @@ class Test_linking(unittest.TestCase):
         self.assertListEqual(g.get_vertices(),[0,1,2])
     # def test_g_saveFile_and_loadFile_and_fileNames(self):
     #     g=Linking.Graph()
-    #     newDict=g.vert_dict#create a vert_dict
-    #     output = open('junk2'+'.pkl', 'wb')
-    #     pickle.dump(newDict, output)#store it into disk
-    #     output.close()
-    #     self.assertTrue('junk2.pkl' in g.fileNames())# is there a file called junk2?
-    #     os.remove('junk2.pkl')#now delete it
-    #     self.assertFalse('junk2.pkl' in g.fileNames())# is there a file called junk2?
+    #     g.saveFile('junk2')
+    #     self.assertTrue('junk2_g.pkl' in g.fileNames())# is there a file called junk2?
+    #     self.assertDictEqual(g.loadFile('junk2'),g.vert_dict)
+    #     os.remove('junk2_g.pkl')#now delete it
+    #     self.assertFalse('junk2_g.pkl' in g.fileNames())# is there a file called junk2?
 
     def test_g_resetAllHeuristic(self):
         g=Linking.Graph()
@@ -231,13 +229,11 @@ class Test_linking(unittest.TestCase):
             self.assertEqual(gd.grid_dict[i].heuristic,dict[i])
     # def test_gd_saveFile_and_loadFile_and_fileNames(self):
     #     gd=Linking.Grid(3,3)
-    #     newDict=gd.grid_dict#create a vert_dict
-    #     output = open('junk2'+'.pkl', 'wb')
-    #     pickle.dump(newDict, output)#store it into disk
-    #     output.close()
-    #     self.assertTrue('junk2.pkl' in gd.fileNames())# is there a file called junk2?
-    #     os.remove('junk2.pkl')#now delete it
-    #     self.assertFalse('junk2.pkl' in gd.fileNames())# is there a file called junk2?
+    #     gd.saveFile('junk2')
+    #     self.assertTrue(gd.loadFile('junk2')[3].id==gd.grid_dict[3].id)
+    #     self.assertTrue('junk2_gd.pkl' in gd.fileNames())# is there a file called junk2?
+    #     os.remove('junk2_gd.pkl')#now delete it
+    #     self.assertFalse('junk2_gd.pkl' in gd.fileNames())# is there a file called junk2?
 
     def test_gd_resetAllUtility(self):
         gd=Linking.Grid(3,3)
