@@ -22,12 +22,16 @@ MN=ManageNode.manageNode()
 
 #create buttons
 button1=Button(bottomFrame,text="Run")
-button2=Button(topFrame2,text="<<")
-button3=Button(topFrame2,text=">>")
+
+button2=Button(topFrame2,text="Enter value")
+
+button3=Button(topFrame2,text="<<")
+button4=Button(topFrame2,text=">>")
 
 button1.pack(side=BOTTOM)
 button2.pack(side=LEFT)
 button3.pack(side=LEFT)
+button4.pack(side=LEFT)
 
 #change these to entry boxes
 
@@ -92,8 +96,17 @@ minLine4=canvas.create_line(900,240,510,90)
 #max triangle
 max=canvas.create_polygon(475,90,510,40,545,90, fill="dark red")
 
+def popupValue():
+    print("ggggg")
+
 def ValueEntry(event):
     print("fffff")
+    #select square and click then it opens a pop up value and that value is then placed
+    #as a label into the bottom square
+    #which is then fetched by the algorithm
+
+    root.config(cursor="")
+    canvas.bind("<Button-1>", popupValue)
 
 def Run(event):
     root.config(cursor="")
@@ -108,5 +121,6 @@ def Run(event):
 
 button1.bind("<Button-1>",Run)
 # box1.bind("<Button1>",ValueEntry)
+button2.bind("<Button-1>",ValueEntry)
 
 root.mainloop()
