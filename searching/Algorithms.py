@@ -117,7 +117,7 @@ class algorithms:
     #input:@arg1 the root node, @arg2 how many layers it will goes, @arg3 algorithm
     #output: a list [[expending node, alpha, beta], ...] the root node is always on depth 0
     def miniMaxAlphaBeta(self,id,depth,algorithm):
-        self.utilityLog=[]#[[expending node,{id: utility}], ...]
+        self.utilityLog=[]#[[expending node,{id: alpha, beta}], ...]
         self.partOfminiMax(id,depth,True,algorithm)
         return self.utilityLog
     #the iterative part of the miniMax algorithm
@@ -153,7 +153,7 @@ class algorithms:
                         bestValue=val
                         if n!=self.graph[id].get_connections()[-1]:
                             self.utilityLog.append([id,val,math.inf])
-                else:# type is Action, for exMiniMax
+                else:# type is Edge, for exMiniMax
                     bestValue=0
                     for vertid in self.graph[n].neighbor:#go through every child
                         bestValue+=self.graph[vertid].probability*self.partOfminiMax(vertid,depth-1,False,algorithm)
@@ -179,19 +179,22 @@ class algorithms:
                         bestValue=val
                         if n!=self.graph[id].get_connections()[-1]:#if it is not the last element
                             self.utilityLog.append([id,-math.inf,val])#alpha is -inf
-                else:# type is Action, for exMiniMax
+                else:# type is Edge, for exMiniMax
                     bestValue=0
                     for vertid in self.graph[n].neighbor:#go through every child
                         bestValue+=self.graph[vertid].probability*self.partOfminiMax(vertid,depth-1,True,algorithm)
             self.utilityLog.append([id,bestValue,bestValue])#for the last element, both alpha and beta is bestValue
             return bestValue
+    ##The query method gives you the probability of a node, this method gives you all probabilities of nodes in the graph
+    #input: @arg1  dictionary . ie {id:'T', ...}
+    #output: dictionary {id: 0.1, id2: 0.5, ...}
     def refreshP(self,observation):
         PT={}
         for i in self.graph:
             PT[i]=self.query(observation,i)
         return PT
     ##This will calculate probability values which weren't given in the question, but can be inferred from the information which is given.
-    #input: @arg1 dictionary contains the observation variables and its boolean. ie {id:'T', ...}, @arg2 the id of the node needs to be figured out.
+    #input: @arg1 dictionary . ie {id:'T', ...}, @arg2 the id of the node needs to be figured out.
     #output:the probability value of the query node
     def query(self,observation,query):
         self.observation=observation
@@ -231,10 +234,9 @@ class algorithms:
                         reverse=True
                     self.tempPT[query]=self.updateParentObs(a,query,reverse)
                 else:
-                    self.findParentAndChild(query)
                     boolean=False
                     for o in self.observation:
-                        if o in self.relatedChild:
+                        if o in self.findChild(query):
                             boolean=True
                     if boolean:
                         ori=self.tempPT[a]
@@ -243,25 +245,32 @@ class algorithms:
                             self.tempPT[query]=self.updateParentNonObs(a,query,new)
         return self.tempPT[query]
 
-    def findParentAndChild(self,query):
-        self.relatedParent=[]#a list of nodes that will affect the value of query node
-        if query in self.parent:
-            q=list(self.parent[query])
-            self.relatedParent.extend(q)
-            while q:
-                p=q.pop(0)
-                if p in self.parent:
-                    l=list(self.parent[p])
-                    q.extend(l)
-                    self.relatedParent.extend(l)
-        self.relatedChild=[]
+    ##find all the child and grand child of a node
+    #input: @arg1 the node
+    #output:list contains the child and grand child
+    def findChild(self,query):
+        # self.relatedParent=[]#a list of nodes that will affect the value of query node
+        # if query in self.parent:
+        #     q=list(self.parent[query])
+        #     self.relatedParent.extend(q)
+        #     while q:
+        #         p=q.pop(0)
+        #         if p in self.parent:
+        #             l=list(self.parent[p])
+        #             q.extend(l)
+        #             self.relatedParent.extend(l)
+        relatedChild=[]
         q=list(self.graph[query].adjacent)
-        self.relatedChild.extend(q)
+        relatedChild.extend(q)
         while q:
             a=q.pop(0)
             c=list(self.graph[a].adjacent)
             q.extend(c)
-            self.relatedChild.extend(c)
+            relatedChild.extend(c)
+        return relatedChild
+    ##update the probability of a specific parent when the child is obsvered
+    #input:@arg1 child id @arg2 parent id @arg3  return reverse probability?
+    #output:the probability of the parent
     def updateParentObs(self,id,parentId,reverse=False):
         parent=self.parent[id]
         st=''
@@ -291,10 +300,16 @@ class algorithms:
                 else:
                     de+=pro
         return nu/(nu+de)
+    ##update the probability of a specific parent when the child is not obsvered
+    #input:@arg1 child id @arg2 parent id
+    #output:the probability of the parent
     def updateParentNonObs(self,id,parentId,newP):
-        r=self.updateParentObs(id,parentId)
-        notR=self.updateParentObs(id,parentId,True)
+        r=self.updateParentObs(id,parentId)#not reverse
+        notR=self.updateParentObs(id,parentId,True)#reverse
         return r*newP+notR*(1-newP)
+    ##update the probability of a child from parents, no matter they are obsvered or not
+    #input:@arg1 node id
+    #output:the probability of the node
     def updateSelfProbabilityFromParent(self,id):
         st=''
         for p in self.parent[id]:
@@ -347,7 +362,8 @@ class algorithms:
     #input: @arg1 the node, @arg2  key of the row as a string ie. 'TT', @arg3 probability
     def setProbabilityTable(self,id,key,value):
         self.graph[id].probabilityTable[key][3]=value
-
+    ##after setProbabilityTable, simulateData needs to be called in order to have the prior probabilities
+    #input: @arg1 how many data
     def simulateData(self,times):
         for t in range(times):
             temp={}
