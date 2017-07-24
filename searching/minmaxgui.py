@@ -2,6 +2,9 @@ import GuiArray,ManageNode,Algorithms
 
 from tkinter import *
 
+from tkinter.simpledialog import askstring
+from tkinter.messagebox import showinfo
+
 root = Tk()
 topFrame = Frame(root)
 topFrame.pack(fill=X)
@@ -37,10 +40,6 @@ button4.pack(side=LEFT)
 
 #set 1
 box1=canvas.create_rectangle(15,490,65,440)
-# label1=Entry(canvas,width=2)
-#
-#
-# label1.pack(side=BOTTOM)
 box2=canvas.create_rectangle(95,490,145,440)
 box3=canvas.create_rectangle(175,490,225,440)
 
@@ -96,16 +95,53 @@ minLine4=canvas.create_line(900,240,510,90)
 #max triangle
 max=canvas.create_polygon(475,90,510,40,545,90, fill="dark red")
 
-def popupValue():
-    print("ggggg")
 
+def popupValue(e):
+    print("ggggg")
+    #make pop up box
+    #change label to match pop up box entry
+
+    # provides pop up box
+    value = askstring('value', 'Please enter a value')
+    value = int(float(value))
+
+    # alt make pop up box and entry box on that
+
+    label1 = canvas.create_text(40,465,text=str(value))
+    labelFilled = True
+    print("hhhh")
+
+    #check if label 1 is empty then enter for label 2
+    if labelFilled != True:
+        label2 = canvas.create_text(120,465, text=str(value))
+
+    label3 = canvas.create_text(200, 465, text=str(value))
+
+    label4 = canvas.create_text(300, 465, text=str(value))
+
+    label5 = canvas.create_text(380, 465, text=str(value))
+
+    label6 = canvas.create_text(460, 465, text=str(value))
+
+    label7 = canvas.create_text(560, 465, text=str(value))
+
+    label8 = canvas.create_text(640, 465, text=str(value))
+
+    label9 = canvas.create_text(720, 465, text=str(value))
+
+    label10 = canvas.create_text(820, 465, text=str(value))
+
+    label11 = canvas.create_text(900, 465, text=str(value))
+
+    label12 = canvas.create_text(980, 465, text=str(value))
+#
 def ValueEntry(event):
     print("fffff")
     #select square and click then it opens a pop up value and that value is then placed
     #as a label into the bottom square
     #which is then fetched by the algorithm
 
-    root.config(cursor="")
+    root.config(cursor="cross")
     canvas.bind("<Button-1>", popupValue)
 
 def Run(event):
