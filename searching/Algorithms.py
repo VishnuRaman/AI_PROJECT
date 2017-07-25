@@ -156,7 +156,7 @@ class algorithms:
                 else:# type is Edge, for exMiniMax
                     bestValue=0
                     for vertid in self.graph[n].neighbor:#go through every child
-                        bestValue+=self.graph[vertid].probability*self.partOfminiMax(vertid,depth-1,False,algorithm)
+                        bestValue+=self.graph[n].neighbor[vertid]*self.partOfminiMax(vertid,depth-1,False,algorithm)#probability*utility of child
             self.utilityLog.append([id,bestValue,bestValue])#for the last element,  both alpha and beta is bestValue
             return bestValue
         elif player==False:
@@ -182,7 +182,7 @@ class algorithms:
                 else:# type is Edge, for exMiniMax
                     bestValue=0
                     for vertid in self.graph[n].neighbor:#go through every child
-                        bestValue+=self.graph[vertid].probability*self.partOfminiMax(vertid,depth-1,True,algorithm)
+                        bestValue+=self.graph[n].neighbor[vertid]*self.partOfminiMax(vertid,depth-1,True,algorithm)#probability*utility of child
             self.utilityLog.append([id,bestValue,bestValue])#for the last element, both alpha and beta is bestValue
             return bestValue
     ##The query method gives you the probability of a node, this method gives you all probabilities of nodes in the graph
@@ -338,7 +338,7 @@ class algorithms:
 
     ##after the graph finished or changed, this method needs to be called in order to generate the probability table for each node
     def generateProbabilityTable(self):
-        self.parent={}#{node id: [parent...], ...} the nodes which have parent
+        self.parent={}#{node id: [parent...], ...} the nodes which have parenta
         for n in self.graph:#for each node in the graph
             self.graph[n].probabilityTable.clear()#clean up table
             for i in self.graph[n].adjacent:#find each adjacent
@@ -358,7 +358,7 @@ class algorithms:
                 self.graph[n].probabilityTable={n:[]}#the attribute row of the table
                 self.graph[n].probabilityTable['T']=[0,0,0,0]
 
-    ##set up the ProbabilityTable manually
+    ##set up the expected value of ProbabilityTable, it will need to run simulateData to generate real value in probability table.
     #input: @arg1 the node, @arg2  key of the row as a string ie. 'TT', @arg3 probability
     def setProbabilityTable(self,id,key,value):
         self.graph[id].probabilityTable[key][3]=value
@@ -410,7 +410,7 @@ class algorithms:
                         self.graph[q].probability=k/(times)
             else:
                 queue.append(q)
-    ##manually set up the ratio in probability table, after set up, setKnownPT should be called
+    ##manually set up the ratio in probability table directly without simulateData, after set up, generatePriorProbability should be called
     #input:@arg1 the node, @arg2  key of the row as a string ie. 'TT', @arg3 probability
     def setKnownPT(self,id,key,value):
         self.graph[id].probabilityTable[key][0]=value
@@ -444,3 +444,21 @@ class algorithms:
                 self.graph[q].probability=nu/(nu+de)
             else:
                 queue.append(q)
+    def markov(self,id,step):
+        self.generateProbabilityTable()#to know who are parents
+        return self.partOfMarkov(id,step)
+
+    def partOfMarkov(self,id,step):
+        if step==0:
+            return self.graph[id].probability
+        elif step>0:
+            if id in self.parent:
+                pre=0
+                for p in self.parent[id]:
+                    if p==id:#from self to self
+                        pre+=self.partOfMarkov(id,step-1)*self.graph[id].get_weight(id)#previous step probability* stay chance
+                    else:
+                        pre+=self.partOfMarkov(p,step-1)*self.graph[p].get_weight(id)#previous step p probability* p to id chance
+                return pre
+            else:
+                return self.graph[id].probability
