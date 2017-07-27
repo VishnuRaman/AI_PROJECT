@@ -61,7 +61,7 @@ class algorithms:
             # gets the first path in the queue
             (cost, node, path) = pq.get()
             if node == goal:
-                self.qsLog.append([node,[n[1] for n in pq.queue]])
+                self.qsLog.append([node,[n[1] for n in pq.queue],[n[0] for n in pq.queue]])#[expanding node,[adj1, adj2, ...], [cost1, cost2, ...]]
                 visited.append(node)
                 self.visitedLog.append(list(visited))
                 return path
@@ -82,7 +82,7 @@ class algorithms:
                             self.layerDict[adj]=self.layerDict[node]+1#layer of child = layer of parent +1
                     pq.queue.extend(temp.queue)
                 pq.queue.sort()#first sort by cost, then sort by numerical order
-                self.qsLog.append([node,[n[1] for n in pq.queue]])
+                self.qsLog.append([node,[n[1] for n in pq.queue],[n[0] for n in pq.queue]])#[expanding node,[adj1, adj2, ...], [cost1, cost2, ...]]
                 # print('bdfs:'+str(qs))
 
     ##Call this method when you want an iterative algorithm
@@ -444,13 +444,17 @@ class algorithms:
                 self.graph[q].probability=nu/(nu+de)
             else:
                 queue.append(q)
-    def markov(self,id,step):
+    ##This method provides the probability of a state after several steps
+    #input: @arg1 the state id, @arg2 how many steps after the observation, @arg3 observation {id: 0.7, id2: 0.3}
+    #output: probability
+    def markov(self,id,step,obs):
         self.generateProbabilityTable()#to know who are parents
+        self.obs=obs
         return self.partOfMarkov(id,step)
-
     def partOfMarkov(self,id,step):
         if step==0:
-            return self.graph[id].probability
+            # return self.graph[id].probability
+            return self.obs[id]
         elif step>0:
             if id in self.parent:
                 pre=0
@@ -461,4 +465,5 @@ class algorithms:
                         pre+=self.partOfMarkov(p,step-1)*self.graph[p].get_weight(id)#previous step p probability* p to id chance
                 return pre
             else:
-                return self.graph[id].probability
+                # return self.graph[id].probability
+                return self.obs[id]
