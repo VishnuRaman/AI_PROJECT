@@ -180,10 +180,10 @@ def customNickname(e):
     # labelFilled = False
     # e.x - 50, e.y - 40, e.x + 50, e.y + 40
 
-    label1 = canvas.create_text(e.x+15, e.y+10, text=str(value))
+    label1 = canvas.create_text(e.x, e.y, text=str(value))
     # label1fill = True
 
-    print("iiiii")
+    # print("iiiii")
 
 def Nickname(event):
     root.config(cursor="cross")
