@@ -180,7 +180,9 @@ def customNickname(e):
     # labelFilled = False
     # e.x - 50, e.y - 40, e.x + 50, e.y + 40
 
-    label1 = canvas.create_text(e.x, e.y, text=str(value))
+    nickNameLabel = canvas.create_text(e.x, e.y, text=str(value))
+
+    nickName = text=str(value)
     # label1fill = True
 
     # print("iiiii")
