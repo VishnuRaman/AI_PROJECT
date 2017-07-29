@@ -114,11 +114,20 @@ class algorithms:
 
 
     ##The miniMax, expectiMiniMax, and alphaBeta algorithm (expectiMiniMax algorithm key word is 'exMiniMax')
+    #get the final path by calling finalPath
     #input:@arg1 the root node, @arg2 how many layers it will goes, @arg3 algorithm
     #output: a list [[expending node, alpha, beta], ...] the root node is always on depth 0
     def miniMaxAlphaBeta(self,id,depth,algorithm):
         self.utilityLog=[]#[[expending node,{id: alpha, beta}], ...]
         self.partOfminiMax(id,depth,True,algorithm)
+        self.finalPath=[]#the final path
+        temp=list(self.utilityLog)
+        temp.reverse()
+        a=temp[0][1]#temp[0] is the root, temp[0][1] is the alpha of the root node
+        b=temp[0][2]#beta
+        for i in range(len(temp)):
+            if temp[i][1]==a and temp[i][2]==b:
+                self.finalPath.append(temp[i][0])#node id
         return self.utilityLog
     #the iterative part of the miniMax algorithm
     def partOfminiMax(self,id,depth,player,algorithm,ab=math.inf):#ab=inf so the root is impossible to be pruned
