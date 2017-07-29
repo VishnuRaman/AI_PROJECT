@@ -9,7 +9,7 @@ class Vertex:
         self.id = id
         self.heuristic=0#default value=0
         self.utility=0#default value=0
-        self.probability=1#default value=1, for expetiminimax and belief net algorithms
+        self.probability=0.5#default value=0.5, for belief net(prior probability) and Markov(initial probability) algorithm
         self.adjacent = {}
         self.probabilityTable={}
 
@@ -53,13 +53,13 @@ class Vertex:
 class Edge:
     def __init__(self,id):
         self.id=id
-        self.neighbor=[]
+        self.neighbor={}
     ##connect this action to a vertex (with chance)
     #input: @arg1 chance, @arg2 vertex id
-    def add_neighbor(self,id):
-        self.neighbor.append(id)
+    def add_neighbor(self,id,probability):
+        self.neighbor[id]=probability
     def delete_neighbor(self,id):
-        self.neighbor.remove(id)
+        self.neighbor.pop(id)
 
 
 
@@ -95,8 +95,8 @@ class Graph:
         self.vert_dict.pop(actionId)#delete itself from vert_dict
     ##just like add_edge, but it can only be used to add the connection between node(as child) and action(as parent)
     #input: @arg1 action id, @arg2 the chance of the vertex, @arg3 the vertex object
-    def add_objEdge_vert_connection(self,edgeId,nodeId):
-        self.vert_dict[edgeId].add_neighbor(nodeId)
+    def add_objEdge_vert_connection(self,edgeId,nodeId,probability):
+        self.vert_dict[edgeId].add_neighbor(nodeId,probability)
     def delete_objEdge_vert_connection(self,edgeId,nodeId):
         self.vert_dict[edgeId].delete_neighbor(nodeId)
     ##delete a node and every connection with it
@@ -116,7 +116,7 @@ class Graph:
         else:
             return None
     ##add a linking. It can also be used to set up the cost again.
-    #input:@arg1  from 'node id', @arg2 to 'node id',  @arg3  the 'cost' of the linking
+    #input:@arg1  from 'node id', @arg2 to 'node id',  @arg3  the 'cost' of the linking(searching).  the 'probability' of the linking(exMinimax, markov)
     def add_edge(self, frm, to, cost=1):
         self.vert_dict[frm].add_neighbor(to, cost)
     ##delete a linking

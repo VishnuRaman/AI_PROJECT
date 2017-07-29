@@ -224,10 +224,8 @@ class Test_algorithm(unittest.TestCase):
         self.g.add_edge(2,'a0')
         self.g.delete_edge(2,5)
         self.g.delete_edge(2,6)
-        self.g.get_vertex(5).probability=0.3
-        self.g.get_vertex(6).probability=0.5
-        self.g.add_objEdge_vert_connection('a0',5)#utility of node 5 =10, 10*0.3=3
-        self.g.add_objEdge_vert_connection('a0',6)#utility of node 6 =4, 4*0.5=2
+        self.g.add_objEdge_vert_connection('a0',5,0.3)#utility of node 5 =10, 10*0.3=3
+        self.g.add_objEdge_vert_connection('a0',6,0.5)#utility of node 6 =4, 4*0.5=2
         #so now the total utility of action0 = 5
         expect=[[0, -math.inf, math.inf],
                 [1, -math.inf, math.inf],
@@ -492,3 +490,28 @@ class Test_algorithm(unittest.TestCase):
         obs={}#empty
         expected={0: 0.1, 1: 0.5, 2: 0.3295, 3: 0.405, 4: 0.039655}
         self.assertDictEqual(al.refreshP(obs),expected)
+
+    def test_markov(self):
+        g=Linking.Graph()
+        g.add_vertex(0)
+        g.add_vertex(1)
+        g.add_edge(0,1,0.5)
+        g.add_edge(0,0,0.5)
+        g.add_edge(1,0,0.1)
+        g.add_edge(1,1,0.9)
+        # g.get_vertex(0).probability=1
+        # g.get_vertex(1).probability=0
+        obs={0:1,1:0}
+        al=Algorithms.algorithms(g.vert_dict)
+        expected=[1,
+                  0.5,
+                  0.3,
+                  0.21999999999999997,
+                  0.188,
+                  0.17520000000000002,
+                  0.17008,
+                  0.16803200000000001,
+                  0.16721280000000002,
+                  0.16688512000000005]
+        for i in range(10):
+            self.assertTrue(al.markov(0,i,obs)==expected[i])
