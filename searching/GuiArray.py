@@ -9,11 +9,14 @@ class guiArray:
         self.nodeList[nodeID]=set
         print('GUI object '+str(self.nodeList))#########
     def addArrow(self,fromNode,toNode,arrow,weight): #include weight after arrow when sorted it out via gui
-
         #so print will say node you are travelling FROM, it travels DOWN the grid to that node
         #then travels ACROSS to find the node you're travelling TO
         self.nodeList[fromNode][2][toNode]=(arrow, weight) #include ,weight after arrow when sorted it on the gui
         print('GUI object '+str(self.nodeList))#########
+
+    def addBeliefArrow(self, fromNode, toNode, arrow):
+        self.nodeList[fromNode][2][toNode] = (arrow)  # include ,weight after arrow when sorted it on the gui
+        print('GUI object ' + str(self.nodeList))  #########
 
     def deleteNode(self,node):
         self.deleteArrow(node)

@@ -82,7 +82,7 @@ def ArcPoint2(e):
             arrow = canvas.create_line(x,y,e.x,e.y,arrow="last")#fill="turquoise" can change color
             #use -->  canvas.itemconfig(arrow,fill="red") <-- to change color after created
 
-            GA.addArrow(fromNode, toNode, arrow)
+            GA.addBeliefArrow(fromNode, toNode, arrow)
 
             # #this method produces the connection
 
