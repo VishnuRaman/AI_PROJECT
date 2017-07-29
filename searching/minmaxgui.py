@@ -97,43 +97,52 @@ max=canvas.create_polygon(475,90,510,40,545,90, fill="dark red")
 
 
 def popupValue(e):
-    print("ggggg")
-    #make pop up box
-    #change label to match pop up box entry
 
     # provides pop up box
     value = askstring('value', 'Please enter a value')
     value = int(float(value))
 
-    # alt make pop up box and entry box on that
+    # make while loop so it loops through all the labels
 
-    label1 = canvas.create_text(40,465,text=str(value))
-    labelFilled = True
-    print("hhhh")
+    # labelFilled = False
 
-    #check if label 1 is empty then enter for label 2
-    if labelFilled != True:
-        label2 = canvas.create_text(120,465, text=str(value))
 
-    label3 = canvas.create_text(200, 465, text=str(value))
 
-    label4 = canvas.create_text(300, 465, text=str(value))
+    # #check if label 1 is empty then enter for label 2
+    # if labelFilled == False:
+    label1 = canvas.create_text(40, 465, text=str(value))
+         # label1fill = True
 
-    label5 = canvas.create_text(380, 465, text=str(value))
+    print("iiiii")
 
-    label6 = canvas.create_text(460, 465, text=str(value))
+    # if label1fill==True:
+    #     #dont write over it
+    #     #start from label 2
 
-    label7 = canvas.create_text(560, 465, text=str(value))
+    label2 = canvas.create_text(120,465, text=str(value))
 
-    label8 = canvas.create_text(640, 465, text=str(value))
+    print("jjjjj")
 
-    label9 = canvas.create_text(720, 465, text=str(value))
-
-    label10 = canvas.create_text(820, 465, text=str(value))
-
-    label11 = canvas.create_text(900, 465, text=str(value))
-
-    label12 = canvas.create_text(980, 465, text=str(value))
+        #
+        # label3 = canvas.create_text(200, 465, text=str(value))
+        #
+        # label4 = canvas.create_text(300, 465, text=str(value))
+        #
+        # label5 = canvas.create_text(380, 465, text=str(value))
+        #
+        # label6 = canvas.create_text(460, 465, text=str(value))
+        #
+        # label7 = canvas.create_text(560, 465, text=str(value))
+        #
+        # label8 = canvas.create_text(640, 465, text=str(value))
+        #
+        # label9 = canvas.create_text(720, 465, text=str(value))
+        #
+        # label10 = canvas.create_text(820, 465, text=str(value))
+        #
+        # label11 = canvas.create_text(900, 465, text=str(value))
+        #
+        # label12 = canvas.create_text(980, 465, text=str(value))
 #
 def ValueEntry(event):
     print("fffff")
