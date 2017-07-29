@@ -1,3 +1,4 @@
+from tkinter.simpledialog import askstring
 
 import ManageNode,Linking,GuiArray,Algorithms
 
@@ -30,10 +31,11 @@ button1 = Button(topFrame,text="Create Node")
 button2 = Button(topFrame,text="Create Link")
 button3 = Button(topFrame,text="Move Node")
 button4 = Button(topFrame,text="Delete Node")
-button5 = Button(topFrame,text="Set Probability")
-button6 = Button(topFrame,text="Set Observation")
-button7 = Button(topFrame2,text="Previous step",bg="light blue")
-button8 = Button(topFrame2,text="Next step",bg="light blue")
+button5 = Button(topFrame,text="Set Nickname")
+button6 = Button(topFrame,text="Set Probability")
+button7 = Button(topFrame,text="Set Observation")
+button8 = Button(topFrame2,text="Previous step",bg="light blue")
+button9 = Button(topFrame2,text="Next step",bg="light blue")
 
 button1.pack(side=LEFT)
 button2.pack(side=LEFT)
@@ -42,6 +44,7 @@ button4.pack(side=LEFT)
 button5.pack(side=LEFT)
 button7.pack(side=LEFT)
 button8.pack(side=LEFT)
+button9.pack(side=LEFT)
 
 # methods called by buttons
 node_id_Dic={}
@@ -58,7 +61,7 @@ def drawNode(e):
         oval=canvas.create_oval(e.x-50,e.y-40,e.x+50,e.y+40)
       #MN.inc means increase that method by 1 as new node was created
         nodeID=MN.inc()
-        num=canvas.create_text(e.x,e.y,text=str(nodeID))
+        num=canvas.create_text(e.x,e.y)
         #num = the number label for the node eg 0,1,2
         #node = the oval shape
         GUIset=[num,oval,{}]#number object / oval object / dictionary for linking
@@ -79,7 +82,7 @@ def ArcPoint2(e):
             arrow = canvas.create_line(x,y,e.x,e.y,arrow="last")#fill="turquoise" can change color
             #use -->  canvas.itemconfig(arrow,fill="red") <-- to change color after created
 
-            GA.addArrow(fromNode, toNode, arrow)
+            GA.addBeliefArrow(fromNode, toNode, arrow)
 
             # #this method produces the connection
 
@@ -169,6 +172,23 @@ def Delete(event):
     root.config(cursor="spider")
     canvas.bind("<Button-1>",removeFromCanvas)
 
+def customNickname(e):
+    value = askstring('value', 'Please enter a value')
+
+    # make while loop so it loops through all the labels
+
+    # labelFilled = False
+    # e.x - 50, e.y - 40, e.x + 50, e.y + 40
+
+    label1 = canvas.create_text(e.x, e.y, text=str(value))
+    # label1fill = True
+
+    # print("iiiii")
+
+def Nickname(event):
+    root.config(cursor="cross")
+    canvas.bind("<Button-1>", customNickname)
+
 def Run(): #next step button produces this so method below
     # canvas - make pop up probability table like video
         resultcanvas = Frame(root)
@@ -186,10 +206,11 @@ button1.bind("<Button-1>",CreateNode)
 button2.bind("<Button-1>",CreateArc)
 button3.bind("<Button-1>",Move)
 button4.bind("<Button-1>",Delete)
-#button5.bind("<Button-1>", set probabilty method - pop up box select link select probability)
-# button6.bind("<Button-1>", set observation method - ie set it as true or false)
-button7.bind("<Button-1>",PreStep)
-button8.bind("<Button-1>",NextStep)
+button5.bind("<Button-1>",Nickname)
+#button6.bind("<Button-1>", set probabilty method - pop up box select link select probability)
+# button7.bind("<Button-1>", set observation method - ie set it as true or false)
+button8.bind("<Button-1>",PreStep)
+button9.bind("<Button-1>",NextStep)
 
 
 root.mainloop()
