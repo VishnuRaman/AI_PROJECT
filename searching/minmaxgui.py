@@ -1,3 +1,9 @@
+# make a button like create node to create squares
+# then do the enter values method
+# then store the values into an array
+# then next button = min method and max methods and collects stored numbers for algorithms
+
+
 import GuiArray,ManageNode,Algorithms
 
 from tkinter import *
