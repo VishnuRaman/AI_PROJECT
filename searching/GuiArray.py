@@ -15,10 +15,10 @@ class guiArray:
         self.nodeList[fromNode][2][toNode]=(arrow, weight) #include ,weight after arrow when sorted it on the gui
         print('GUI object '+str(self.nodeList))#########
 
-    # def addNickname(self,set,nodeID,nickName):
-    #     self.nicknameList[nodeID,nickName]=set
-    #     print('GUI object ' + str(self.nicknameList))
-    #     print("iiii")
+    def addNickname(self,set,nodeID,nickName):
+        self.nicknameList[nodeID,nickName]=set
+        print('GUI object ' + str(self.nicknameList))
+        print("iiii")
 
     def addBeliefArrow(self, fromNode, toNode, arrow):
         self.nodeList[fromNode][2][toNode] = (arrow)  # include ,weight after arrow when sorted it on the gui

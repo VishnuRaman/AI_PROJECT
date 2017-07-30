@@ -34,8 +34,8 @@ button4 = Button(topFrame,text="Delete Node")
 button5 = Button(topFrame,text="Set Nickname")
 button6 = Button(topFrame,text="Set Probability")
 button7 = Button(topFrame,text="Set Observation")
-button8 = Button(topFrame2,text="Previous step",bg="light blue")
-button9 = Button(topFrame2,text="Next step",bg="light blue")
+# button8 = Button(topFrame2,text="Previous step",bg="light blue")
+button9 = Button(topFrame2,text="Show Full Table",bg="light blue")
 
 button1.pack(side=LEFT)
 button2.pack(side=LEFT)
@@ -43,7 +43,7 @@ button3.pack(side=LEFT)
 button4.pack(side=LEFT)
 button5.pack(side=LEFT)
 button7.pack(side=LEFT)
-button8.pack(side=LEFT)
+# button8.pack(side=LEFT)
 button9.pack(side=LEFT)
 
 # methods called by buttons
@@ -175,14 +175,9 @@ def Delete(event):
 def customNickname(e):
     value = askstring('value', 'Please enter a value')
 
-    # make while loop so it loops through all the labels
-
-    # labelFilled = False
-    # e.x - 50, e.y - 40, e.x + 50, e.y + 40
-
     nickNameLabel = canvas.create_text(e.x, e.y, text=str(value))
 
-    nickName = text=str(value)
+    nickName = str(value)
     # label1fill = True
 
     # print("iiiii")
@@ -193,16 +188,29 @@ def Nickname(event):
 
 def Run(): #next step button produces this so method below
     # canvas - make pop up probability table like video
-        resultcanvas = Frame(root)
-        resultcanvas.pack(side=BOTTOM)
+    #     resultcanvas = Frame(root)
+    #     resultcanvas.pack(side=BOTTOM)
+    print("iiii")
 
 def NextStep(e):
     #produce the canvas to display the probability table here
-    root.update()
-def PreStep(e): #takes you back to the canvas where you can then adjust the values you have given
-    global xTh
+    #remove previous canvas from screen
+    #
+    # topFrame3 = Frame(root)
+    # topFrame3.pack(fill=X)
+    #
+    # resultcanvas = Canvas(root, width=100, height=60, bg="white")
+    # resultcanvas.pack(expand=1, fill=BOTH)
 
-    root.update()
+    toplevel = Toplevel(width=700,height=800)
+    # box = canvas.create_rectangle(200,200,200,200)
+
+
+#
+# def PreStep(e): #takes you back to the canvas where you can then adjust the values you have given
+#     global xTh
+#
+#     root.update()
 
 button1.bind("<Button-1>",CreateNode)
 button2.bind("<Button-1>",CreateArc)
@@ -211,7 +219,7 @@ button4.bind("<Button-1>",Delete)
 button5.bind("<Button-1>",Nickname)
 #button6.bind("<Button-1>", set probabilty method - pop up box select link select probability)
 # button7.bind("<Button-1>", set observation method - ie set it as true or false)
-button8.bind("<Button-1>",PreStep)
+# button8.bind("<Button-1>",PreStep)
 button9.bind("<Button-1>",NextStep)
 
 
