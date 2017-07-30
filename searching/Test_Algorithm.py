@@ -173,6 +173,7 @@ class Test_algorithm(unittest.TestCase):
                  [2, 5, 5],
                  [0, 10, 10]]
         self.assertListEqual(self.AL.miniMaxAlphaBeta(0,3,'miniMax'),expect)
+        self.assertListEqual(self.AL.finalPath,[0, 1, 4])
 
     def test_miniMaxAlphaBeta_alphaBeta(self):
         self.g.resetAllUtility()
@@ -196,6 +197,7 @@ class Test_algorithm(unittest.TestCase):
                 [0, 5, 5]]
 
         self.assertListEqual(self.AL.miniMaxAlphaBeta(0,3,'alphaBeta'),expect)
+        self.assertListEqual(self.AL.finalPath,[0, 2, 5])
         # #with prune
         self.g.resetAllUtility()
         self.g.get_vertex(3).utility=20
@@ -214,6 +216,7 @@ class Test_algorithm(unittest.TestCase):
                 [2, -math.inf, 5],
                 [0, 10, 10]]
         self.assertListEqual(self.AL.miniMaxAlphaBeta(0,3,'alphaBeta'),expect)#node 6 is pruned
+        self.assertListEqual(self.AL.finalPath,[0, 1, 4])
     def test_miniMaxAlphaBeta_exMiniMax(self):
         self.g.resetAllUtility()
         self.g.get_vertex(3).utility=20
@@ -240,6 +243,7 @@ class Test_algorithm(unittest.TestCase):
                 [2, 5.0, 5.0],
                 [0, 5.0, 5.0]]
         self.assertListEqual(self.AL.miniMaxAlphaBeta(0,3,'exMiniMax'),expect)
+        self.assertListEqual(self.AL.finalPath,[0, 2])
         self.g.add_edge(2,5)
         self.g.add_edge(2,6)
         self.g.delete_objEdge('a0')
