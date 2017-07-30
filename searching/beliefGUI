@@ -196,14 +196,16 @@ def NextStep(e):
     #produce the canvas to display the probability table here
     #remove previous canvas from screen
     #
-    # topFrame3 = Frame(root)
-    # topFrame3.pack(fill=X)
     #
-    # resultcanvas = Canvas(root, width=100, height=60, bg="white")
-    # resultcanvas.pack(expand=1, fill=BOTH)
-
+    #one method:
     toplevel = Toplevel(width=700,height=800)
-    # box = canvas.create_rectangle(200,200,200,200)
+
+
+
+    # popup = canvas.create_rectangle(200,200,200,200)
+
+    # toplevel.grid_bbox(GA.nodeList,4) ####--- find out how to access node list and its size
+
 
 
 #
