@@ -102,48 +102,13 @@ def popupValue(e):
     value = askstring('value', 'Please enter a value')
     value = int(float(value))
 
-    # make while loop so it loops through all the labels
-
-    # labelFilled = False
-
-
-
-    # #check if label 1 is empty then enter for label 2
-    # if labelFilled == False:
-    label1 = canvas.create_text(40, 465, text=str(value))
-         # label1fill = True
-
-    print("iiiii")
-
-    # if label1fill==True:
-    #     #dont write over it
-    #     #start from label 2
-
-    label2 = canvas.create_text(120,465, text=str(value))
+    valueEntry = canvas.create_text(e.x,e.y, text=str(value))
 
     print("jjjjj")
 
+        #now need to store entries to use them
         #
-        # label3 = canvas.create_text(200, 465, text=str(value))
-        #
-        # label4 = canvas.create_text(300, 465, text=str(value))
-        #
-        # label5 = canvas.create_text(380, 465, text=str(value))
-        #
-        # label6 = canvas.create_text(460, 465, text=str(value))
-        #
-        # label7 = canvas.create_text(560, 465, text=str(value))
-        #
-        # label8 = canvas.create_text(640, 465, text=str(value))
-        #
-        # label9 = canvas.create_text(720, 465, text=str(value))
-        #
-        # label10 = canvas.create_text(820, 465, text=str(value))
-        #
-        # label11 = canvas.create_text(900, 465, text=str(value))
-        #
-        # label12 = canvas.create_text(980, 465, text=str(value))
-#
+
 def ValueEntry(event):
     print("fffff")
     #select square and click then it opens a pop up value and that value is then placed

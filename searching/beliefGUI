@@ -35,7 +35,7 @@ button5 = Button(topFrame,text="Set Nickname")
 button6 = Button(topFrame,text="Set Probability")
 button7 = Button(topFrame,text="Set Observation")
 # button8 = Button(topFrame2,text="Previous step",bg="light blue")
-button9 = Button(topFrame2,text="Show Full Table",bg="light blue")
+button9 = Button(topFrame,text="Show Full Table")
 
 button1.pack(side=LEFT)
 button2.pack(side=LEFT)
@@ -186,11 +186,11 @@ def Nickname(event):
     root.config(cursor="cross")
     canvas.bind("<Button-1>", customNickname)
 
-def Run(): #next step button produces this so method below
-    # canvas - make pop up probability table like video
-    #     resultcanvas = Frame(root)
-    #     resultcanvas.pack(side=BOTTOM)
-    print("iiii")
+# def Run(): #next step button produces this so method below
+#     # canvas - make pop up probability table like video
+#     #     resultcanvas = Frame(root)
+#     #     resultcanvas.pack(side=BOTTOM)
+#     print("iiii")
 
 def NextStep(e):
     #produce the canvas to display the probability table here
@@ -202,11 +202,8 @@ def NextStep(e):
 
 
 
-    # popup = canvas.create_rectangle(200,200,200,200)
-
-    # toplevel.grid_bbox(GA.nodeList,4) ####--- find out how to access node list and its size
-
-
+    popup = canvas.create_rectangle(200,200,200,200)
+    print("iiii")
 
 #
 # def PreStep(e): #takes you back to the canvas where you can then adjust the values you have given
