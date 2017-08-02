@@ -26,12 +26,12 @@ class algorithms:
             if node == goal:
                 self.qsLog.append([node,[n[0] for n in qs]])
                 visited.append(node)
-                self.visitedLog.append([n for n in visited])
+                self.visitedLog.append(list(visited))
                 return path
             # enumerate all adjacent nodes, construct a new path and push it into the queue
             elif node not in visited:
                 visited.append(node)
-                self.visitedLog.append([n for n in visited])
+                self.visitedLog.append(list(visited))
                 if (it!=-1 and self.maxDepth>self.layerDict[node]) or (it==-1):#max layer > current layer
                     temp=[]
                     for adj in self.graph[node]:
@@ -347,15 +347,8 @@ class algorithms:
 
     ##after the graph finished or changed, this method needs to be called in order to generate the probability table for each node
     def generateProbabilityTable(self):
-        self.parent={}#{node id: [parent...], ...} the nodes which have parenta
-        for n in self.graph:#for each node in the graph
-            self.graph[n].probabilityTable.clear()#clean up table
-            for i in self.graph[n].adjacent:#find each adjacent
-                if i not in self.parent:
-                    self.parent[i]=[n]
-                else:
-                    self.parent[i].append(n)
-        self.noParent={i for i in self.graph if i not in self.parent}#set, the nodes have no parent
+        self.parent=self.findParent(self.graph)
+        self.noParent=[i for i in self.graph if i not in self.parent]#the nodes have no parent
         for n in self.graph:
             if n in self.parent:#for those who have parent
                 l=self.parent[n]
@@ -366,6 +359,16 @@ class algorithms:
             else:#prior
                 self.graph[n].probabilityTable={n:[]}#the attribute row of the table
                 self.graph[n].probabilityTable['T']=[0,0,0,0]
+    def findParent(self,dict):
+        parent={}#{node id: [parent...], ...} the nodes which have parenta
+        for n in dict:#for each node in the graph
+            dict[n].probabilityTable.clear()#clean up table
+            for i in dict[n].adjacent:#find each adjacent
+                if i not in parent:
+                    parent[i]=[n]
+                else:
+                    parent[i].append(n)
+        return parent
 
     ##set up the expected value of ProbabilityTable, it will need to run simulateData to generate real value in probability table.
     #input: @arg1 the node, @arg2  key of the row as a string ie. 'TT', @arg3 probability
@@ -403,22 +406,23 @@ class algorithms:
                 else:
                     queue.append(q)#add to tail
         #after all simulating, update the prior probability of each node  (without given condition)
-        self.order=[]#the order that all parents of node are ready
-        for n in self.noParent:
-            self.graph[n].probability=self.graph[n].probabilityTable['T'][0]
-            self.order.append(n)
-        queue=list(self.parent)#clone it and become a queue
-        while queue:#is not empty
-            q=queue.pop(0)#pop from head
-            if set(self.parent[q]).issubset(self.order):#if all parents are ready
-                self.order.append(q)
-                k=0
-                for j in self.graph[q].probabilityTable:
-                    if j != q:
-                        k+=self.graph[q].probabilityTable[j][1]
-                        self.graph[q].probability=k/(times)
-            else:
-                queue.append(q)
+        self.generatePriorProbability()
+        # self.order=[]#the order that all parents of node are ready
+        # for n in self.noParent:
+        #     self.graph[n].probability=self.graph[n].probabilityTable['T'][0]
+        #     self.order.append(n)
+        # queue=list(self.parent)#clone it and become a queue
+        # while queue:#is not empty
+        #     q=queue.pop(0)#pop from head
+        #     if set(self.parent[q]).issubset(self.order):#if all parents are ready
+        #         self.order.append(q)
+        #         k=0
+        #         for j in self.graph[q].probabilityTable:
+        #             if j != q:
+        #                 k+=self.graph[q].probabilityTable[j][1]
+        #                 self.graph[q].probability=k/(times)
+        #     else:
+        #         queue.append(q)
     ##manually set up the ratio in probability table directly without simulateData, after set up, generatePriorProbability should be called
     #input:@arg1 the node, @arg2  key of the row as a string ie. 'TT', @arg3 probability
     def setKnownPT(self,id,key,value):
@@ -453,26 +457,41 @@ class algorithms:
                 self.graph[q].probability=nu/(nu+de)
             else:
                 queue.append(q)
+
+    ##A node in simple markov chain only depends on its parent
+    #input: @arg1 initial probability of each state{id: 0.7, id2: 0.3}, @arg2 transition model, is a vert_dict @arg3 the id of start node
+    #output: dictionary {step1:{state1:p, state2:p, ...}, ...}
+    def markov(self,initPro,model,id):
+        self.parentM=self.findParent(model)#to know who are parents
+        self.initPro=initPro
+        self.model=model
+
+        parent=self.findParent(self.graph)#to know who are parents
+        PT={}
+        step={id:0}
+        q=[id]
+        while q:
+            n=q.pop(0)
+            temp={}
+            for s in model:#every state in model
+                temp[s]=self.markovTrans(s,step[n])#{state1:p, state2:p, ...}
+                for c in self.graph[n].adjacent:#every child(usually only 1)
+                    step[c]=step[n]+1
+                    q.append(c)
+            PT[n]=temp#{step1:{state1:p, state2:p, ...}, ...}
+        return PT
     ##This method provides the probability of a state after several steps
-    #input: @arg1 the state id, @arg2 how many steps after the observation, @arg3 observation {id: 0.7, id2: 0.3}
+    #input: @arg1 the state id, @arg2 how many steps after the initial state, @arg3 initial probability {id: 0.7, id2: 0.3}, @arg4 transition model, is a vert_dict
     #output: probability
-    def markov(self,id,step,obs):
-        self.generateProbabilityTable()#to know who are parents
-        self.obs=obs
-        return self.partOfMarkov(id,step)
-    def partOfMarkov(self,id,step):
+    def markovTrans(self,id,step):
         if step==0:
-            # return self.graph[id].probability
-            return self.obs[id]
+            return self.initPro[id]
         elif step>0:
-            if id in self.parent:
-                pre=0
-                for p in self.parent[id]:
-                    if p==id:#from self to self
-                        pre+=self.partOfMarkov(id,step-1)*self.graph[id].get_weight(id)#previous step probability* stay chance
-                    else:
-                        pre+=self.partOfMarkov(p,step-1)*self.graph[p].get_weight(id)#previous step p probability* p to id chance
-                return pre
-            else:
-                # return self.graph[id].probability
-                return self.obs[id]
+            pre=0
+            for p in self.parentM[id]:
+                if p==id:#from self to self
+                    pre+=self.markovTrans(id,step-1)*self.model[id].get_weight(id)#previous step probability* stay chance
+                else:
+                    pre+=self.markovTrans(p,step-1)*self.model[p].get_weight(id)#previous step p probability* p to id chance
+
+            return pre
