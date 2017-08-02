@@ -505,17 +505,24 @@ class Test_algorithm(unittest.TestCase):
         g.add_edge(1,1,0.9)
         # g.get_vertex(0).probability=1
         # g.get_vertex(1).probability=0
-        obs={0:1,1:0}
-        al=Algorithms.algorithms(g.vert_dict)
-        expected=[1,
-                  0.5,
-                  0.3,
-                  0.21999999999999997,
-                  0.188,
-                  0.17520000000000002,
-                  0.17008,
-                  0.16803200000000001,
-                  0.16721280000000002,
-                  0.16688512000000005]
-        for i in range(10):
-            self.assertTrue(al.markov(0,i,obs)==expected[i])
+        initPro={0:1,1:0}
+        model=g.vert_dict
+        gg=Linking.Graph()
+        gg.add_vertex(0)
+        gg.add_vertex(1)
+        gg.add_vertex(2)
+        gg.add_vertex(3)
+        gg.add_edge(0,1)
+        gg.add_edge(1,2)
+        gg.add_edge(2,3)
+        al=Algorithms.algorithms(gg.vert_dict)
+        expected={0: {0: 1, 1: 0},
+                  1: {0: 0.5, 1: 0.5},
+                  2: {0: 0.3, 1: 0.7},
+                  3: {0: 0.21999999999999997, 1: 0.78}}
+        self.assertDictEqual(al.markov(initPro,model,0),expected)
+
+        expected={1: {0: 1, 1: 0},
+                  2: {0: 0.5, 1: 0.5},
+                  3: {0: 0.3, 1: 0.7}}
+        self.assertDictEqual(al.markov(initPro,model,1),expected)
