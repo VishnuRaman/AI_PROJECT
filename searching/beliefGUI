@@ -28,7 +28,8 @@ LK=Linking.Graph()
 #drop down list
 
 # create buttons
-button1 = Button(topFrame,text="Create Node")
+button1 = Button(topFrame,text="Create Parent Node")
+button10 = Button(topFrame,text="Create Child Node")
 button2 = Button(topFrame,text="Create Link")
 button3 = Button(topFrame,text="Move Node")
 button4 = Button(topFrame,text="Delete Node")
@@ -39,6 +40,7 @@ button7 = Button(topFrame,text="Set Observation")
 button9 = Button(topFrame,text="Show Full Table")
 
 button1.pack(side=LEFT)
+button10.pack(side=LEFT)
 button2.pack(side=LEFT)
 button3.pack(side=LEFT)
 button4.pack(side=LEFT)
@@ -64,13 +66,14 @@ def drawNode(e):
 
         #need to factor these tables into the above
 
-        probTable=canvas.create_rectangle(e.x-60,e.y-60,e.x-140,e.y+60)
-        tableHorizLine1=canvas.create_line(e.x-60,e.y+10,e.x-140,e.y+10)
-        tableHorizLine2 = canvas.create_line(e.x-60,e.y-25,e.x-140,e.y-25)
-        tableVertLine = canvas.create_line(e.x-100,e.y-60,e.x-100,e.y+60)
+        probTable=canvas.create_rectangle(e.x-60,e.y-30,e.x-140,e.y+30)
+        tableHorizLine2 = canvas.create_line(e.x-60,e.y,e.x-140,e.y)
+        tableVertLine = canvas.create_line(e.x - 100, e.y - 30, e.x - 100, e.y + 30)
+        falseLabel=canvas.create_text(e.x-80,e.y-15,text="F")
+        trueLabel = canvas.create_text(e.x-120,e.y-15,text="T")
 
-        #true false labels and probabilty from parent probability button
-        #can do second part in that method later below
+        #make entry boxes for the true and false values and enter them that way
+
 
 
         value = askstring('value', 'Please enter a title')
@@ -97,6 +100,36 @@ def drawNode(e):
 def CreateNode(event):
     root.config(cursor="")
     canvas.bind("<Button-1>",drawNode)
+
+def drawChild(e):
+    if not canvas.find_enclosed(e.x-105,e.y-105,e.x+105,e.y+105):
+        oval=canvas.create_oval(e.x-50,e.y-50,e.x+50,e.y+40)
+
+
+        value = askstring('value', 'Please enter a title')
+
+      #MN.inc means increase that method by 1 as new node was created
+
+        nodeID=MN.inc()
+
+        nodeName=value
+
+        #nickname given to each node
+        nickname=canvas.create_text(e.x,e.y,text=str(value))
+
+        # seperate dictioanry that does them singuarly
+        # nameDict=dict([(nodeID, nodeName)])
+        # print('node and name connection:' + str(nameDict))
+
+        GUIset=[nodeName,oval,{}]#number object / oval object / dictionary for linking
+        node_id_Dic[oval]=nodeID
+        GA.addNode(GUIset,nodeID)
+        LK.add_vertex(nodeID)
+
+def CreateChild(event):
+    root.config(cursor="")
+    canvas.bind("<Button-1>",drawChild)
+
 # listen to second click and draw the line on the canvas
 def ArcPoint2(e):
     if len(canvas.find_enclosed(e.x-105,e.y-105,e.x+105,e.y+105))==2:
@@ -225,17 +258,46 @@ def NextStep(e):
     print("iiii")
 
 def setProb(e):
+    # observation = askstring('value', 'Please enter T/F')
+    #
+    # if not canvas.find_enclosed(e.x-20, e.y, e.x+20, e.y+30):
+    #     canvas.create_text(e.x, e.y, text=observation)
+    #
+    # if observation=="T":
+    #     canvas.create_text(e.x+40,e.y,text="F")
+    #
+    # else:
+    #   canvas.create_text(e.x + 40, e.y, text="T")
+
+
+
     value = askstring('value', 'Please enter a probability value')
 
-    value = int(float(value))
+    value = getdouble(value)
+
+    # probTable = canvas.create_rectangle(e.x - 60, e.y - 30, e.x - 140, e.y + 30)
+    # tableHorizLine2 = canvas.create_line(e.x - 60, e.y, e.x - 140, e.y)
+    # tableVertLine = canvas.create_line(e.x - 100, e.y - 30, e.x - 100, e.y + 30)
+
+    #if true box is clicked enter value
+    if not canvas.find_enclosed(e.x-20, e.y, e.x+20, e.y+30):
+        canvas.create_text(e.x, e.y, text=value)
+    #     canvas.create_text(e.x+40,e.y,text=1.0-value)
+    #
+    # # elif not canvas.find_enclosed(e.x-60, e.y, e.x-100, e.y+30):
+    # elif canvas.find_enclosed(e.x-20,e.y,e.x-20,e.y+30):
+    #     canvas.create_text(e.x+40, e.y, text=value)
+    #     canvas.create_text(e.x, e.y, text=1.0-value)
 
 
-    # MN.inc means increase that method by 1 as new node was created
-    nodeID = MN.inc()
 
-    Probset = [nodeID, value, {}]  # number object / oval object / dictionary for linking
 
-    GA.addBeliefNode(Probset, nodeID,value)
+        # # MN.inc means increase that method by 1 as new node was created
+    # nodeID = MN.inc()
+    #
+    # Probset = [nodeID, value, {}]  # number object / oval object / dictionary for linking
+    #
+    # GA.addBeliefNode(Probset, nodeID,value)
 
     # print(str(probValue))
 
@@ -244,6 +306,7 @@ def ParentProb(event):
     canvas.bind("<Button-1>", setProb)
 
 button1.bind("<Button-1>",CreateNode)
+button10.bind("<Button-1>",CreateChild)
 button2.bind("<Button-1>",CreateArc)
 button3.bind("<Button-1>",Move)
 button4.bind("<Button-1>",Delete)
