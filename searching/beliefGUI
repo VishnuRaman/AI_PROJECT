@@ -60,7 +60,19 @@ def drawNode(e):
     #if is empty then creates the oval
 
     if not canvas.find_enclosed(e.x-105,e.y-105,e.x+105,e.y+105):
-        oval=canvas.create_oval(e.x-50,e.y-40,e.x+50,e.y+40)
+        oval=canvas.create_oval(e.x-50,e.y-50,e.x+50,e.y+40)
+
+        #need to factor these tables into the above
+
+        probTable=canvas.create_rectangle(e.x-60,e.y-60,e.x-140,e.y+60)
+        tableHorizLine1=canvas.create_line(e.x-60,e.y+10,e.x-140,e.y+10)
+        tableHorizLine2 = canvas.create_line(e.x-60,e.y-25,e.x-140,e.y-25)
+        tableVertLine = canvas.create_line(e.x-100,e.y-60,e.x-100,e.y+60)
+
+        #true false labels and probabilty from parent probability button
+        #can do second part in that method later below
+
+
         value = askstring('value', 'Please enter a title')
 
       #MN.inc means increase that method by 1 as new node was created
@@ -75,7 +87,6 @@ def drawNode(e):
         # seperate dictioanry that does them singuarly
         # nameDict=dict([(nodeID, nodeName)])
         # print('node and name connection:' + str(nameDict))
-
 
         GUIset=[nodeName,oval,{}]#number object / oval object / dictionary for linking
         node_id_Dic[oval]=nodeID
