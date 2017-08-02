@@ -71,9 +71,11 @@ def popupValue(e):
 
     valueEntry = canvas.create_text(e.x,e.y, text=str(value))
 
-    #need to store all the values entered
+    #need to store all the values entered not just one at a time
 
-    valueList = value
+    #maybe do a loop so if button click, add to a list
+
+    valueList = [value] #need to add every new click too
     print(valueList)
 
     #make a list that stores all the entered values
