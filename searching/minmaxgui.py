@@ -71,6 +71,13 @@ def popupValue(e):
 
     valueEntry = canvas.create_text(e.x,e.y, text=str(value))
 
+    #need to store all the values entered
+
+    valueList = value
+    print(valueList)
+
+    #make a list that stores all the entered values
+
     print("jjjjj")
 
         #now need to store entries to use them

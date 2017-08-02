@@ -72,8 +72,9 @@ def drawNode(e):
         #nickname given to each node
         nickname=canvas.create_text(e.x,e.y,text=str(value))
 
-        nameDict=dict([(nodeID, nodeName)])
-        print('node and name connection:' + str(nameDict))
+        # seperate dictioanry that does them singuarly
+        # nameDict=dict([(nodeID, nodeName)])
+        # print('node and name connection:' + str(nameDict))
 
 
         GUIset=[nodeName,oval,{}]#number object / oval object / dictionary for linking
