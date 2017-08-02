@@ -1,6 +1,7 @@
 from tkinter.simpledialog import askstring
 
 import ManageNode,Linking,GuiArray,Algorithms
+import  math,numpy
 
 import pickle
 from tkinter import *
@@ -31,19 +32,20 @@ button1 = Button(topFrame,text="Create Node")
 button2 = Button(topFrame,text="Create Link")
 button3 = Button(topFrame,text="Move Node")
 button4 = Button(topFrame,text="Delete Node")
-button5 = Button(topFrame,text="Set Nickname")
-button6 = Button(topFrame,text="Set Probability")
+# button5 = Button(topFrame,text="Set Nickname")
+button6 = Button(topFrame,text="Set Parent Probability")
 button7 = Button(topFrame,text="Set Observation")
-button8 = Button(topFrame2,text="Previous step",bg="light blue")
-button9 = Button(topFrame2,text="Next step",bg="light blue")
+# button8 = Button(topFrame2,text="Previous step",bg="light blue")
+button9 = Button(topFrame,text="Show Full Table")
 
 button1.pack(side=LEFT)
 button2.pack(side=LEFT)
 button3.pack(side=LEFT)
 button4.pack(side=LEFT)
-button5.pack(side=LEFT)
+# button5.pack(side=LEFT)
+button6.pack(side=LEFT)
 button7.pack(side=LEFT)
-button8.pack(side=LEFT)
+# button8.pack(side=LEFT)
 button9.pack(side=LEFT)
 
 # methods called by buttons
@@ -58,13 +60,35 @@ def drawNode(e):
     #if is empty then creates the oval
 
     if not canvas.find_enclosed(e.x-105,e.y-105,e.x+105,e.y+105):
-        oval=canvas.create_oval(e.x-50,e.y-40,e.x+50,e.y+40)
+        oval=canvas.create_oval(e.x-50,e.y-50,e.x+50,e.y+40)
+
+        #need to factor these tables into the above
+
+        probTable=canvas.create_rectangle(e.x-60,e.y-60,e.x-140,e.y+60)
+        tableHorizLine1=canvas.create_line(e.x-60,e.y+10,e.x-140,e.y+10)
+        tableHorizLine2 = canvas.create_line(e.x-60,e.y-25,e.x-140,e.y-25)
+        tableVertLine = canvas.create_line(e.x-100,e.y-60,e.x-100,e.y+60)
+
+        #true false labels and probabilty from parent probability button
+        #can do second part in that method later below
+
+
+        value = askstring('value', 'Please enter a title')
+
       #MN.inc means increase that method by 1 as new node was created
+
         nodeID=MN.inc()
-        num=canvas.create_text(e.x,e.y)
-        #num = the number label for the node eg 0,1,2
-        #node = the oval shape
-        GUIset=[num,oval,{}]#number object / oval object / dictionary for linking
+
+        nodeName=value
+
+        #nickname given to each node
+        nickname=canvas.create_text(e.x,e.y,text=str(value))
+
+        # seperate dictioanry that does them singuarly
+        # nameDict=dict([(nodeID, nodeName)])
+        # print('node and name connection:' + str(nameDict))
+
+        GUIset=[nodeName,oval,{}]#number object / oval object / dictionary for linking
         node_id_Dic[oval]=nodeID
         GA.addNode(GUIset,nodeID)
         LK.add_vertex(nodeID)
@@ -172,46 +196,61 @@ def Delete(event):
     root.config(cursor="spider")
     canvas.bind("<Button-1>",removeFromCanvas)
 
-def customNickname(e):
-    value = askstring('value', 'Please enter a value')
-
-    # make while loop so it loops through all the labels
-
-    # labelFilled = False
-    # e.x - 50, e.y - 40, e.x + 50, e.y + 40
-
-    nickNameLabel = canvas.create_text(e.x, e.y, text=str(value))
-
-    nickName = text=str(value)
-    # label1fill = True
-
-    # print("iiiii")
-
-def Nickname(event):
-    root.config(cursor="cross")
-    canvas.bind("<Button-1>", customNickname)
-
-def Run(): #next step button produces this so method below
-    # canvas - make pop up probability table like video
-        resultcanvas = Frame(root)
-        resultcanvas.pack(side=BOTTOM)
+# def customNickname(e): #maybe move this to create node one
+#     value = askstring('value', 'Please enter a value')
+#
+#     nickNameLabel = canvas.create_text(e.x, e.y, text=str(value))
+#
+#     nickName = str(value)
+#
+#     #make dictionary for node id and nickname
+#
+#     # print("iiiii")
+#
+# def Nickname(event):
+#     root.config(cursor="cross")
+#     canvas.bind("<Button-1>", customNickname)
 
 def NextStep(e):
     #produce the canvas to display the probability table here
-    root.update()
-def PreStep(e): #takes you back to the canvas where you can then adjust the values you have given
-    global xTh
+    #remove previous canvas from screen
+    #
+    #
+    #one method:
+    toplevel = Toplevel(width=700,height=800)
 
-    root.update()
+
+
+    popup = canvas.create_rectangle(200,200,200,200)
+    print("iiii")
+
+def setProb(e):
+    value = askstring('value', 'Please enter a probability value')
+
+    value = int(float(value))
+
+
+    # MN.inc means increase that method by 1 as new node was created
+    nodeID = MN.inc()
+
+    Probset = [nodeID, value, {}]  # number object / oval object / dictionary for linking
+
+    GA.addBeliefNode(Probset, nodeID,value)
+
+    # print(str(probValue))
+
+def ParentProb(event):
+    root.config(cursor="cross")
+    canvas.bind("<Button-1>", setProb)
 
 button1.bind("<Button-1>",CreateNode)
 button2.bind("<Button-1>",CreateArc)
 button3.bind("<Button-1>",Move)
 button4.bind("<Button-1>",Delete)
-button5.bind("<Button-1>",Nickname)
-#button6.bind("<Button-1>", set probabilty method - pop up box select link select probability)
-# button7.bind("<Button-1>", set observation method - ie set it as true or false)
-button8.bind("<Button-1>",PreStep)
+# button5.bind("<Button-1>",Nickname)
+button6.bind("<Button-1>",ParentProb)
+#button7.bind("<Button-1>", set probabilty method - pop up box select link select probability)
+#button8.bind("<Button-1>", set observation method - ie set it as true or false)
 button9.bind("<Button-1>",NextStep)
 
 
