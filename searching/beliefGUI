@@ -315,10 +315,14 @@ def setTF(e):
 
         if true == True and false==False:
             #COLOUR THE NODE GREEN
+
+            #add to the dictionary nodeID and T
             print(chosenNode + "T")
 
         if true==False and False==True:
             #COLOUR THE NODE FALSE
+
+            #add to the dictionary nodeID and F
             print(chosenNode + "F")
 
     # observation = askstring('value', 'Please enter T/F')
