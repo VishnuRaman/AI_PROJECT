@@ -503,10 +503,10 @@ class Test_algorithm(unittest.TestCase):
         g.add_edge(0,0,0.5)
         g.add_edge(1,0,0.1)
         g.add_edge(1,1,0.9)
-        # g.get_vertex(0).probability=1
-        # g.get_vertex(1).probability=0
-        initPro={0:1,1:0}
+        g.get_vertex(0).probability=1#initial probability
+        g.get_vertex(1).probability=0#initial probability
         model=g.vert_dict
+
         gg=Linking.Graph()
         gg.add_vertex(0)
         gg.add_vertex(1)
@@ -520,9 +520,59 @@ class Test_algorithm(unittest.TestCase):
                   1: {0: 0.5, 1: 0.5},
                   2: {0: 0.3, 1: 0.7},
                   3: {0: 0.21999999999999997, 1: 0.78}}
-        self.assertDictEqual(al.markov(initPro,model,0),expected)
+        self.assertDictEqual(al.markov(model,0),expected)
 
         expected={1: {0: 1, 1: 0},
                   2: {0: 0.5, 1: 0.5},
                   3: {0: 0.3, 1: 0.7}}
-        self.assertDictEqual(al.markov(initPro,model,1),expected)
+        self.assertDictEqual(al.markov(model,1),expected)
+
+    def test_hiddenMarkov(self):
+        g=Linking.Graph()
+        g.add_vertex('rainy')
+        g.add_vertex('sunny')
+        g.add_vertex('hear')
+        g.add_vertex('not')
+        #transition probability
+        g.add_edge('rainy','sunny',0.5)
+        g.add_edge('rainy','rainy',0.5)
+        g.add_edge('sunny','rainy',0.1)
+        g.add_edge('sunny','sunny',0.9)
+        #emission probability
+        g.add_edge('rainy','hear',0.7)
+        g.add_edge('rainy','not',0.3)
+        g.add_edge('sunny','hear',0.2)
+        g.add_edge('sunny','not',0.8)
+        #initial probability
+        g.get_vertex('rainy').probability=0.5
+        g.get_vertex('sunny').probability=0.5
+        model=g.vert_dict
+
+        gg=Linking.Graph()
+        #node
+        gg.add_vertex(0)
+        gg.add_vertex(1)
+        gg.add_vertex(2)
+        gg.add_vertex(3)
+        #obs
+        gg.add_vertex(4)
+        gg.add_vertex(5)
+        gg.add_vertex(6)
+
+        gg.add_edge(0,1)
+        gg.add_edge(1,2)
+        gg.add_edge(2,3)
+        gg.add_edge(0,4)#obs
+        gg.add_edge(1,5)
+        gg.add_edge(2,6)
+        al=Algorithms.algorithms(gg.vert_dict)
+
+        obs={4:'hear', 5:'hear', 6:'not'}
+        states=['rainy','sunny']
+
+        expected={0: {'rainy': 0.7777777777777778, 'sunny': 0.22222222222222227},
+                  1: {'rainy': 0.7095890410958903, 'sunny': 0.2904109589041096},
+                  2: {'rainy': 0.18936697454381615, 'sunny': 0.8106330254561839},
+                  3: {'rainy': 0.17574678981752645, 'sunny': 0.8242532101824737}}
+        print(al.hiddenMarkov(model,0,obs,states))
+        self.assertDictEqual(al.hiddenMarkov(model,0,obs,states),expected)

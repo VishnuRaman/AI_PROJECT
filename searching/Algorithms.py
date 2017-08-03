@@ -258,16 +258,6 @@ class algorithms:
     #input: @arg1 the node
     #output:list contains the child and grand child
     def findChild(self,query):
-        # self.relatedParent=[]#a list of nodes that will affect the value of query node
-        # if query in self.parent:
-        #     q=list(self.parent[query])
-        #     self.relatedParent.extend(q)
-        #     while q:
-        #         p=q.pop(0)
-        #         if p in self.parent:
-        #             l=list(self.parent[p])
-        #             q.extend(l)
-        #             self.relatedParent.extend(l)
         relatedChild=[]
         q=list(self.graph[query].adjacent)
         relatedChild.extend(q)
@@ -407,22 +397,7 @@ class algorithms:
                     queue.append(q)#add to tail
         #after all simulating, update the prior probability of each node  (without given condition)
         self.generatePriorProbability()
-        # self.order=[]#the order that all parents of node are ready
-        # for n in self.noParent:
-        #     self.graph[n].probability=self.graph[n].probabilityTable['T'][0]
-        #     self.order.append(n)
-        # queue=list(self.parent)#clone it and become a queue
-        # while queue:#is not empty
-        #     q=queue.pop(0)#pop from head
-        #     if set(self.parent[q]).issubset(self.order):#if all parents are ready
-        #         self.order.append(q)
-        #         k=0
-        #         for j in self.graph[q].probabilityTable:
-        #             if j != q:
-        #                 k+=self.graph[q].probabilityTable[j][1]
-        #                 self.graph[q].probability=k/(times)
-        #     else:
-        #         queue.append(q)
+
     ##manually set up the ratio in probability table directly without simulateData, after set up, generatePriorProbability should be called
     #input:@arg1 the node, @arg2  key of the row as a string ie. 'TT', @arg3 probability
     def setKnownPT(self,id,key,value):
@@ -439,8 +414,8 @@ class algorithms:
             q=queue.pop(0)#pop from head
             if set(self.parent[q]).issubset(self.order):#if all parents are ready
                 self.order.append(q)
-                nu=0
-                de=0
+                nu=0#numerator
+                de=0#denominator
                 for k in self.graph[q].probabilityTable:
                     if k != q:#skip title row
                         pro=1
@@ -459,11 +434,10 @@ class algorithms:
                 queue.append(q)
 
     ##A node in simple markov chain only depends on its parent
-    #input: @arg1 initial probability of each state{id: 0.7, id2: 0.3}, @arg2 transition model, is a vert_dict @arg3 the id of start node
+    #input: @arg1  transition model, is a vert_dict @arg2 the id of start node
     #output: dictionary {step1:{state1:p, state2:p, ...}, ...}
-    def markov(self,initPro,model,id):
+    def markov(self,model,id):
         self.parentM=self.findParent(model)#to know who are parents
-        self.initPro=initPro
         self.model=model
 
         parent=self.findParent(self.graph)#to know who are parents
@@ -472,26 +446,66 @@ class algorithms:
         q=[id]
         while q:
             n=q.pop(0)
-            temp={}
-            for s in model:#every state in model
-                temp[s]=self.markovTrans(s,step[n])#{state1:p, state2:p, ...}
-                for c in self.graph[n].adjacent:#every child(usually only 1)
-                    step[c]=step[n]+1
-                    q.append(c)
-            PT[n]=temp#{step1:{state1:p, state2:p, ...}, ...}
+            PT[n]=self.markovTrans(step[n])#{step1:{state1:p, state2:p, ...}, ...}
+            for c in self.graph[n].adjacent:#every child(usually only 1)
+                step[c]=step[n]+1
+                q.append(c)
         return PT
-    ##This method provides the probability of a state after several steps
-    #input: @arg1 the state id, @arg2 how many steps after the initial state, @arg3 initial probability {id: 0.7, id2: 0.3}, @arg4 transition model, is a vert_dict
+    ##This method is a part of markov, it provides the probability of a state after several steps, it works on the transition model
+    #input: @arg1  how many steps after the initial state
     #output: probability
-    def markovTrans(self,id,step):
-        if step==0:
-            return self.initPro[id]
-        elif step>0:
-            pre=0
-            for p in self.parentM[id]:
-                if p==id:#from self to self
-                    pre+=self.markovTrans(id,step-1)*self.model[id].get_weight(id)#previous step probability* stay chance
-                else:
-                    pre+=self.markovTrans(p,step-1)*self.model[p].get_weight(id)#previous step p probability* p to id chance
+    def markovTrans(self,step):
+        temp={}
+        for s in self.model:#every state in model
+            if step==0:
+                temp[s]=self.model[s].probability
+            elif step>0:
+                pro=0
+                for p in self.parentM[s]:
+                    pro+=self.markovTrans(step-1)[p]*self.model[p].get_weight(s)#previous step p probability* p to s chance
+                temp[s]=pro
+        return temp
 
-            return pre
+    #input: @arg1  transition model, is a vert_dict @arg2 the id of start node, @arg3 observation {id1:'hear', id2:'not'}, @arg4 a list of state id ['rainy', 'sunny', cloudy', ...] or [0, 1, 2, ...]
+    #output: dictionary {step1:{state1:p, state2:p, ...}, ...}
+    def hiddenMarkov(self,model,id,obs,states):
+        parent=self.findParent(self.graph)
+        parentM=self.findParent(model)
+        PT={}
+
+        temp={}#putting initial probability into PT
+        for s in states:
+            temp[s]=model[s].probability
+        PT[id]=temp
+
+        q=[id]
+        while q:
+            n=q.pop(0)#current node
+            bo=False
+            for a in self.graph[n].adjacent:#every child
+                if a in obs:#child is in observation, then update current node
+                    bo=True
+                    #model
+                    temp={}
+                    nu=0#numerator
+                    de=0#denominator
+                    for p in parentM[obs[a]]:
+                        de+=PT[n][p]*model[p].get_weight(obs[a])
+                    for p in parentM[obs[a]]:#every parent of the observation in the model
+                        nu=PT[n][p]*model[p].get_weight(obs[a])
+                        temp[p]=nu/de#{state1:p, state2:p, ...}
+                    PT[n]=temp
+                else:#child is next step
+                    q.append(a)
+
+                for a in self.graph[n].adjacent:#every child
+                    if a not in obs:#not in observation
+                        temp={}
+                        for s in states:
+                            pro=0
+                            for p in parentM[s]:
+                                pro+=PT[n][p]*model[p].get_weight(s)
+                            temp[s]=pro#{state1:p, ...}
+                        PT[a]=temp
+
+        return  PT
