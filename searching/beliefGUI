@@ -29,21 +29,20 @@ LK=Linking.Graph()
 
 # create buttons
 button1 = Button(topFrame,text="Create Parent Node")
-button10 = Button(topFrame,text="Create Child Node")
-button2 = Button(topFrame,text="Create Link")
-button3 = Button(topFrame,text="Move Node")
-button4 = Button(topFrame,text="Delete Node")
-# button5 = Button(topFrame,text="Set Nickname")
+button2 = Button(topFrame,text="Create Child Node")
+button3 = Button(topFrame,text="Create Link")
+button4 = Button(topFrame,text="Move Node")
+button5 = Button(topFrame,text="Delete Node")
 button6 = Button(topFrame,text="Set Parent Probability")
 button7 = Button(topFrame,text="Set Observation")
 # button8 = Button(topFrame2,text="Previous step",bg="light blue")
 button9 = Button(topFrame,text="Show Full Table")
 
 button1.pack(side=LEFT)
-button10.pack(side=LEFT)
 button2.pack(side=LEFT)
 button3.pack(side=LEFT)
 button4.pack(side=LEFT)
+button5.pack(side=LEFT)
 # button5.pack(side=LEFT)
 button6.pack(side=LEFT)
 button7.pack(side=LEFT)
@@ -258,22 +257,15 @@ def NextStep(e):
     print("iiii")
 
 def setProb(e):
-    # observation = askstring('value', 'Please enter T/F')
-    #
-    # if not canvas.find_enclosed(e.x-20, e.y, e.x+20, e.y+30):
-    #     canvas.create_text(e.x, e.y, text=observation)
-    #
-    # if observation=="T":
-    #     canvas.create_text(e.x+40,e.y,text="F")
-    #
-    # else:
-    #   canvas.create_text(e.x + 40, e.y, text="T")
-
-
 
     value = askstring('value', 'Please enter a probability value')
 
     value = getdouble(value)
+
+    #need to sort out error handling here if no value entered/cancelled
+
+
+
 
     # probTable = canvas.create_rectangle(e.x - 60, e.y - 30, e.x - 140, e.y + 30)
     # tableHorizLine2 = canvas.create_line(e.x - 60, e.y, e.x - 140, e.y)
@@ -305,15 +297,57 @@ def ParentProb(event):
     root.config(cursor="cross")
     canvas.bind("<Button-1>", setProb)
 
+def setTF(e):
+
+        Label(root, text="Select Node:").pack(side=LEFT)
+
+        e1 = Entry(root)
+
+        e1.pack(side=LEFT)
+
+        chosenNode = e1.get()
+
+        true = Checkbutton(root, text="True")
+        true.pack(side=LEFT)
+
+        false = Checkbutton(root, text="False")
+        false.pack(side=LEFT)
+
+        if true == True and false==False:
+            #COLOUR THE NODE GREEN
+            print(chosenNode + "T")
+
+        if true==False and False==True:
+            #COLOUR THE NODE FALSE
+            print(chosenNode + "F")
+
+    # observation = askstring('value', 'Please enter T/F')
+    #
+    # if not canvas.find_enclosed(e.x-20, e.y, e.x+20, e.y+30):
+    #  canvas.create_text(e.x, e.y, text=observation)
+    #
+    # if observation=="T":
+    #  canvas.create_text(e.x+40,e.y,text="F")
+    #
+    # else:
+    # canvas.create_text(e.x + 40, e.y, text="T")
+
+        print("afeewafew")
+
+def SetObs(event):
+    root.config(cursor="cross")
+    canvas.bind("<Button-1>", setTF)
+
 button1.bind("<Button-1>",CreateNode)
-button10.bind("<Button-1>",CreateChild)
-button2.bind("<Button-1>",CreateArc)
+button2.bind("<Button-1>",CreateChild)
+button3.bind("<Button-1>",CreateArc)
 button3.bind("<Button-1>",Move)
-button4.bind("<Button-1>",Delete)
+button5.bind("<Button-1>",Delete)
 # button5.bind("<Button-1>",Nickname)
 button6.bind("<Button-1>",ParentProb)
-#button7.bind("<Button-1>", set probabilty method - pop up box select link select probability)
-#button8.bind("<Button-1>", set observation method - ie set it as true or false)
+button7.bind("<Button-1>", SetObs)
+
+# set observation method - ie set it as true or false)
 button9.bind("<Button-1>",NextStep)
 
 
