@@ -36,7 +36,11 @@ class Test_algorithm(unittest.TestCase):
     def test_ucsAStar_ucs(self):
         #UCS
         self.assertEqual([0,1,4],self.AL.ucsAStar(0,4,'UCS'))#Test UCS final path
-        qsExpect=[[0, [1, 2], [1, 1]], [1, [2, 3, 4], [1, 2, 2]], [2, [3, 4, 5, 6], [2, 2, 2, 2]], [3, [4, 5, 6], [2, 2, 2]], [4, [5, 6], [2, 2]]]
+        qsExpect=[[0, [1, 2], [1, 1]],
+                  [1, [2, 3, 4], [1, 2, 2]],
+                  [2, [3, 4, 5, 6], [2, 2, 2, 2]],
+                  [3, [4, 5, 6], [2, 2, 2]],
+                  [4, [5, 6], [2, 2]]]
         self.assertEqual(qsExpect,self.AL.getQsLog())#Test UCS qsLog
         visitedExpect=[[0], [0, 1], [0, 1, 2], [0, 1, 2, 3], [0, 1, 2, 3, 4]]
         self.assertEqual(visitedExpect,self.AL.getVisitedLog())#Test UCS visitedLog
@@ -58,21 +62,21 @@ class Test_algorithm(unittest.TestCase):
         self.assertEqual(visitedExpect,self.AL.getVisitedLog())#Test A* visitedLog
     def test_bdfs_bfs_iter(self):
         #BFS
-        self.assertEqual([0,1,4],self.AL.iterative(0,4,'BFS',it=3))#Test BFS final path
+        self.assertEqual([0,1,4],self.AL.iterative(0,4,'BFS',3))#Test BFS final path
         qsExpect=[[0, [1, 2]], [1, [2]], [2, []], [0, [1, 2]], [1, [2, 3, 4]], [2, [3, 4, 5, 6]], [3, [4, 5, 6]], [4, [5, 6]]]
         self.assertEqual(qsExpect,self.AL.getQsLog())#Test BFS qsLog
         visitedExpect=[[0], [0, 1], [0, 1, 2], [0], [0, 1], [0, 1, 2], [0, 1, 2, 3], [0, 1, 2, 3, 4]]
         self.assertEqual(visitedExpect,self.AL.getVisitedLog())#Test BFS visitedLog
     def test_bdfs_dfs_iter(self):
         #DFS
-        self.assertEqual([0,2,5],self.AL.iterative(0,5,'DFS',it=3))#Test DFS final path
+        self.assertEqual([0,2,5],self.AL.iterative(0,5,'DFS',3))#Test DFS final path
         qsExpect=[[0, [1, 2]], [2, [1]], [1, []],[0, [1, 2]], [2, [1, 5, 6]], [6, [1, 5]], [5, [1]]]
         self.assertEqual(qsExpect,self.AL.getQsLog())#Test DFS qsLog
         visitedExpect=[[0], [0, 2], [0, 2, 1], [0], [0, 2], [0, 2, 6], [0, 2, 6, 5]]
         self.assertEqual(visitedExpect,self.AL.getVisitedLog())#Test DFS visitedLog
     def test_ucsAStar_ucs_iter(self):
         #UCS
-        self.assertEqual([0,1,4],self.AL.iterative(0,4,'UCS',it=3))#Test UCS final path
+        self.assertEqual([0,1,4],self.AL.iterative(0,4,'UCS',3))#Test UCS final path
         qsExpect=[[0, [1, 2], [1, 1]], [1, [2], [1]], [2, [], []], [0, [1, 2], [1, 1]], [1, [2, 3, 4], [1, 2, 2]], [2, [3, 4, 5, 6], [2, 2, 2, 2]], [3, [4, 5, 6], [2, 2, 2]], [4, [5, 6], [2, 2]]]
         self.assertEqual(qsExpect,self.AL.getQsLog())#Test UCS qsLog
         visitedExpect=[[0], [0, 1], [0, 1, 2], [0], [0, 1], [0, 1, 2], [0, 1, 2, 3], [0, 1, 2, 3, 4]]
@@ -81,14 +85,14 @@ class Test_algorithm(unittest.TestCase):
         #A* (manual heuristic)
         self.g.get_vertex(1).heuristic=1
         self.g.get_vertex(3).heuristic=1
-        self.assertEqual([0,1,4],self.AL.iterative(0,4,'aStar',it=3))#Test A* final path
+        self.assertEqual([0,1,4],self.AL.iterative(0,4,'aStar',3))#Test A* final path
         qsExpect=[[0, [2, 1], [1, 2]], [2, [1], [2]], [1, [], []], [0, [2, 1], [1, 2]], [2, [1, 5, 6], [2, 2, 2]], [1, [5, 6, 4, 3], [2, 2, 3, 4]], [5, [6, 4, 3], [2, 3, 4]], [6, [4, 3], [3, 4]], [4, [3], [4]]]
         self.assertEqual(qsExpect,self.AL.getQsLog())#Test A* qsLog
         visitedExpect=[[0], [0, 2], [0, 2, 1], [0], [0, 2], [0, 2, 1], [0, 2, 1, 5], [0, 2, 1, 5, 6], [0, 2, 1, 5, 6, 4]]
         self.assertEqual(visitedExpect,self.AL.getVisitedLog())#Test A* visitedLog
         self.g.resetAllHeuristic()
         #A* (default heuristic=0)
-        self.assertEqual([0,1,4],self.AL.iterative(0,4,'aStar',it=3))#Test A* final path
+        self.assertEqual([0,1,4],self.AL.iterative(0,4,'aStar',3))#Test A* final path
         qsExpect=[[0, [1, 2], [1, 1]], [1, [2], [1]], [2, [], []], [0, [1, 2], [1, 1]], [1, [2, 3, 4], [1, 2, 2]], [2, [3, 4, 5, 6], [2, 2, 2, 2]], [3, [4, 5, 6], [2, 2, 2]], [4, [5, 6], [2, 2]]]
         self.assertEqual(qsExpect,self.AL.getQsLog())#Test A* qsLog
         visitedExpect=[[0], [0, 1], [0, 1, 2], [0], [0, 1], [0, 1, 2], [0, 1, 2, 3], [0, 1, 2, 3, 4]]
@@ -471,7 +475,11 @@ class Test_algorithm(unittest.TestCase):
         al.setKnownPT(4,'F',0.01)
         al.generatePriorProbability()
         obs={3:'T',4:'T'}
-        expected={0: 0.1694628029147602, 1: 0.9958554837953809, 2: 0.9228191078724887, 3: 1, 4: 1}
+        expected={0: 0.1694628029147602,
+                  1: 0.9958554837953809,
+                  2: 0.9228191078724887,
+                  3: 1,
+                  4: 1}
         self.assertDictEqual(al.refreshP(obs),expected)
         obs={3:'T'}
         expected={0: 0.1, 1: 0.9876543209876543, 2: 0.5445555555555555, 3: 1, 4: 0.05900999999999999}
