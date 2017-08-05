@@ -190,10 +190,11 @@ def ArcPoint2(e):
         toNode=node_id_Dic[canvas.find_enclosed(e.x-50,e.y-50,e.x+50,e.y+50)[0]]#the node is created before num so it is at [0]
         if (fromNode is not toNode)and(LK.check_edge_existed(fromNode,toNode)==False):
             root.config(cursor="")
-            arrow = canvas.create_line(x,y,e.x,e.y,arrow="last")#fill="turquoise" can change color
+            arrow = canvas.create_line(x,y,e.x,e.y,arrow="last")
             #use -->  canvas.itemconfig(arrow,fill="red") <-- to change color after created
 
             # need to change this so text corresponds to the custom entry made by the user
+            #do like belief net button
             weight = canvas.create_text(0.5*(x+e.x),0.5*(y+e.y)-10,text=1)
 
             # GA.addArrow(fromNode,toNode,arrow,weight) - inc when sorted weight out
@@ -271,7 +272,6 @@ def Move(event):
     root.config(cursor="")
     canvas.bind("<Button-1>",moveFrom)
 
-
 def removeFromCanvas(e):
     #checks range to see if both node and number label are in the range where you clicked
     if len(canvas.find_enclosed(e.x-50,e.y-50,e.x+50,e.y+50))==2:
@@ -310,7 +310,6 @@ def Run(event):
     elif iter==False and algorithm in ('BFS', 'DFS'):
         # print('hhhh')
         finalPath = AL.bdfs(int(startNode.get()),int(endNode.get()),algorithm)
-
 
     # else:
     #     tkinter.messagebox('error','Please select a search')
