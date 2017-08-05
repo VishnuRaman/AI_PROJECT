@@ -4,12 +4,20 @@ class guiArray:
     def __init__(self,canvas):
         self.canvas=canvas
         self.nodeList={}
-        self.nameDict = dict
+        # self.nameDict = dict
         self.parentProbList={}
 
     def addNode(self,set,nodeID):
         self.nodeList[nodeID]=set
         print('GUI object '+str(self.nodeList))
+
+        #adding belief nodes - so table and node together
+    def addBeliefNode(self,set,nodeID,probID):
+
+        self.parentProbList[nodeID,probID]=set
+        print('Prob set '+str(self.parentProbList))
+
+
 
     # def addBeliefNode(self,dict,nodeID,nodeName):
     #
@@ -33,7 +41,7 @@ class guiArray:
 
     def addBeliefArrow(self, fromNode, toNode, arrow):
         self.nodeList[fromNode][2][toNode] = (arrow)
-        print('GUI object ' + str(self.nodeList))  #########
+        print('GUI object ' + str(self.nodeList))
 
     def deleteNode(self,node):
         self.deleteArrow(node)

@@ -28,29 +28,30 @@ LK=Linking.Graph()
 #drop down list
 
 # create buttons
-button1 = Button(topFrame,text="Create Parent Node")
-button2 = Button(topFrame,text="Create Child Node")
+button1 = Button(topFrame,text="Create Node")
+button2 = Button(topFrame,text="Create Child Probabilities")
 button3 = Button(topFrame,text="Create Link")
-button4 = Button(topFrame,text="Move Node")
-button5 = Button(topFrame,text="Delete Node")
-button6 = Button(topFrame,text="Set Parent Probability")
-button7 = Button(topFrame,text="Set Observation")
+# button4 = Button(topFrame,text="Move Node")
+# button5 = Button(topFrame,text="Delete Node")
+button6 = Button(topFrame,text="Set True Probability")
+button7 = Button(topFrame,text="Set False Probability")
+button8 = Button(topFrame,text="Set Observation")
 # button8 = Button(topFrame2,text="Previous step",bg="light blue")
-button9 = Button(topFrame,text="Show Full Table")
+# button9 = Button(topFrame,text="Show Full Table")
 
 button1.pack(side=LEFT)
 button2.pack(side=LEFT)
 button3.pack(side=LEFT)
-button4.pack(side=LEFT)
-button5.pack(side=LEFT)
+# button4.pack(side=LEFT)
 # button5.pack(side=LEFT)
 button6.pack(side=LEFT)
 button7.pack(side=LEFT)
-# button8.pack(side=LEFT)
-button9.pack(side=LEFT)
+button8.pack(side=LEFT)
+# button9.pack(side=LEFT)
 
 # methods called by buttons
 node_id_Dic={}
+prob_table_id={}
 # draw on the canvas
 def drawNode(e):
     #if not means if it's empty then do operation
@@ -71,9 +72,7 @@ def drawNode(e):
         falseLabel=canvas.create_text(e.x-80,e.y-15,text="F")
         trueLabel = canvas.create_text(e.x-120,e.y-15,text="T")
 
-        #make entry boxes for the true and false values and enter them that way
-
-
+        #store these tables into dictionaries linking them to the node
 
         value = askstring('value', 'Please enter a title')
 
@@ -86,57 +85,31 @@ def drawNode(e):
         #nickname given to each node
         nickname=canvas.create_text(e.x,e.y,text=str(value))
 
-        # seperate dictioanry that does them singuarly
-        # nameDict=dict([(nodeID, nodeName)])
-        # print('node and name connection:' + str(nameDict))
-
-        GUIset=[nodeName,oval,{}]#number object / oval object / dictionary for linking
         node_id_Dic[oval]=nodeID
-        GA.addNode(GUIset,nodeID)
         LK.add_vertex(nodeID)
+
+    # set store following for below
+    # node ID, node name, prob table, t and its value, f and its value
+
+    probID=MN.inc()
+    prob_table_id[probTable]=probID
+    Probset = [nodeID, nodeName,probID,"T",{},"F",{}]
+
+    GA.addBeliefNode(Probset, nodeID, probID)
+
 
 # listen to mouse action
 def CreateNode(event):
     root.config(cursor="")
     canvas.bind("<Button-1>",drawNode)
 
-def drawChild(e):
-    if not canvas.find_enclosed(e.x-105,e.y-105,e.x+105,e.y+105):
-        oval=canvas.create_oval(e.x-50,e.y-50,e.x+50,e.y+40)
-
-
-        value = askstring('value', 'Please enter a title')
-
-      #MN.inc means increase that method by 1 as new node was created
-
-        nodeID=MN.inc()
-
-        nodeName=value
-
-        #nickname given to each node
-        nickname=canvas.create_text(e.x,e.y,text=str(value))
-
-        # seperate dictioanry that does them singuarly
-        # nameDict=dict([(nodeID, nodeName)])
-        # print('node and name connection:' + str(nameDict))
-
-        GUIset=[nodeName,oval,{}]#number object / oval object / dictionary for linking
-        node_id_Dic[oval]=nodeID
-        GA.addNode(GUIset,nodeID)
-        LK.add_vertex(nodeID)
-
-def CreateChild(event):
-    root.config(cursor="")
-    canvas.bind("<Button-1>",drawChild)
-
-# listen to second click and draw the line on the canvas
+# need to change these values so it includes table
 def ArcPoint2(e):
     if len(canvas.find_enclosed(e.x-105,e.y-105,e.x+105,e.y+105))==2:
         toNode=node_id_Dic[canvas.find_enclosed(e.x-105,e.y-105,e.x+105,e.y+105)[0]]#the node is created before num so it is at [0]
         if (fromNode is not toNode)and(LK.check_edge_existed(fromNode,toNode)==False):
             root.config(cursor="")
             arrow = canvas.create_line(x,y,e.x,e.y,arrow="last")#fill="turquoise" can change color
-            #use -->  canvas.itemconfig(arrow,fill="red") <-- to change color after created
 
             GA.addBeliefArrow(fromNode, toNode, arrow)
 
@@ -207,7 +180,6 @@ def Move(event):
     root.config(cursor="")
     canvas.bind("<Button-1>",moveFrom)
 
-
 def removeFromCanvas(e):
     #checks range to see if both node and number label are in the range where you clicked
     if len(canvas.find_enclosed(e.x-50,e.y-50,e.x+50,e.y+50))==2:
@@ -228,21 +200,6 @@ def Delete(event):
     root.config(cursor="spider")
     canvas.bind("<Button-1>",removeFromCanvas)
 
-# def customNickname(e): #maybe move this to create node one
-#     value = askstring('value', 'Please enter a value')
-#
-#     nickNameLabel = canvas.create_text(e.x, e.y, text=str(value))
-#
-#     nickName = str(value)
-#
-#     #make dictionary for node id and nickname
-#
-#     # print("iiiii")
-#
-# def Nickname(event):
-#     root.config(cursor="cross")
-#     canvas.bind("<Button-1>", customNickname)
-
 def NextStep(e):
     #produce the canvas to display the probability table here
     #remove previous canvas from screen
@@ -251,53 +208,57 @@ def NextStep(e):
     #one method:
     toplevel = Toplevel(width=700,height=800)
 
-
-
     popup = canvas.create_rectangle(200,200,200,200)
     print("iiii")
 
-def setProb(e):
+def setTrueProb(e):
 
-    value = askstring('value', 'Please enter a probability value')
+    valueT = askstring('value', 'Please enter a true probability value')
 
-    value = getdouble(value)
+    valueT = getdouble(valueT)
+
+    valueTrueSet=["T " + str(valueT)]
+
+    print(valueTrueSet)
 
     #need to sort out error handling here if no value entered/cancelled
 
-
-
-
-    # probTable = canvas.create_rectangle(e.x - 60, e.y - 30, e.x - 140, e.y + 30)
-    # tableHorizLine2 = canvas.create_line(e.x - 60, e.y, e.x - 140, e.y)
-    # tableVertLine = canvas.create_line(e.x - 100, e.y - 30, e.x - 100, e.y + 30)
-
     #if true box is clicked enter value
     if not canvas.find_enclosed(e.x-20, e.y, e.x+20, e.y+30):
-        canvas.create_text(e.x, e.y, text=value)
-    #     canvas.create_text(e.x+40,e.y,text=1.0-value)
-    #
-    # # elif not canvas.find_enclosed(e.x-60, e.y, e.x-100, e.y+30):
-    # elif canvas.find_enclosed(e.x-20,e.y,e.x-20,e.y+30):
-    #     canvas.create_text(e.x+40, e.y, text=value)
-    #     canvas.create_text(e.x, e.y, text=1.0-value)
+        canvas.create_text(e.x, e.y, text=valueT)
 
 
-
-
-        # # MN.inc means increase that method by 1 as new node was created
-    # nodeID = MN.inc()
-    #
-    # Probset = [nodeID, value, {}]  # number object / oval object / dictionary for linking
-    #
-    # GA.addBeliefNode(Probset, nodeID,value)
-
-    # print(str(probValue))
-
-def ParentProb(event):
+def ParentTrueProb(event):
     root.config(cursor="cross")
-    canvas.bind("<Button-1>", setProb)
+    canvas.bind("<Button-1>", setTrueProb)
+
+
+def setFalseProb(e):
+    valueF = askstring('value', 'Please enter a false probability value')
+
+    valueF = getdouble(valueF)
+
+    valueFalseSet = ["F " + str(valueF)]
+
+    print(valueFalseSet)
+
+    # need to sort out error handling here if no value entered/cancelled
+
+    # if true box is clicked enter value
+    if not canvas.find_enclosed(e.x - 20, e.y, e.x + 20, e.y + 30):
+        canvas.create_text(e.x, e.y, text=valueF)
+
+
+def ParentFalseProb(event):
+    root.config(cursor="cross")
+    canvas.bind("<Button-1>", setFalseProb)
+
 
 def setTF(e):
+
+    #alternatively do a drop down list of all the nodes from the dictionary
+    #instead of an entry box
+
 
         Label(root, text="Select Node:").pack(side=LEFT)
 
@@ -307,52 +268,65 @@ def setTF(e):
 
         chosenNode = e1.get()
 
-        true = Checkbutton(root, text="True")
+        print("aaaaaa")
+        print(chosenNode) #not printing????
+        print("bbbb")
+
+
+        global truevar
+
+        truevar = IntVar()
+
+        true = Checkbutton(root, text="True", variable=truevar)
         true.pack(side=LEFT)
 
-        false = Checkbutton(root, text="False")
+        falsevar=IntVar()
+        false = Checkbutton(root, text="False", variable=falsevar)
         false.pack(side=LEFT)
+        falsevar.get()
+        # print(falsevar.get())
 
-        if true == True and false==False:
-            #COLOUR THE NODE GREEN
 
-            #add to the dictionary nodeID and T
-            print(chosenNode + "T")
+        print("eeeee")
+        truevar.get()
 
-        if true==False and False==True:
-            #COLOUR THE NODE FALSE
+        print(truevar.get())
 
-            #add to the dictionary nodeID and F
-            print(chosenNode + "F")
 
-    # observation = askstring('value', 'Please enter T/F')
-    #
-    # if not canvas.find_enclosed(e.x-20, e.y, e.x+20, e.y+30):
-    #  canvas.create_text(e.x, e.y, text=observation)
-    #
-    # if observation=="T":
-    #  canvas.create_text(e.x+40,e.y,text="F")
-    #
-    # else:
-    # canvas.create_text(e.x + 40, e.y, text="T")
+        # need to check if its selected
 
-        print("afeewafew")
+    # if truevar.get() == 0:
+        #      print("T")
+        #
+        # else:
+        #     print("F")
+
+        print("ccccc")
 
 def SetObs(event):
     root.config(cursor="cross")
     canvas.bind("<Button-1>", setTF)
 
+def childProbs(e):
+
+    #make this call the algorithm
+    print("")
+
+def childP(event):
+    root.config(cursor="")
+    canvas.bind("<Button-1>",childProbs)
+
 button1.bind("<Button-1>",CreateNode)
-button2.bind("<Button-1>",CreateChild)
+button2.bind("<Button-1>",childP)
 button3.bind("<Button-1>",CreateArc)
-button3.bind("<Button-1>",Move)
-button5.bind("<Button-1>",Delete)
-# button5.bind("<Button-1>",Nickname)
-button6.bind("<Button-1>",ParentProb)
-button7.bind("<Button-1>", SetObs)
+# button3.bind("<Button-1>",Move)
+# button5.bind("<Button-1>",Delete)
+button6.bind("<Button-1>",ParentTrueProb)
+button7.bind("<Button-1>",ParentFalseProb)
+button8.bind("<Button-1>", SetObs)
 
 # set observation method - ie set it as true or false)
-button9.bind("<Button-1>",NextStep)
+# button9.bind("<Button-1>",NextStep)
 
 
 root.mainloop()
