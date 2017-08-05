@@ -36,8 +36,6 @@ button3 = Button(topFrame,text="Create Link")
 button6 = Button(topFrame,text="Set True Probability")
 button7 = Button(topFrame,text="Set False Probability")
 button8 = Button(topFrame,text="Set Observation")
-# button8 = Button(topFrame2,text="Previous step",bg="light blue")
-# button9 = Button(topFrame,text="Show Full Table")
 
 button1.pack(side=LEFT)
 button2.pack(side=LEFT)
@@ -47,7 +45,6 @@ button3.pack(side=LEFT)
 button6.pack(side=LEFT)
 button7.pack(side=LEFT)
 button8.pack(side=LEFT)
-# button9.pack(side=LEFT)
 
 # methods called by buttons
 node_id_Dic={}
@@ -322,9 +319,6 @@ button3.bind("<Button-1>",CreateArc)
 button6.bind("<Button-1>",ParentTrueProb)
 button7.bind("<Button-1>",ParentFalseProb)
 button8.bind("<Button-1>", SetObs)
-
-# set observation method - ie set it as true or false)
-# button9.bind("<Button-1>",NextStep)
 
 
 root.mainloop()
