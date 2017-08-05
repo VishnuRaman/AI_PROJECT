@@ -85,16 +85,18 @@ def drawNode(e):
         #nickname given to each node
         nickname=canvas.create_text(e.x,e.y,text=str(value))
 
-        node_id_Dic[oval]=nodeID
-        LK.add_vertex(nodeID)
+
 
     # set store following for below
     # node ID, node name, prob table, t and its value, f and its value
 
+    # GUIset = [nodeName, oval, {}]  # number object / oval object / dictionary for linking
+
     probID=MN.inc()
     prob_table_id[probTable]=probID
-    Probset = [nodeID, nodeName,probID,"T",{},"F",{}]
-
+    Probset = [nodeID, nodeName,probID,{}]
+    node_id_Dic[oval] = nodeID
+    LK.add_vertex(nodeID)
     GA.addBeliefNode(Probset, nodeID, probID)
 
 
@@ -105,7 +107,7 @@ def CreateNode(event):
 
 # need to change these values so it includes table
 def ArcPoint2(e):
-    if len(canvas.find_enclosed(e.x-105,e.y-105,e.x+105,e.y+105))==2:
+    if len(canvas.find_enclosed(e.x-165,e.y-135,e.x+105,e.y+105))==2:
         toNode=node_id_Dic[canvas.find_enclosed(e.x-105,e.y-105,e.x+105,e.y+105)[0]]#the node is created before num so it is at [0]
         if (fromNode is not toNode)and(LK.check_edge_existed(fromNode,toNode)==False):
             root.config(cursor="")
@@ -240,11 +242,12 @@ def setFalseProb(e):
 
     valueFalseSet = ["F " + str(valueF)]
 
+
     print(valueFalseSet)
 
     # need to sort out error handling here if no value entered/cancelled
 
-    # if true box is clicked enter value
+    # if false box is clicked enter value
     if not canvas.find_enclosed(e.x - 20, e.y, e.x + 20, e.y + 30):
         canvas.create_text(e.x, e.y, text=valueF)
 
