@@ -3,18 +3,18 @@ import unittest,Algorithms,pickle,Linking,os
 class Test_linking(unittest.TestCase):
 
 #For Vertex
-    def test_v_check_neighbor_existed(self):
+    def test_v_check_connectingTo(self):
         v=Linking.Vertex(6)# vertex 6
         for i in range(6):# vertex 6 is connected to 0~5
             v.adjacent[i]=1
         for i in range(6):#is vertex 6 connected to 0~5 ?
-            self.assertTrue(v.check_neighbor_existed(i))
+            self.assertTrue(v.check_connectingTo(i))
     def test_v_add_neighbor(self):
         v=Linking.Vertex(0)# vertex 0
         v.add_neighbor(1)# vertex 0 is connected to 1
         v.add_neighbor(2)# vertex 0 is connected to 2
-        self.assertTrue(v.check_neighbor_existed(1))#is vertex 0 connected to 1 ?
-        self.assertTrue(v.check_neighbor_existed(2))#is vertex 0 connected to 2 ?
+        self.assertTrue(v.check_connectingTo(1))#is vertex 0 connected to 1 ?
+        self.assertTrue(v.check_connectingTo(2))#is vertex 0 connected to 2 ?
     def test_v_delete_neighbor(self):
         v=Linking.Vertex(0)
         for i in range(6):# vertex 0 is connected to 0~5
@@ -23,9 +23,9 @@ class Test_linking(unittest.TestCase):
             v.delete_neighbor(i)
         for i in range(6):
             if(i<3):
-                self.assertFalse(v.check_neighbor_existed(i))
+                self.assertFalse(v.check_connectingTo(i))
             else:
-                self.assertTrue(v.check_neighbor_existed(i))
+                self.assertTrue(v.check_connectingTo(i))
     def test_v_get_connections(self):
         v=Linking.Vertex(0)
         for i in range(6):# vertex 0 is connected to 0~5
@@ -104,13 +104,6 @@ class Test_linking(unittest.TestCase):
         self.assertListEqual(g.get_vertices(),[0,1])
         g.add_vertex(2)
         self.assertListEqual(g.get_vertices(),[0,1,2])
-    # def test_g_saveFile_and_loadFile_and_fileNames(self):
-    #     g=Linking.Graph()
-    #     g.saveFile('junk2')
-    #     self.assertTrue('junk2_g.pkl' in g.fileNames())# is there a file called junk2?
-    #     self.assertDictEqual(g.loadFile('junk2'),g.vert_dict)
-    #     os.remove('junk2_g.pkl')#now delete it
-    #     self.assertFalse('junk2_g.pkl' in g.fileNames())# is there a file called junk2?
 
     def test_g_resetAllHeuristic(self):
         g=Linking.Graph()
@@ -227,13 +220,6 @@ class Test_linking(unittest.TestCase):
         gd.setManhattanDist(4)
         for i in range(9):
             self.assertEqual(gd.grid_dict[i].heuristic,dict[i])
-    # def test_gd_saveFile_and_loadFile_and_fileNames(self):
-    #     gd=Linking.Grid(3,3)
-    #     gd.saveFile('junk2')
-    #     self.assertTrue(gd.loadFile('junk2')[3].id==gd.grid_dict[3].id)
-    #     self.assertTrue('junk2_gd.pkl' in gd.fileNames())# is there a file called junk2?
-    #     os.remove('junk2_gd.pkl')#now delete it
-    #     self.assertFalse('junk2_gd.pkl' in gd.fileNames())# is there a file called junk2?
 
     def test_gd_resetAllUtility(self):
         gd=Linking.Grid(3,3)

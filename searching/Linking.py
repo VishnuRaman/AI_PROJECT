@@ -11,15 +11,15 @@ class Vertex:
         self.utility=0#default value=0
         self.probability=0.5#default value=0.5, for belief net(prior probability) and Markov(initial probability) algorithm
         self.adjacent = {}
-        self.probabilityTable={}
+        self.probabilityTable={}#distribution probability table
 
-    def __iter__(self):
+    def __iter__(self):#makes vertex object iterable
         return iter(self.adjacent.keys())
 
     ##checks if the given node is already connected
     #input: @arg1 node needed to be check
     #output: Boolean
-    def check_neighbor_existed(self,id):
+    def check_connectingTo(self,id):
 
         if id in self.adjacent:
             return True
@@ -33,7 +33,7 @@ class Vertex:
     #input:@arg1 node needed to be delete the connection
     def delete_neighbor(self, id):
         self.adjacent.pop(id)
-    ##return the list of nodes that connected to itself
+    ##return the list of nodes that it connects to
     #output: list
     def get_connections(self):
         temp=list(self.adjacent)
@@ -127,7 +127,7 @@ class Graph:
     #input:@arg1  from 'node id' to 'node id'
     #output: Boolean
     def check_edge_existed(self,frm,to):
-        return self.vert_dict[frm].check_neighbor_existed(to)
+        return self.vert_dict[frm].check_connectingTo(to)
     ##get the list of vertex that already created
     #output: list
     def get_vertices(self):
@@ -135,32 +135,6 @@ class Graph:
         temp=sorted(temp,key=lambda x: str(x))
         return temp
 
-    # ##save the current vert_dict with given fileName
-    # #input:@arg1  fileName as a string
-    # def saveFile(self,fileName):
-    #     newDict=self.vert_dict
-    #     output = open(fileName+'_g.pkl', 'wb')
-    #     pickle.dump(newDict, output)
-    #     output.close()
-    #
-    # ##load the stored vert_dict with having the name fileName
-    # #input:@arg1  fileName as a string
-    # #output: vert_dict
-    # def loadFile(self,fileName):
-    #     # read python dict back from the file
-    #     file = open(fileName+'_g.pkl', 'rb')
-    #     dict = pickle.load(file)
-    #     file.close()
-    #     return dict
-    #
-    # ##see all the .pkl files name
-    # #output: all the names as a list [name1.pkl, name2.pkl, ...]
-    # def fileNames(self):
-    #     temp=[]
-    #     for i in os.listdir(os.getcwd()):
-    #         if '_g.pkl' in i:
-    #             temp.append(i)
-    #     return temp
     #reset all heuristic to 0
     def resetAllHeuristic(self):
         for node in self.vert_dict:
@@ -261,33 +235,6 @@ class Grid:
                 id=self.x*j+i
                 self.grid_dict[id].heuristic=abs(i-xCoordinate)+abs(j-yCoordinate)
 
-
-    # ##save the current vert_dict with given fileName
-    # #input: @arg1 fileName as a string
-    # def saveFile(self,fileName):
-    #     newDict=self.grid_dict
-    #     output = open(fileName+'_gd.pkl', 'wb')
-    #     pickle.dump(newDict, output)
-    #     output.close()
-    #
-    # ##load the stored vert_dict with having the name fileName
-    # #input: @arg1 fileName as a string
-    # #output: dictionary
-    # def loadFile(self,fileName):
-    #     # read python dict back from the file
-    #     file = open(fileName+'_gd.pkl', 'rb')
-    #     dict = pickle.load(file)
-    #     file.close()
-    #     return dict
-    #
-    # ##see all the .pkl files name
-    # #output: all the names as a list
-    # def fileNames(self):
-    #     temp=[]
-    #     for i in os.listdir(os.getcwd()):
-    #         if '_gd.pkl' in i:
-    #             temp.append(i)
-    #     return temp
     ##reset all utility to default
     def resetAllUtility(self):
         for node in self.grid_dict:
