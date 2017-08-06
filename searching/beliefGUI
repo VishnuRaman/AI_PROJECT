@@ -31,8 +31,10 @@ coordinates=[]
 
 # create buttons
 button1 = Button(topFrame,text="Create Node")
-button2 = Button(topFrame,text="Create Child Probabilities")
-button3 = Button(topFrame,text="Create Link")
+button2=Button(topFrame,text="Create Parent Probabilities")
+button3 = Button(topFrame,text="Create Child Probabilities")
+button4 = Button(topFrame,text="Create Link")
+
 # button4 = Button(topFrame,text="Move Node")
 # button5 = Button(topFrame,text="Delete Node")
 button6 = Button(topFrame,text="Set True Probability")
@@ -42,7 +44,7 @@ button8 = Button(topFrame,text="Set Observation")
 button1.pack(side=LEFT)
 button2.pack(side=LEFT)
 button3.pack(side=LEFT)
-# button4.pack(side=LEFT)
+button4.pack(side=LEFT)
 # button5.pack(side=LEFT)
 button6.pack(side=LEFT)
 button7.pack(side=LEFT)
@@ -63,16 +65,7 @@ def drawNode(e):
     if not canvas.find_enclosed(e.x-105,e.y-105,e.x+105,e.y+105):
         oval=canvas.create_oval(e.x-50,e.y-50,e.x+50,e.y+40)
 
-        #need to factor these tables into the above
-        #draw the node first then the table afterwards
 
-        # probTable=canvas.create_rectangle(e.x-60,e.y-30,e.x-140,e.y+30)
-        # tableHorizLine2 = canvas.create_line(e.x-60,e.y,e.x-140,e.y)
-        # tableVertLine = canvas.create_line(e.x - 100, e.y - 30, e.x - 100, e.y + 30)
-        # falseLabel=canvas.create_text(e.x-80,e.y-15,text="F")
-        # trueLabel = canvas.create_text(e.x-120,e.y-15,text="T")
-        #
-        # #store these tables into dictionaries linking them to the node
 
         value = askstring('value', 'Please enter a title')
 
@@ -90,19 +83,19 @@ def drawNode(e):
     # set store following for below
     # node ID, node name, prob table, t and its value, f and its value
 
-    # GUIset = [nodeName, oval, {}]  # number object / oval object / dictionary for linking
 
-
-    coordinates=[nodeID,[e.x,e.y]]
+    coordinates=[nodeID,nodeName,[e.x,e.y]]
     print(coordinates)
 
-    probID=MN.inc()
+    # probID=MN.inc()
     # prob_table_id[probTable]=probID
-    Probset = [nodeID, nodeName,probID,{}]
+    # Probset = [nodeID, nodeName,{}, probID]
+    GUIset = [nodeName, nodeID, {}]  # number object / oval object / dictionary for linking
+
     node_id_Dic[oval] = nodeID
     LK.add_vertex(nodeID)
-    GA.addBeliefNode(Probset, nodeID, probID)
-
+   # GA.addBeliefNode(Probset, nodeID, probID)
+    GA.addNode(GUIset,nodeID)
 
 # listen to mouse action
 def CreateNode(event):
@@ -119,9 +112,9 @@ def ArcPoint2(e):
             root.config(cursor="")
             arrow = canvas.create_line(x,y,e.x,e.y,arrow="last")#fill="turquoise" can change color
 
-            weight = canvas.create_text(0.5 * (x + e.x), 0.5 * (y + e.y) - 10, text=" ")
+            # weight = canvas.create_text(0.5 * (x + e.x), 0.5 * (y + e.y) - 10, text=" ")
 
-            GA.addArrow(fromNode, toNode, arrow, weight)
+            GA.addBeliefArrow(fromNode, toNode, arrow)
 
             # #this method produces the connection
 
@@ -216,6 +209,22 @@ def NextStep(e):
     #
     print("iiii")
 
+def parentTable(e):
+
+# need to factor these tables into the above
+# draw the node first then the table afterwards
+    probTable=canvas.create_rectangle(e.x-60,e.y-30,e.x-140,e.y+30)
+    tableHorizLine2 = canvas.create_line(e.x-60,e.y,e.x-140,e.y)
+    tableVertLine = canvas.create_line(e.x - 100, e.y - 30, e.x - 100, e.y + 30)
+    falseLabel=canvas.create_text(e.x-80,e.y-15,text="F")
+    trueLabel = canvas.create_text(e.x-120,e.y-15,text="T")
+#
+# #store these tables into dictionaries linking them to the node
+
+def parentP(event):
+    root.config(cursor="cross")
+    canvas.bind("<Button-1>",parentTable)
+
 def setTrueProb(e):
 
     valueT = askstring('value', 'Please enter a true probability value')
@@ -223,7 +232,7 @@ def setTrueProb(e):
     valueT = getdouble(valueT)
 
 #need to add nodeID to the front before the T and the F like the test oens
-    valueTrueSet=["T" , valueT]
+    valueTrueSet=["T", valueT]
 
     print(valueTrueSet)
 
@@ -260,6 +269,16 @@ def setFalseProb(e):
 def ParentFalseProb(event):
     root.config(cursor="cross")
     canvas.bind("<Button-1>", setFalseProb)
+
+
+def childProbs(e):
+
+    #make this call the algorithm
+    print("")
+
+def childP(event):
+    root.config(cursor="")
+    canvas.bind("<Button-1>",childProbs)
 
 
 def setTF(e):
@@ -319,18 +338,11 @@ def SetObs(event):
     root.config(cursor="cross")
     canvas.bind("<Button-1>", setTF)
 
-def childProbs(e):
-
-    #make this call the algorithm
-    print("")
-
-def childP(event):
-    root.config(cursor="")
-    canvas.bind("<Button-1>",childProbs)
 
 button1.bind("<Button-1>",CreateNode)
-button2.bind("<Button-1>",childP)
-button3.bind("<Button-1>",CreateArc)
+button2.bind("<Button-1>",parentP)
+button3.bind("<Button-1>",childP)
+button4.bind("<Button-1>",CreateArc)
 # button3.bind("<Button-1>",Move)
 # button5.bind("<Button-1>",Delete)
 button6.bind("<Button-1>",ParentTrueProb)
