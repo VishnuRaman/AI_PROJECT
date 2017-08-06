@@ -211,7 +211,7 @@ def setTrueProb(e):
 
     valueT = getdouble(valueT)
 
-    valueTrueSet=["T " + str(valueT)]
+    valueTrueSet=["T " , valueT]
 
     print(valueTrueSet)
 
@@ -232,7 +232,7 @@ def setFalseProb(e):
 
     valueF = getdouble(valueF)
 
-    valueFalseSet = ["F " + str(valueF)]
+    valueFalseSet = ["F " , valueF]
 
 
     print(valueFalseSet)
