@@ -1,5 +1,3 @@
-# from tkinter.simpledialog import askstring
-
 import ManageNode,Linking,GuiArray,Algorithms
 import  math,numpy
 
@@ -7,6 +5,7 @@ import pickle
 from tkinter import *
 # import Tkinter
 import tkinter.filedialog
+from tkinter.simpledialog import askstring
 
 root = Tk()
 topFrame = Frame(root)
@@ -24,6 +23,9 @@ canvas.pack(expand=1,fill=BOTH)
 GA=GuiArray.guiArray(canvas)
 MN=ManageNode.manageNode()
 LK=Linking.Graph()
+
+global coordinates
+coordinates=[]
 
 #drop down list
 
@@ -62,14 +64,15 @@ def drawNode(e):
         oval=canvas.create_oval(e.x-50,e.y-50,e.x+50,e.y+40)
 
         #need to factor these tables into the above
+        #draw the node first then the table afterwards
 
-        probTable=canvas.create_rectangle(e.x-60,e.y-30,e.x-140,e.y+30)
-        tableHorizLine2 = canvas.create_line(e.x-60,e.y,e.x-140,e.y)
-        tableVertLine = canvas.create_line(e.x - 100, e.y - 30, e.x - 100, e.y + 30)
-        falseLabel=canvas.create_text(e.x-80,e.y-15,text="F")
-        trueLabel = canvas.create_text(e.x-120,e.y-15,text="T")
-
-        #store these tables into dictionaries linking them to the node
+        # probTable=canvas.create_rectangle(e.x-60,e.y-30,e.x-140,e.y+30)
+        # tableHorizLine2 = canvas.create_line(e.x-60,e.y,e.x-140,e.y)
+        # tableVertLine = canvas.create_line(e.x - 100, e.y - 30, e.x - 100, e.y + 30)
+        # falseLabel=canvas.create_text(e.x-80,e.y-15,text="F")
+        # trueLabel = canvas.create_text(e.x-120,e.y-15,text="T")
+        #
+        # #store these tables into dictionaries linking them to the node
 
         value = askstring('value', 'Please enter a title')
 
@@ -89,8 +92,12 @@ def drawNode(e):
 
     # GUIset = [nodeName, oval, {}]  # number object / oval object / dictionary for linking
 
+
+    coordinates=[nodeID,[e.x,e.y]]
+    print(coordinates)
+
     probID=MN.inc()
-    prob_table_id[probTable]=probID
+    # prob_table_id[probTable]=probID
     Probset = [nodeID, nodeName,probID,{}]
     node_id_Dic[oval] = nodeID
     LK.add_vertex(nodeID)
@@ -102,7 +109,9 @@ def CreateNode(event):
     root.config(cursor="")
     canvas.bind("<Button-1>",drawNode)
 
-# need to change these values so it includes table
+# need to change these values so it includes table try a smaller size
+#try another method so it connects to the edge of the oval
+#alt try it adds a weight but just doesnt show it
 def ArcPoint2(e):
     if len(canvas.find_enclosed(e.x-105,e.y-105,e.x+105,e.y+105))==2:
         toNode=node_id_Dic[canvas.find_enclosed(e.x-105,e.y-105,e.x+105,e.y+105)[0]]#the node is created before num so it is at [0]
@@ -110,7 +119,9 @@ def ArcPoint2(e):
             root.config(cursor="")
             arrow = canvas.create_line(x,y,e.x,e.y,arrow="last")#fill="turquoise" can change color
 
-            GA.addBeliefArrow(fromNode, toNode, arrow)
+            weight = canvas.create_text(0.5 * (x + e.x), 0.5 * (y + e.y) - 10, text=" ")
+
+            GA.addArrow(fromNode, toNode, arrow, weight)
 
             # #this method produces the connection
 
@@ -211,7 +222,8 @@ def setTrueProb(e):
 
     valueT = getdouble(valueT)
 
-    valueTrueSet=["T " , valueT]
+#need to add nodeID to the front before the T and the F like the test oens
+    valueTrueSet=["T" , valueT]
 
     print(valueTrueSet)
 
@@ -232,7 +244,8 @@ def setFalseProb(e):
 
     valueF = getdouble(valueF)
 
-    valueFalseSet = ["F " , valueF]
+
+    valueFalseSet = ["F" , valueF]
 
 
     print(valueFalseSet)
@@ -262,6 +275,10 @@ def setTF(e):
         e1.pack(side=LEFT)
 
         chosenNode = e1.get()
+
+    #check after input then print
+    #alt create a button that confirms the input then prints
+    #store in a list - as order is necessary must be t/f then value
 
         print("aaaaaa")
         print(chosenNode) #not printing????

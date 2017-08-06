@@ -24,7 +24,7 @@ class guiArray:
         print('GUI object '+str(self.nodeList))#########
 
     def addBeliefArrow(self, fromNode, toNode, arrow):
-        self.nodeList[fromNode][2][toNode] = (arrow)
+        self.nodeList[fromNode][2][toNode] = arrow
         print('GUI object ' + str(self.nodeList))
 
     def deleteNode(self,node):

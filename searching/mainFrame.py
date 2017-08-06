@@ -175,7 +175,7 @@ def drawNode(e):
         num=canvas.create_text(e.x,e.y,text=str(nodeID))
         #num = the number label for the node eg 0,1,2
         #node = the oval shape
-        GUIset=[num,oval,{}]#number object / oval object / dictionary for linking
+        GUIset=[[e.x,e.y],num,oval,{}]#number object / oval object / dictionary for linking
         node_id_Dic[oval]=nodeID
         GA.addNode(GUIset,nodeID)
         LK.add_vertex(nodeID)
