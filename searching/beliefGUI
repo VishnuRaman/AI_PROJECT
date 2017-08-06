@@ -1,4 +1,4 @@
-# from tkinter.simpledialog import askstring
+from tkinter.simpledialog import askstring
 
 import ManageNode,Linking,GuiArray,Algorithms
 import  math,numpy
