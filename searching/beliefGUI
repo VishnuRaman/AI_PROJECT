@@ -137,25 +137,32 @@ def probTable(event):
 #     tableVertLine = canvas.create_line(e.x - 100, e.y - 30, e.x - 100, e.y + 30)
 #     falseLabel=canvas.create_text(e.x-80,e.y-15,text="F")
 #     trueLabel = canvas.create_text(e.x-120,e.y-15,text="T")
-#
-# #store these tables into dictionaries linking them to the node
 
-    # parent = {}  # {node id: [parent...], ...} the nodes which have parenta
-    # for n in AL.findParent(dict):  # for each node in the graph
-    #     dict[n].probabilityTable.clear()  # clean up table
-    #     for i in dict[n].adjacent:  # find each adjacent
-    #         if i not in parent:
-    #          parent[i] = [n]
-    #     else:
-    #         parent[i].append(n)
-    # return parent
-
-
-    print("xxxxx")
+    # parent={}#{node id: [parent...], ...} the nodes which have parents
+    #     for n in dict:#for each node in the graph
+    #         dict[n].probabilityTable.clear()#clean up table
+    #         for i in dict[n].adjacent:#find each adjacent
+    #             if i not in parent:
+    #                 parent[i]=[n]
+    #             else:
+    #                 parent[i].append(n)
+    #     return parent
 
     parentNodes = {}
+    # for n in LK.vert_dict[0]:
+    #     if n.isEmpty():
+    for n in GA.nodeList[0][2]:
 
+        parentNodes.append(n)
+        print(parentNodes)
+            # print("kkkk")
 
+        # # print("pppp")
+        # for i in GA.nodeList[n]:
+        #     if i != n:
+        #         print(i)
+        #     else:
+        #         print("fghjk")
 
 
 # def probGrids(event):

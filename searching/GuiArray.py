@@ -6,7 +6,7 @@ class guiArray:
         self.nodeList={}
         self.coordList={}
         # self.nameDict = dict
-        self.parentProbList={}
+        # self.parentProbList={}
 
     def addNode(self,set,nodeID):
         self.nodeList[nodeID]=set
