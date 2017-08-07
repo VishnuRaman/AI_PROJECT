@@ -23,6 +23,7 @@ canvas.pack(expand=1,fill=BOTH)
 GA=GuiArray.guiArray(canvas)
 MN=ManageNode.manageNode()
 LK=Linking.Graph()
+AL=Algorithms.algorithms(LK.vert_dict)
 
 global coordinates
 coordinates=[]
@@ -32,7 +33,7 @@ coordinates=[]
 # create buttons
 button1 = Button(topFrame,text="Create Node")
 button2=Button(topFrame,text="Create Parent Probabilities")
-button3 = Button(topFrame,text="Create Child Probabilities")
+# button3 = Button(topFrame,text="Create Child Probabilities")
 button4 = Button(topFrame,text="Create Link")
 
 # button4 = Button(topFrame,text="Move Node")
@@ -43,7 +44,7 @@ button8 = Button(topFrame,text="Set Observation")
 
 button1.pack(side=LEFT)
 button2.pack(side=LEFT)
-button3.pack(side=LEFT)
+# button3.pack(side=LEFT)
 button4.pack(side=LEFT)
 # button5.pack(side=LEFT)
 button6.pack(side=LEFT)
@@ -84,8 +85,8 @@ def drawNode(e):
     # node ID, node name, prob table, t and its value, f and its value
 
 
-    coordinates=[nodeID,nodeName,[e.x,e.y]]
-    print(coordinates)
+    coordinateSet=[nodeName,[e.x,e.y]]
+    print(coordinateSet)
 
     # probID=MN.inc()
     # prob_table_id[probTable]=probID
@@ -96,6 +97,7 @@ def drawNode(e):
     LK.add_vertex(nodeID)
    # GA.addBeliefNode(Probset, nodeID, probID)
     GA.addNode(GUIset,nodeID)
+    GA.addCoords(coordinateSet,nodeID)
 
 # listen to mouse action
 def CreateNode(event):
@@ -139,68 +141,68 @@ def CreateArc(event):
     root.config(cursor="")
     canvas.bind("<Button-1>",ArcPoint1)
 
-def moveTo(e):
-    #for both lines below so x = location of the node you want to move
-    #e.x = location you want to move it to
-    #subtract these to get the distance to move the node by
+# def moveTo(e):
+#     #for both lines below so x = location of the node you want to move
+#     #e.x = location you want to move it to
+#     #subtract these to get the distance to move the node by
+#
+#     #selects the location of the node you want to move
+#     canvas.move(moveTheNode,e.x-x,e.y-y)
+#
+#     #+1 moves the number associated with that node ie 0,1,2 etc
+#     canvas.move(moveTheNode+1,e.x-x,e.y-y)
+#
+#     # move the arrows
+#     for i in moveArrowTails:
+#         canvas.move(moveArrowTails[i],e.x-x,e.y-y)
+#
+#     root.config(cursor="")
+#     canvas.bind("<Button-1>",moveFrom)
+# # select the node
+# def moveFrom(e):
+#     global x,y
+#     x,y=e.x,e.y
+#     n=canvas.find_enclosed(e.x-50,e.y-50,e.x+50,e.y+50)
+#     if len(n)==2:
+#         root.config(cursor="exchange")
+#         global moveTheNode, moveArrowTails, moveArrowHeads
+#         #[0] is the ID of the node you want to move
+#         moveTheNode=n[0]
+#         moveArrowTails=GA.nodeList[node_id_Dic[n[0]]][2]
+#         moveArrowHeads={}
+#         for i in GA.nodeList:
+#             if node_id_Dic[n[0]] in GA.nodeList[i][2]:
+#                 moveArrowHeads[i]=GA.nodeList[i][2][node_id_Dic[n[0]]]
+#
+#         #once you click that node, then moves to moveTo method above and moves node
+#         canvas.bind("<Button-1>",moveTo)
+#     else:
+#         canvas.bind("<Button-1>",moveTo)
+#
+# # Move the object
+# def Move(event):
+#     root.config(cursor="")
+#     canvas.bind("<Button-1>",moveFrom)
 
-    #selects the location of the node you want to move
-    canvas.move(moveTheNode,e.x-x,e.y-y)
-
-    #+1 moves the number associated with that node ie 0,1,2 etc
-    canvas.move(moveTheNode+1,e.x-x,e.y-y)
-
-    # move the arrows
-    for i in moveArrowTails:
-        canvas.move(moveArrowTails[i],e.x-x,e.y-y)
-
-    root.config(cursor="")
-    canvas.bind("<Button-1>",moveFrom)
-# select the node
-def moveFrom(e):
-    global x,y
-    x,y=e.x,e.y
-    n=canvas.find_enclosed(e.x-50,e.y-50,e.x+50,e.y+50)
-    if len(n)==2:
-        root.config(cursor="exchange")
-        global moveTheNode, moveArrowTails, moveArrowHeads
-        #[0] is the ID of the node you want to move
-        moveTheNode=n[0]
-        moveArrowTails=GA.nodeList[node_id_Dic[n[0]]][2]
-        moveArrowHeads={}
-        for i in GA.nodeList:
-            if node_id_Dic[n[0]] in GA.nodeList[i][2]:
-                moveArrowHeads[i]=GA.nodeList[i][2][node_id_Dic[n[0]]]
-
-        #once you click that node, then moves to moveTo method above and moves node
-        canvas.bind("<Button-1>",moveTo)
-    else:
-        canvas.bind("<Button-1>",moveTo)
-
-# Move the object
-def Move(event):
-    root.config(cursor="")
-    canvas.bind("<Button-1>",moveFrom)
-
-def removeFromCanvas(e):
-    #checks range to see if both node and number label are in the range where you clicked
-    if len(canvas.find_enclosed(e.x-50,e.y-50,e.x+50,e.y+50))==2:
-        #[0] is the node ID thats selected
-        selectedNode=node_id_Dic[canvas.find_enclosed(e.x-50,e.y-50,e.x+50,e.y+50)[0]]
-        GA.deleteNode(selectedNode)
-        LK.delete_vertex(selectedNode)
-        #this removes the deleted node and arrow out of the array and stores the number of that node into a priority queue
-        #so takes no. from top of priority queue when creating next node
-        MN.remove(selectedNode)
-
-        # for v in LK.vert_dict:#####
-        # print(str(LK.vert_dict[v].get_id())+' is connected to '+str([g for g in LK.vert_dict[v]]))
-        Delete  #takes you to delete def below
-
-# Delete the node
-def Delete(event):
-    root.config(cursor="spider")
-    canvas.bind("<Button-1>",removeFromCanvas)
+# def removeFromCanvas(e):
+#     #checks range to see if both node and number label are in the range where you clicked
+#     if len(canvas.find_enclosed(e.x-50,e.y-50,e.x+50,e.y+50))==2:
+#         #[0] is the node ID thats selected
+#         selectedNode=node_id_Dic[canvas.find_enclosed(e.x-50,e.y-50,e.x+50,e.y+50)[0]]
+#         GA.deleteNode(selectedNode)
+#         LK.delete_vertex(selectedNode)
+#         #this removes the deleted node and arrow out of the array and stores the number of that node into a priority queue
+#         #so takes no. from top of priority queue when creating next node
+#         MN.remove(selectedNode)
+#
+#         # for v in LK.vert_dict:#####
+#         # print(str(LK.vert_dict[v].get_id())+' is connected to '+str([g for g in LK.vert_dict[v]]))
+#         Delete  #takes you to delete def below
+#
+# # Delete the node
+# def Delete(event):
+#     root.config(cursor="spider")
+#     canvas.bind("<Button-1>",removeFromCanvas)
 
 def NextStep(e):
     #produce the canvas to display the probability table here
@@ -210,19 +212,29 @@ def NextStep(e):
     print("iiii")
 
 def parentTable(e):
-
-# need to factor these tables into the above
-# draw the node first then the table afterwards
-    probTable=canvas.create_rectangle(e.x-60,e.y-30,e.x-140,e.y+30)
-    tableHorizLine2 = canvas.create_line(e.x-60,e.y,e.x-140,e.y)
-    tableVertLine = canvas.create_line(e.x - 100, e.y - 30, e.x - 100, e.y + 30)
-    falseLabel=canvas.create_text(e.x-80,e.y-15,text="F")
-    trueLabel = canvas.create_text(e.x-120,e.y-15,text="T")
+#
+# # need to factor these tables into the above
+# # draw the node first then the table afterwards
+#     probTable=canvas.create_rectangle(e.x-60,e.y-30,e.x-140,e.y+30)
+#     tableHorizLine2 = canvas.create_line(e.x-60,e.y,e.x-140,e.y)
+#     tableVertLine = canvas.create_line(e.x - 100, e.y - 30, e.x - 100, e.y + 30)
+#     falseLabel=canvas.create_text(e.x-80,e.y-15,text="F")
+#     trueLabel = canvas.create_text(e.x-120,e.y-15,text="T")
 #
 # #store these tables into dictionaries linking them to the node
 
+    parent = {}  # {node id: [parent...], ...} the nodes which have parenta
+    for n in AL.findParent(dict):  # for each node in the graph
+        dict[n].probabilityTable.clear()  # clean up table
+        for i in dict[n].adjacent:  # find each adjacent
+            if i not in parent:
+             parent[i] = [n]
+        else:
+            parent[i].append(n)
+    return parent
+
 def parentP(event):
-    root.config(cursor="cross")
+    root.config(cursor="")
     canvas.bind("<Button-1>",parentTable)
 
 def setTrueProb(e):
@@ -271,17 +283,17 @@ def ParentFalseProb(event):
     canvas.bind("<Button-1>", setFalseProb)
 
 
-def childProbs(e):
+# def childProbs(e):
+#
+#     #make this call the algorithm
+#     print("")
+#
+# def childP(event):
+#     root.config(cursor="")
+#     canvas.bind("<Button-1>",childProbs)
 
-    #make this call the algorithm
-    print("")
 
-def childP(event):
-    root.config(cursor="")
-    canvas.bind("<Button-1>",childProbs)
-
-
-def setTF(e):
+def setTF(e): #change this to run the algorithm too
 
     #alternatively do a drop down list of all the nodes from the dictionary
     #instead of an entry box
@@ -341,7 +353,7 @@ def SetObs(event):
 
 button1.bind("<Button-1>",CreateNode)
 button2.bind("<Button-1>",parentP)
-button3.bind("<Button-1>",childP)
+# button3.bind("<Button-1>",childP)
 button4.bind("<Button-1>",CreateArc)
 # button3.bind("<Button-1>",Move)
 # button5.bind("<Button-1>",Delete)
