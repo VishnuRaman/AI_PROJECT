@@ -149,13 +149,30 @@ def probTable(event):
     #     return parent
 
     parentNodes = {}
+
+#need to store a DICTIONARY not list
+#has nodeID and their links
+#then proceed to make the tables 8
+
     # for n in LK.vert_dict[0]:
     #     if n.isEmpty():
-    for n in GA.nodeList[0][2]:
+    for nodeID in GA.nodeList:
+        print("kmkmkm")
 
-        parentNodes.append(n)
-        print(parentNodes)
-            # print("kkkk")
+        if len(GA.nodeList[0][2])==0:
+            print("kkkk")
+            # parentNodes[nodeID]=set
+            # print(parentNodes)
+
+    else:
+        print("wwwww")
+
+            #add to a parent node set
+
+
+        # parentNodes.append(n)
+        # print(parentNodes)
+            #
 
         # # print("pppp")
         # for i in GA.nodeList[n]:
@@ -164,10 +181,6 @@ def probTable(event):
         #     else:
         #         print("fghjk")
 
-
-# def probGrids(event):
-#     root.config(cursor="")
-#     canvas.bind("<Button-1>",probTable)
 
 def setTrueProb(e):
 
