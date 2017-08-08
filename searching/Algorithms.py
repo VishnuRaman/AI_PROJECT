@@ -440,7 +440,6 @@ class algorithms:
         self.parentM=self.findParent(model)#to know who are parents
         self.model=model
 
-        parent=self.findParent(self.graph)#to know who are parents
         PT={}
         step={id:0}
         q=[id]
@@ -459,7 +458,7 @@ class algorithms:
         for s in self.model:#every state in model
             if step==0:
                 temp[s]=self.model[s].probability
-            elif step>0:
+            else:# step>0
                 pro=0
                 for p in self.parentM[s]:
                     pro+=self.markovTrans(step-1)[p]*self.model[p].get_weight(s)#previous step p probability* p to s chance
@@ -481,10 +480,8 @@ class algorithms:
         q=[id]
         while q:
             n=q.pop(0)#current node
-            bo=False
             for a in self.graph[n].adjacent:#every child
                 if a in obs:#child is in observation, then update current node
-                    bo=True
                     #model
                     temp={}
                     nu=0#numerator
