@@ -23,6 +23,7 @@ canvas.pack(expand=1,fill=BOTH)
 GA=GuiArray.guiArray(canvas)
 MN=ManageNode.manageNode()
 LK=Linking.Graph()
+AL=Algorithms.algorithms(LK.vert_dict)
 
 global coordinates
 coordinates=[]
@@ -31,22 +32,18 @@ coordinates=[]
 
 # create buttons
 button1 = Button(topFrame,text="Create Node")
-button2 = Button(topFrame,text="Create Child Probabilities")
+button2 = Button(topFrame,text="Create Probability Tables")
 button3 = Button(topFrame,text="Create Link")
-# button4 = Button(topFrame,text="Move Node")
-# button5 = Button(topFrame,text="Delete Node")
-button6 = Button(topFrame,text="Set True Probability")
-button7 = Button(topFrame,text="Set False Probability")
-button8 = Button(topFrame,text="Set Observation")
+button4 = Button(topFrame,text="Set True Probability")
+button5 = Button(topFrame,text="Set False Probability")
+button6 = Button(topFrame,text="Set Observation")
 
 button1.pack(side=LEFT)
 button2.pack(side=LEFT)
 button3.pack(side=LEFT)
-# button4.pack(side=LEFT)
-# button5.pack(side=LEFT)
+button4.pack(side=LEFT)
+button5.pack(side=LEFT)
 button6.pack(side=LEFT)
-button7.pack(side=LEFT)
-button8.pack(side=LEFT)
 
 # methods called by buttons
 node_id_Dic={}
@@ -63,16 +60,7 @@ def drawNode(e):
     if not canvas.find_enclosed(e.x-105,e.y-105,e.x+105,e.y+105):
         oval=canvas.create_oval(e.x-50,e.y-50,e.x+50,e.y+40)
 
-        #need to factor these tables into the above
-        #draw the node first then the table afterwards
 
-        # probTable=canvas.create_rectangle(e.x-60,e.y-30,e.x-140,e.y+30)
-        # tableHorizLine2 = canvas.create_line(e.x-60,e.y,e.x-140,e.y)
-        # tableVertLine = canvas.create_line(e.x - 100, e.y - 30, e.x - 100, e.y + 30)
-        # falseLabel=canvas.create_text(e.x-80,e.y-15,text="F")
-        # trueLabel = canvas.create_text(e.x-120,e.y-15,text="T")
-        #
-        # #store these tables into dictionaries linking them to the node
 
         value = askstring('value', 'Please enter a title')
 
@@ -85,24 +73,14 @@ def drawNode(e):
         #nickname given to each node
         nickname=canvas.create_text(e.x,e.y,text=str(value))
 
+    coordinateSet=[nodeName,[e.x,e.y]]
 
+    GUIset = [nodeName, nodeID, {}]  # number object / oval object / dictionary for linking
 
-    # set store following for below
-    # node ID, node name, prob table, t and its value, f and its value
-
-    # GUIset = [nodeName, oval, {}]  # number object / oval object / dictionary for linking
-
-
-    coordinates=[nodeID,[e.x,e.y]]
-    print(coordinates)
-
-    probID=MN.inc()
-    # prob_table_id[probTable]=probID
-    Probset = [nodeID, nodeName,probID,{}]
     node_id_Dic[oval] = nodeID
     LK.add_vertex(nodeID)
-    GA.addBeliefNode(Probset, nodeID, probID)
-
+    GA.addNode(GUIset,nodeID)
+    GA.addCoords(coordinateSet,nodeID)
 
 # listen to mouse action
 def CreateNode(event):
@@ -119,9 +97,9 @@ def ArcPoint2(e):
             root.config(cursor="")
             arrow = canvas.create_line(x,y,e.x,e.y,arrow="last")#fill="turquoise" can change color
 
-            weight = canvas.create_text(0.5 * (x + e.x), 0.5 * (y + e.y) - 10, text=" ")
+            # weight = canvas.create_text(0.5 * (x + e.x), 0.5 * (y + e.y) - 10, text=" ")
 
-            GA.addArrow(fromNode, toNode, arrow, weight)
+            GA.addBeliefArrow(fromNode, toNode, arrow)
 
             # #this method produces the connection
 
@@ -146,75 +124,63 @@ def CreateArc(event):
     root.config(cursor="")
     canvas.bind("<Button-1>",ArcPoint1)
 
-def moveTo(e):
-    #for both lines below so x = location of the node you want to move
-    #e.x = location you want to move it to
-    #subtract these to get the distance to move the node by
+def probTable(event):
 
-    #selects the location of the node you want to move
-    canvas.move(moveTheNode,e.x-x,e.y-y)
+# run through nodelist and find parents
+# then create the grids according to the coordinates for location
+# and the parents for the no. of rows you need
 
-    #+1 moves the number associated with that node ie 0,1,2 etc
-    canvas.move(moveTheNode+1,e.x-x,e.y-y)
+#     need to factor these tables into the above
+#     draw the node first then the table afterwards
+#     probTable=canvas.create_rectangle(e.x-60,e.y-30,e.x-140,e.y+30)
+#     tableHorizLine2 = canvas.create_line(e.x-60,e.y,e.x-140,e.y)
+#     tableVertLine = canvas.create_line(e.x - 100, e.y - 30, e.x - 100, e.y + 30)
+#     falseLabel=canvas.create_text(e.x-80,e.y-15,text="F")
+#     trueLabel = canvas.create_text(e.x-120,e.y-15,text="T")
 
-    # move the arrows
-    for i in moveArrowTails:
-        canvas.move(moveArrowTails[i],e.x-x,e.y-y)
+    # parent={}#{node id: [parent...], ...} the nodes which have parents
+    #     for n in dict:#for each node in the graph
+    #         dict[n].probabilityTable.clear()#clean up table
+    #         for i in dict[n].adjacent:#find each adjacent
+    #             if i not in parent:
+    #                 parent[i]=[n]
+    #             else:
+    #                 parent[i].append(n)
+    #     return parent
 
-    root.config(cursor="")
-    canvas.bind("<Button-1>",moveFrom)
-# select the node
-def moveFrom(e):
-    global x,y
-    x,y=e.x,e.y
-    n=canvas.find_enclosed(e.x-50,e.y-50,e.x+50,e.y+50)
-    if len(n)==2:
-        root.config(cursor="exchange")
-        global moveTheNode, moveArrowTails, moveArrowHeads
-        #[0] is the ID of the node you want to move
-        moveTheNode=n[0]
-        moveArrowTails=GA.nodeList[node_id_Dic[n[0]]][2]
-        moveArrowHeads={}
-        for i in GA.nodeList:
-            if node_id_Dic[n[0]] in GA.nodeList[i][2]:
-                moveArrowHeads[i]=GA.nodeList[i][2][node_id_Dic[n[0]]]
+    parentNodes = {}
 
-        #once you click that node, then moves to moveTo method above and moves node
-        canvas.bind("<Button-1>",moveTo)
+#need to store a DICTIONARY not list
+#has nodeID and their links
+#then proceed to make the tables 8
+
+    # for n in LK.vert_dict[0]:
+    #     if n.isEmpty():
+    for nodeID in GA.nodeList:
+        print("kmkmkm")
+
+        if len(GA.nodeList[0][2])==0:
+            print("kkkk")
+            # parentNodes[nodeID]=set
+            # print(parentNodes)
+
     else:
-        canvas.bind("<Button-1>",moveTo)
+        print("wwwww")
 
-# Move the object
-def Move(event):
-    root.config(cursor="")
-    canvas.bind("<Button-1>",moveFrom)
+            #add to a parent node set
 
-def removeFromCanvas(e):
-    #checks range to see if both node and number label are in the range where you clicked
-    if len(canvas.find_enclosed(e.x-50,e.y-50,e.x+50,e.y+50))==2:
-        #[0] is the node ID thats selected
-        selectedNode=node_id_Dic[canvas.find_enclosed(e.x-50,e.y-50,e.x+50,e.y+50)[0]]
-        GA.deleteNode(selectedNode)
-        LK.delete_vertex(selectedNode)
-        #this removes the deleted node and arrow out of the array and stores the number of that node into a priority queue
-        #so takes no. from top of priority queue when creating next node
-        MN.remove(selectedNode)
 
-        # for v in LK.vert_dict:#####
-        # print(str(LK.vert_dict[v].get_id())+' is connected to '+str([g for g in LK.vert_dict[v]]))
-        Delete  #takes you to delete def below
+        # parentNodes.append(n)
+        # print(parentNodes)
+            #
 
-# Delete the node
-def Delete(event):
-    root.config(cursor="spider")
-    canvas.bind("<Button-1>",removeFromCanvas)
+        # # print("pppp")
+        # for i in GA.nodeList[n]:
+        #     if i != n:
+        #         print(i)
+        #     else:
+        #         print("fghjk")
 
-def NextStep(e):
-    #produce the canvas to display the probability table here
-    #remove previous canvas from screen
-    #
-    #
-    print("iiii")
 
 def setTrueProb(e):
 
@@ -223,7 +189,7 @@ def setTrueProb(e):
     valueT = getdouble(valueT)
 
 #need to add nodeID to the front before the T and the F like the test oens
-    valueTrueSet=["T" , valueT]
+    valueTrueSet=["T", valueT]
 
     print(valueTrueSet)
 
@@ -261,8 +227,7 @@ def ParentFalseProb(event):
     root.config(cursor="cross")
     canvas.bind("<Button-1>", setFalseProb)
 
-
-def setTF(e):
+def setTF(e): #change this to run the algorithm too
 
     #alternatively do a drop down list of all the nodes from the dictionary
     #instead of an entry box
@@ -319,23 +284,13 @@ def SetObs(event):
     root.config(cursor="cross")
     canvas.bind("<Button-1>", setTF)
 
-def childProbs(e):
-
-    #make this call the algorithm
-    print("")
-
-def childP(event):
-    root.config(cursor="")
-    canvas.bind("<Button-1>",childProbs)
 
 button1.bind("<Button-1>",CreateNode)
-button2.bind("<Button-1>",childP)
+button2.bind("<Button-1>",probTable)
 button3.bind("<Button-1>",CreateArc)
-# button3.bind("<Button-1>",Move)
-# button5.bind("<Button-1>",Delete)
-button6.bind("<Button-1>",ParentTrueProb)
-button7.bind("<Button-1>",ParentFalseProb)
-button8.bind("<Button-1>", SetObs)
+button4.bind("<Button-1>",ParentTrueProb)
+button5.bind("<Button-1>",ParentFalseProb)
+button6.bind("<Button-1>", SetObs)
 
 
 root.mainloop()
