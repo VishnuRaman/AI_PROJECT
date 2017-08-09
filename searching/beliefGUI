@@ -125,9 +125,21 @@ def CreateArc(event):
     canvas.bind("<Button-1>",ArcPoint1)
 
 def CreateTable(parent,coordinate):
-    print("qqqqq")
-    canvas.create_rectangle(coordinate[0]-60,coordinate[1]-30,coordinate[0]-140,coordinate[1]+30)
 
+    box1 = canvas.create_rectangle(coordinate[0]-140,coordinate[1],coordinate[0]-100,coordinate[1]-30)
+    box2 =  canvas.create_rectangle(coordinate[0] - 60, coordinate[1], coordinate[0] - 100, coordinate[1]-30)
+
+    print("uuuuu")
+
+    #need to change from p to the set part that does parent no.s
+    for p in range(len(parent)):
+        coordinate[1] = coordinate[1] - 30
+        #print box 1&2 again but lower than previous row and do for the same amount of times as p
+
+        box3 = canvas.create_rectangle(coordinate[0] - 140, coordinate[1], coordinate[0] - 100, coordinate[1]-30)
+        box4 = canvas.create_rectangle(coordinate[0] - 60, coordinate[1], coordinate[0] - 100, coordinate[1]-30)
+
+    print("qqqqq")
 #use a for loop to make the rows for each box as in the box is the for loop
 
 def probTable(event):
@@ -167,18 +179,11 @@ def probTable(event):
 
                 # parentNodes[i]=parent
 
-
                 # parentNodes.update(j)
 
                     print(parentNodes)
                     print("ddddd")
-        #then do for loop for finding the links and making tables
 
-            # print("bbbb")
-
-
-    # return parentNodes
-    # print(parentNodes)
 #now print tables where no.of rows is 2^len of the set
 # always have two columns but change the no.of rows
 # once you know the parents len(parents) is no. of rows
