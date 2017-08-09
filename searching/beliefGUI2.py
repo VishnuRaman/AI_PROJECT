@@ -60,8 +60,6 @@ def drawNode(e):
     if not canvas.find_enclosed(e.x-105,e.y-105,e.x+105,e.y+105):
         oval=canvas.create_oval(e.x-50,e.y-50,e.x+50,e.y+40)
 
-
-
         value = askstring('value', 'Please enter a title')
 
       #MN.inc means increase that method by 1 as new node was created
@@ -124,7 +122,7 @@ def CreateArc(event):
     root.config(cursor="")
     canvas.bind("<Button-1>",ArcPoint1)
 
-def probTable(event):
+def probTable(e):
 
 # run through nodes and find parents
 # then create the grids according to the coordinates for location
@@ -132,66 +130,40 @@ def probTable(event):
 
 #     # need to factor these tables into the above
 #     # draw the node first then the table afterwards
-#     probTable=canvas.create_rectangle(e.x-60,e.y-30,e.x-140,e.y+30)
-#     tableHorizLine2 = canvas.create_line(e.x-60,e.y,e.x-140,e.y)
-#     tableVertLine = canvas.create_line(e.x - 100, e.y - 30, e.x - 100, e.y + 30)
-#     falseLabel=canvas.create_text(e.x-80,e.y-15,text="F")
-#     trueLabel = canvas.create_text(e.x-120,e.y-15,text="T")
+        probTable=canvas.create_rectangle(e.x-60,e.y-30,e.x-140,e.y+30)
+        tableHorizLine2 = canvas.create_line(e.x-60,e.y,e.x-140,e.y)
+        tableVertLine = canvas.create_line(e.x - 100, e.y - 30, e.x - 100, e.y + 30)
+        falseLabel=canvas.create_text(e.x-80,e.y-15,text="F")
+        trueLabel = canvas.create_text(e.x-120,e.y-15,text="T")
 
+        for n in GA.coordList:
+            if n[2]==0:
+                print("aaaaa")
 
-
-#need to store a DICTIONARY not list
-#has nodeID and their links
-#then proceed to make the tables 8
-
-
-    parentNodes={}
-    for k in GA.nodeList:
-        parentNodes[k]=set()
-
-
-    # for n in LK.vert_dict[0]:
-    #     if n.isEmpty():
-
-        if LK.num_vertices>0:
-            print("bbbb")
-            for j in GA.nodeList:
-#go through nodes and check if they have parents
-                #then use child id as a key and value as a list and append parent into the list
-
-                for i in GA.nodeList[j][2]:
-                   if GA.nodeList[j][2]:
-                    parentNodes[i].add(j)
-
-                    # parentNodes[i]=parent
-
-
-                     # parentNodes.update(j)
-
-                    print(parentNodes)
-                    print("ddddd")
-            #then do for loop for finding the links and making tables
-
-                # print("bbbb")
-
-
-        return parentNodes
-        print(parentNodes)
-    #now print tables where no.of rows is 2^len of the set
-
-
-
-
+def parentProb(event):
+    root.config(cursor="cross")
+    canvas.bind("<Button-1>",probTable)
+#
+#
 def setTrueProb(e):
 
     valueT = askstring('value', 'Please enter a true probability value')
 
     valueT = getdouble(valueT)
 
+    # error message aspect
+    # # need to change this so it doesnt print the value too
+    # if valueT>1.0:
+    #     print("Please enter a value below 1")
+
 #need to add nodeID to the front before the T and the F like the test oens
     valueTrueSet=["T", valueT]
 
     print(valueTrueSet)
+
+    for i in coordinates[2][0]:
+        if e.x in range(0,i):
+            print("qwerty")
 
     #need to sort out error handling here if no value entered/cancelled
 
@@ -203,8 +175,8 @@ def setTrueProb(e):
 def ParentTrueProb(event):
     root.config(cursor="cross")
     canvas.bind("<Button-1>", setTrueProb)
-
-
+#
+#
 def setFalseProb(e):
     valueF = askstring('value', 'Please enter a false probability value')
 
@@ -226,71 +198,71 @@ def setFalseProb(e):
 def ParentFalseProb(event):
     root.config(cursor="cross")
     canvas.bind("<Button-1>", setFalseProb)
-
-def setTF(e): #change this to run the algorithm too
-
-    #alternatively do a drop down list of all the nodes from the dictionary
-    #instead of an entry box
-
-
-        Label(root, text="Select Node:").pack(side=LEFT)
-
-        e1 = Entry(root)
-
-        e1.pack(side=LEFT)
-
-        chosenNode = e1.get()
-
-    #check after input then print
-    #alt create a button that confirms the input then prints
-    #store in a list - as order is necessary must be t/f then value
-
-        print("aaaaaa")
-        print(chosenNode) #not printing????
-        print("bbbb")
-
-
-        global truevar
-
-        truevar = IntVar()
-
-        true = Checkbutton(root, text="True", variable=truevar)
-        true.pack(side=LEFT)
-
-        falsevar=IntVar()
-        false = Checkbutton(root, text="False", variable=falsevar)
-        false.pack(side=LEFT)
-        falsevar.get()
-        # print(falsevar.get())
-
-
-        print("eeeee")
-        truevar.get()
-
-        print(truevar.get())
-
-
-        # need to check if its selected
-
-    # if truevar.get() == 0:
-        #      print("T")
-        #
-        # else:
-        #     print("F")
-
-        print("ccccc")
-
-def SetObs(event):
-    root.config(cursor="cross")
-    canvas.bind("<Button-1>", setTF)
+#
+# def setTF(e): #change this to run the algorithm too
+#
+#     #alternatively do a drop down list of all the nodes from the dictionary
+#     #instead of an entry box
+#
+#
+#         Label(root, text="Select Node:").pack(side=LEFT)
+#
+#         e1 = Entry(root)
+#
+#         e1.pack(side=LEFT)
+#
+#         chosenNode = e1.get()
+#
+#     #check after input then print
+#     #alt create a button that confirms the input then prints
+#     #store in a list - as order is necessary must be t/f then value
+#
+#         print("aaaaaa")
+#         print(chosenNode) #not printing????
+#         print("bbbb")
+#
+#
+#         global truevar
+#
+#         truevar = IntVar()
+#
+#         true = Checkbutton(root, text="True", variable=truevar)
+#         true.pack(side=LEFT)
+#
+#         falsevar=IntVar()
+#         false = Checkbutton(root, text="False", variable=falsevar)
+#         false.pack(side=LEFT)
+#         falsevar.get()
+#         # print(falsevar.get())
+#
+#
+#         print("eeeee")
+#         truevar.get()
+#
+#         print(truevar.get())
+#
+#
+#         # need to check if its selected
+#
+#     # if truevar.get() == 0:
+#         #      print("T")
+#         #
+#         # else:
+#         #     print("F")
+#
+#         print("ccccc")
+#
+# def SetObs(event):
+#     root.config(cursor="cross")
+#     canvas.bind("<Button-1>", setTF)
 
 
 button1.bind("<Button-1>",CreateNode)
-button2.bind("<Button-1>",probTable)
+button2.bind("<Button-1>",parentProb)
 button3.bind("<Button-1>",CreateArc)
 button4.bind("<Button-1>",ParentTrueProb)
 button5.bind("<Button-1>",ParentFalseProb)
-button6.bind("<Button-1>", SetObs)
+# button6.bind("<Button-1>", SetObs)
 
 
 root.mainloop()
