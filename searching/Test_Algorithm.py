@@ -505,14 +505,14 @@ class Test_algorithm(unittest.TestCase):
 
     def test_markov(self):
         g=Linking.Graph()
-        g.add_vertex(0)
-        g.add_vertex(1)
-        g.add_edge(0,1,0.5)
-        g.add_edge(0,0,0.5)
-        g.add_edge(1,0,0.1)
-        g.add_edge(1,1,0.9)
-        g.get_vertex(0).probability=1#initial probability
-        g.get_vertex(1).probability=0#initial probability
+        g.add_vertex('rainy')
+        g.add_vertex('sunny')
+        g.add_edge('rainy','sunny',0.5)
+        g.add_edge('rainy','rainy',0.5)
+        g.add_edge('sunny','rainy',0.1)
+        g.add_edge('sunny','sunny',0.9)
+        g.get_vertex('rainy').probability=1#initial probability
+        g.get_vertex('sunny').probability=0#initial probability
         model=g.vert_dict
 
         gg=Linking.Graph()
@@ -524,15 +524,15 @@ class Test_algorithm(unittest.TestCase):
         gg.add_edge(1,2)
         gg.add_edge(2,3)
         al=Algorithms.algorithms(gg.vert_dict)
-        expected={0: {0: 1, 1: 0},
-                  1: {0: 0.5, 1: 0.5},
-                  2: {0: 0.3, 1: 0.7},
-                  3: {0: 0.21999999999999997, 1: 0.78}}
+        expected={0: {'rainy': 1, 'sunny': 0},
+                  1: {'rainy': 0.5, 'sunny': 0.5},
+                  2: {'rainy': 0.3, 'sunny': 0.7},
+                  3: {'rainy': 0.21999999999999997, 'sunny': 0.78}}
         self.assertDictEqual(al.markov(model,0),expected)
 
-        expected={1: {0: 1, 1: 0},
-                  2: {0: 0.5, 1: 0.5},
-                  3: {0: 0.3, 1: 0.7}}
+        expected={1: {'rainy': 1, 'sunny': 0},
+                  2: {'rainy': 0.5, 'sunny': 0.5},
+                  3: {'rainy': 0.3, 'sunny': 0.7}}
         self.assertDictEqual(al.markov(model,1),expected)
 
     def test_hiddenMarkov(self):
@@ -582,5 +582,5 @@ class Test_algorithm(unittest.TestCase):
                   1: {'rainy': 0.7095890410958903, 'sunny': 0.2904109589041096},
                   2: {'rainy': 0.18936697454381615, 'sunny': 0.8106330254561839},
                   3: {'rainy': 0.17574678981752645, 'sunny': 0.8242532101824737}}
-        print(al.hiddenMarkov(model,0,obs,states))
+        # print(al.hiddenMarkov(model,0,obs,states))
         self.assertDictEqual(al.hiddenMarkov(model,0,obs,states),expected)
