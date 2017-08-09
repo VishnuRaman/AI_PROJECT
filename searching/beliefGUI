@@ -147,7 +147,6 @@ def probTable(event):
 #has nodeID and their links
 #then proceed to make the tables 8
 
-
     parentNodes={}
     for k in GA.nodeList:
         parentNodes[k]=set()
@@ -165,10 +164,6 @@ def probTable(event):
                     print(parentNodes)
                     print("ddddd")
 
-#now print tables where no.of rows is 2^len of the set
-# always have two columns but change the no.of rows
-# once you know the parents len(parents) is no. of rows
-
     for x in parentNodes:
         print('yyy')
         point=GA.coordList[x][1]
@@ -177,13 +172,14 @@ def probTable(event):
 
 def setTFlabel(e):
 
-    global valueLabel
+    global valueLab
+
 
     valueLabel = askstring('value', 'Please enter either T or F')
 
     valueL = canvas.create_text(e.x, e.y, text=str(valueLabel))
 
-
+    valueLab=valueLabel
 
     #make a getter
 
@@ -197,6 +193,9 @@ def ParentLabel(event):
 
 
 def setProb(e):
+
+    probset={}
+
     valueP = askstring('value', 'Please enter a probability value')
 
     valueprob = getdouble(valueP)
@@ -207,8 +206,9 @@ def setProb(e):
 
         #store this with the nodeID and label from above
 
-    probset = [valueLabel, valueprob]
-    print(probset)
+        #atm probset is overwriting unless do each button alternatively
+        probset = [valueLab, valueprob]
+        print(probset)
 
 
 def ParentProb(event):
