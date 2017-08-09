@@ -133,7 +133,7 @@ def CreateTable(parent,coordinate):
 
     #need to change from p to the set part that does parent no.s
     for p in range(len(parent)):
-        coordinate[1] = coordinate[1] - 30
+        coordinate[1] = coordinate[1] + 30
         #print box 1&2 again but lower than previous row and do for the same amount of times as p
 
         box3 = canvas.create_rectangle(coordinate[0] - 140, coordinate[1], coordinate[0] - 100, coordinate[1]-30)
@@ -194,14 +194,9 @@ def probTable(event):
         print("oooo")
         CreateTable(parentNodes[x],point)
 
-
-
-
-
-
 def setTrueProb(e):
 
-    valueT = askstring('value', 'Please enter a true probability value')
+    valueT = askstring('value', 'Please enter a probability value')
 
     valueT = getdouble(valueT)
 
