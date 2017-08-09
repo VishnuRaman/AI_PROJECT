@@ -124,6 +124,12 @@ def CreateArc(event):
     root.config(cursor="")
     canvas.bind("<Button-1>",ArcPoint1)
 
+def CreateTable(parent,coordinate):
+    print("qqqqq")
+    canvas.create_rectangle(coordinate[0]-60,coordinate[1]-30,coordinate[0]-140,coordinate[1]+30)
+
+#use a for loop to make the rows for each box as in the box is the for loop
+
 def probTable(event):
 
 # run through nodes and find parents
@@ -145,39 +151,45 @@ def probTable(event):
 #then proceed to make the tables 8
 
 
-        parentNodes={}
-        for k in GA.nodeList:
-            parentNodes[k]=set()
+    parentNodes={}
+    for k in GA.nodeList:
+        parentNodes[k]=set()
 
-    #
-    # for n in LK.vert_dict[0]:
-    #     if n.isEmpty():
-    #
-        if LK.num_vertices>0:
-            print("bbbb")
-            for j in GA.nodeList:
-                #go through nodes and check if they have parents
-                #then use child id as a key and value as a list and append parent into the list
+    if LK.num_vertices>0:
+        print("bbbb")
+        for j in GA.nodeList:
+            #go through nodes and check if they have parents
+            #then use child id as a key and value as a list and append parent into the list
 
-                for i in GA.nodeList[j][2]:
-                    if GA.nodeList[j][2]:
-                        parentNodes[i].add(j)
+            for i in GA.nodeList[j][2]:
+                if GA.nodeList[j][2]:
+                    parentNodes[i].add(j)
 
-                    # parentNodes[i]=parent
+                # parentNodes[i]=parent
 
 
-                    # parentNodes.update(j)
+                # parentNodes.update(j)
 
-                        print(parentNodes)
-                        print("ddddd")
-            #then do for loop for finding the links and making tables
+                    print(parentNodes)
+                    print("ddddd")
+        #then do for loop for finding the links and making tables
 
-                # print("bbbb")
+            # print("bbbb")
 
 
-        return parentNodes
-        print(parentNodes)
-    #now print tables where no.of rows is 2^len of the set
+    # return parentNodes
+    # print(parentNodes)
+#now print tables where no.of rows is 2^len of the set
+# always have two columns but change the no.of rows
+# once you know the parents len(parents) is no. of rows
+
+    for x in parentNodes:
+        print('yyy')
+        point=GA.coordList[x][1]
+        print("oooo")
+        CreateTable(parentNodes[x],point)
+
+
 
 
 
