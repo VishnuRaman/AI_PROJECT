@@ -145,31 +145,31 @@ def probTable(event):
 #then proceed to make the tables 8
 
 
-    parentNodes={}
-    for k in GA.nodeList:
-        parentNodes[k]=set()
+        parentNodes={}
+        for k in GA.nodeList:
+            parentNodes[k]=set()
 
-
+    #
     # for n in LK.vert_dict[0]:
     #     if n.isEmpty():
-
+    #
         if LK.num_vertices>0:
             print("bbbb")
             for j in GA.nodeList:
-#go through nodes and check if they have parents
+                #go through nodes and check if they have parents
                 #then use child id as a key and value as a list and append parent into the list
 
                 for i in GA.nodeList[j][2]:
-                   if GA.nodeList[j][2]:
-                    parentNodes[i].add(j)
+                    if GA.nodeList[j][2]:
+                        parentNodes[i].add(j)
 
                     # parentNodes[i]=parent
 
 
-                     # parentNodes.update(j)
+                    # parentNodes.update(j)
 
-                    print(parentNodes)
-                    print("ddddd")
+                        print(parentNodes)
+                        print("ddddd")
             #then do for loop for finding the links and making tables
 
                 # print("bbbb")
