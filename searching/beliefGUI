@@ -6,6 +6,7 @@ from tkinter import *
 # import Tkinter
 import tkinter.filedialog
 from tkinter.simpledialog import askstring
+from tkinter import messagebox
 
 root = Tk()
 topFrame = Frame(root)
@@ -37,6 +38,7 @@ button3 = Button(topFrame,text="Create Probability Tables")
 button4 = Button(topFrame,text="Choose Probability Label")
 button5 = Button(topFrame,text="Set Probability")
 button6 = Button(topFrame,text="Set Observation")
+button7 = Button(bottomFrame,text="Run")
 
 button1.pack(side=LEFT)
 button2.pack(side=LEFT)
@@ -44,6 +46,7 @@ button3.pack(side=LEFT)
 button4.pack(side=LEFT)
 button5.pack(side=LEFT)
 button6.pack(side=LEFT)
+button7.pack(side=LEFT)
 
 # methods called by buttons
 node_id_Dic={}
@@ -124,21 +127,21 @@ def CreateArc(event):
 
 def CreateTable(parent,coordinate):
 
-    box1 = canvas.create_rectangle(coordinate[0]-140,coordinate[1],coordinate[0]-100,coordinate[1]-30)
-    box2 =  canvas.create_rectangle(coordinate[0] - 60, coordinate[1], coordinate[0] - 100, coordinate[1]-30)
-
-    print("uuuuu")
-
     #need to change from p to the set part that does parent no.s
-    for p in range(len(parent)):
+    for p in range(2**len(parent)):
         coordinate[1] = coordinate[1] + 30
         #print box 1&2 again but lower than previous row and do for the same amount of times as p
 
-        box3 = canvas.create_rectangle(coordinate[0] - 140, coordinate[1], coordinate[0] - 100, coordinate[1]-30)
-        box4 = canvas.create_rectangle(coordinate[0] - 60, coordinate[1], coordinate[0] - 100, coordinate[1]-30)
+        box1 = canvas.create_rectangle(coordinate[0] - 140, coordinate[1], coordinate[0] - 100, coordinate[1]-30)
+        box2 = canvas.create_rectangle(coordinate[0] - 60, coordinate[1], coordinate[0] - 100, coordinate[1]-30)
+
+    # rows = 2**len(parent)
+    #
+    # v=  bin(rows)[2:].zfill(len(parent))
+    # print(v)
 
 
-    print("qqqqq")
+
 #use a for loop to make the rows for each box as in the box is the for loop
 
 def probTable(event):
@@ -152,7 +155,7 @@ def probTable(event):
         parentNodes[k]=set()
 
     if LK.num_vertices>0:
-        print("bbbb")
+
         for j in GA.nodeList:
             #go through nodes and check if they have parents
             #then use child id as a key and value as a list and append parent into the list
@@ -162,12 +165,12 @@ def probTable(event):
                     parentNodes[i].add(j)
 
                     print(parentNodes)
-                    print("ddddd")
+
 
     for x in parentNodes:
-        print('yyy')
+
         point=GA.coordList[x][1]
-        print("oooo")
+
         CreateTable(parentNodes[x],point)
 
 def setTFlabel(e):
@@ -194,7 +197,8 @@ def ParentLabel(event):
 
 def setProb(e):
 
-    probset={}
+    x = e.x
+    y = e.y
 
     valueP = askstring('value', 'Please enter a probability value')
 
@@ -204,17 +208,35 @@ def setProb(e):
     if not canvas.find_enclosed(e.x - 20, e.y, e.x + 20, e.y + 30):
         canvas.create_text(e.x, e.y, text=valueprob)
 
-        pc = [valueprob,[e.x,e.y]]
-        print(pc)
+    pc = [valueprob,[e.x,e.y]]
+    print(pc)
 
         #now use these coordinates to match the range of the nodeid its next to
         #store this with the nodeID and label from above
 
         #atm probset is overwriting unless do each button alternatively
-        probset = [valueLab, valueprob]
-        print(probset)
+    # probset = [valueLab, valueprob]
+    probset = {}
 
-        # parentNodes = {}
+    checkCoords={}
+
+    for q in GA.coordList:
+        checkCoords[q] = set()
+
+        if x >0:
+            for w in GA.coordList:
+                for t in GA.coordList[w][1]:
+                    if GA.coordList[w][1]:
+                        print("skssksksk")
+                        if x in range(t):
+                            print(w)
+                            probset=[w,valueLab,valueprob]
+                            print(probset)
+
+                            #need to not overwrite probset
+
+
+# parentNodes = {}
         # for k in GA.nodeList:
         #     parentNodes[k] = set()
         #
@@ -241,66 +263,114 @@ def ParentProb(event):
     root.config(cursor="cross")
     canvas.bind("<Button-1>", setProb)
 
-# def setTF(e): #change this to run the algorithm too
-#
-#     #alternatively do a drop down list of all the nodes from the dictionary
-#     #instead of an entry box
-#     valueLabel = askstring('value', 'Please enter either T or F')
-#
-#     valueL = canvas.create_text(e.x, e.y, text=str(valueLabel))
 
 
+def setTF(e): #change this to run the algorithm too
 
-        #     Label(root, text="Select Node:").pack(side=LEFT)
+    #alternatively do a drop down list of all the nodes from the dictionary
+    #instead of an entry box - true false cancel and whichever is selected rpogerss from there
+    x = e.x
+
+    # checkCoords={}
     #
-    #     e1 = Entry(root)
+    # for q in GA.coordList:
+    #     checkCoords[q] = set()
     #
-    #     e1.pack(side=LEFT)
+    #     if x >0:
+    #         for w in GA.coordList:
+    #             for t in GA.coordList[w][1]:
+    #                 if GA.coordList[w][1]:
+    #                     print("skssksksk")
+    #                     if x in range(0,t):
+    #                         print(w)
+    #                         probset=[w,valueLab,valueprob]
+    #                         print(probset)
+
+    obsLabel = askstring('value', 'Please enter either T or F')
+
+    # obsCoord = {}
+    # obs = {}
+    # for h in GA.coordList:
+    #     obsCoord[h] = set()
     #
-    #     chosenNode = e1.get()
+    #     if x>0:
+    #         for f in GA.coordList:
+    #             for d in GA.coordList[f][1]:
+    #                 if GA.coordList[f][1]:
+    #                     print("werterwt")
+    #                     if x ==d:
+    #                         print(f)
+
+
+    #need it to not overwrite one another
+    if obsLabel == 'T':
+        obs = [obsLabel]
+        print(obs)
+    elif obsLabel == 'F':
+        obs = [obsLabel]
+        print(obs)
+    elif obsLabel is None:
+        print("asassa")
+    else:
+        #dont print the labe
+        obsError = tkinter.messagebox.showinfo('error','Please only enter either T or F')
+
+    return obs
+    print(obs)
+
+        # trueVar=IntVar()
+    # valueObs = tkinter.
+    # obsTrue = Checkbutton(canvas,text="True",variable=trueVar)
+
+
+    # #want a dictionary store nodeID and T/F
+    #
+    # Label(root, text="Select Node:").pack(side=LEFT)
+    #
+    # e1 = Entry(root)
+    #
+    # e1.pack(side=LEFT)
+    #
+    # chosenNode = e1.get()
     #
     # #check after input then print
     # #alt create a button that confirms the input then prints
     # #store in a list - as order is necessary must be t/f then value
     #
-    #     print("aaaaaa")
-    #     print(chosenNode) #not printing????
-    #     print("bbbb")
+    # print("aaaaaa")
+    # print(chosenNode) #not printing????
+    # print("bbbb")
     #
     #
-    #     global truevar
+    # global truevar
     #
-    #     truevar = IntVar()
+    # truevar = IntVar()
     #
-    #     true = Checkbutton(root, text="True", variable=truevar)
-    #     true.pack(side=LEFT)
+    # true = Checkbutton(root, text="True", variable=truevar)
+    # true.pack(side=LEFT)
     #
-    #     falsevar=IntVar()
-    #     false = Checkbutton(root, text="False", variable=falsevar)
-    #     false.pack(side=LEFT)
-    #     falsevar.get()
-    #     # print(falsevar.get())
-    #
-    #
-    #     print("eeeee")
-    #     truevar.get()
-    #
-    #     print(truevar.get())
+    # falsevar=IntVar()
+    # false = Checkbutton(root, text="False", variable=falsevar)
+    # false.pack(side=LEFT)
+    # falsevar.get()
+    # # print(falsevar.get())
     #
     #
-    #     # need to check if its selected
+    # print("eeeee")
+    # truevar.get()
     #
-    # # if truevar.get() == 0:
-    #     #      print("T")
-    #     #
-    #     # else:
-    #     #     print("F")
+    # print(truevar.get())
     #
-    #     print("ccccc")
-#
-# def SetObs(event):
-#     root.config(cursor="cross")
-#     canvas.bind("<Button-1>", setTF)
+    #
+    #
+    # print("ccccc")
+
+def SetObs(event):
+    root.config(cursor="cross")
+    canvas.bind("<Button-1>", setTF)
+
+def run(event):
+    print("asdawdwa")
 
 
 button1.bind("<Button-1>",CreateNode)
@@ -308,7 +378,8 @@ button2.bind("<Button-1>",CreateArc)
 button3.bind("<Button-1>",probTable)
 button4.bind("<Button-1>",ParentLabel)
 button5.bind("<Button-1>",ParentProb)
-# button6.bind("<Button-1>", SetObs)
+button6.bind("<Button-1>", SetObs)
+button7.bind("<Button-1>",run)
 
 
 root.mainloop()

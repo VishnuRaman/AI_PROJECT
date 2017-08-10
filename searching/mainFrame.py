@@ -133,14 +133,18 @@ button2 = Button(topFrame,text="Create Arc")
 button3 = Button(topFrame,text="Move")
 button4 = Button(topFrame,text="Delete")
 button7 = Button(bottomFrame,text="Run")
-text1=Label(topFrame2,text="Start node")
+text1=Label(topFrame2,text="Start Node")
 startNode=Entry(topFrame2, width=2)
-text2=Label(topFrame2,text="End node")
+text2=Label(topFrame2,text="End Node")
 endNode=Entry(topFrame2, width=2)
-text3=Label(topFrame2,text="Delay seconds")
+text3=Label(topFrame2,text="Delay Seconds")
 delay=Entry(topFrame2, width=2)
-text4=Label(topFrame2,text="Limit for Iterative Deep Searches")
+text4=Label(topFrame2,text="Maximum Number of Rows to Search")
 it = Entry(topFrame2, width=2)
+# global itVar
+# itVar = IntVar()
+# it = Checkbutton(topFrame2,text="Iterative",variable=itVar)
+
 button8 = Button(topFrame2,text="<<",bg="light blue")
 button9 = Button(topFrame2,text=">>",bg="light blue")
 
@@ -388,9 +392,14 @@ def display():
         result[3]['text']=str(AL.getQsLog()[xTh][1])#qsValue
         result[4]['text']=str(AL.getVisitedLog()[xTh])#visitedValue
 
-    if AL.getQsLog()[xTh][0]==finalPath[-1]:#meet the goal then color the final path
+    if finalPath == None:
+        print("No final path found yet")
+
+    elif AL.getQsLog()[xTh][0]==finalPath[-1]:#meet the goal then color the final path
 
         #if goal isnt met = produce an error message
+        if finalPath == 'NoneType':
+            print("No final path found yet please enter a larger number")
 
         # for i in the range of range= number of final path nodes
         for a in range(len(finalPath)-1):
