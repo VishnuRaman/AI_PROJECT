@@ -6,6 +6,7 @@ import pickle
 from tkinter import *
 # import Tkinter
 import tkinter.filedialog
+import tkinter.messagebox
 
 
 from searching.Algorithms import algorithms
@@ -133,14 +134,18 @@ button2 = Button(topFrame,text="Create Arc")
 button3 = Button(topFrame,text="Move")
 button4 = Button(topFrame,text="Delete")
 button7 = Button(bottomFrame,text="Run")
-text1=Label(topFrame2,text="Start node")
+text1=Label(topFrame2,text="Start Node")
 startNode=Entry(topFrame2, width=2)
-text2=Label(topFrame2,text="End node")
+text2=Label(topFrame2,text="End Node")
 endNode=Entry(topFrame2, width=2)
-text3=Label(topFrame2,text="Delay seconds")
+text3=Label(topFrame2,text="Delay Seconds")
 delay=Entry(topFrame2, width=2)
-text4=Label(topFrame2,text="Limit for Iterative Deep Searches")
+text4=Label(topFrame2,text="Maximum Number of Rows to Search")
 it = Entry(topFrame2, width=2)
+# global itVar
+# itVar = IntVar()
+# it = Checkbutton(topFrame2,text="Iterative",variable=itVar)
+
 button8 = Button(topFrame2,text="<<",bg="light blue")
 button9 = Button(topFrame2,text=">>",bg="light blue")
 
@@ -388,18 +393,22 @@ def display():
         result[3]['text']=str(AL.getQsLog()[xTh][1])#qsValue
         result[4]['text']=str(AL.getVisitedLog()[xTh])#visitedValue
 
-    if AL.getQsLog()[xTh][0]==finalPath[-1]:#meet the goal then color the final path
+    if finalPath == None:
+        print("No final path found")
 
-        #if goal isnt met = produce an error message
+    else:
+        if AL.getQsLog()[xTh][0]==finalPath[-1]:#meet the goal then color the final path
+    # else:
+        # #if goal isnt met = produce an error message
 
         # for i in the range of range= number of final path nodes
-        for a in range(len(finalPath)-1):
-            canvas.itemconfig(GA.nodeList[finalPath[a]][2][finalPath[a+1]][0],fill="red")#final path arrow
-            # nodelist is the dictionary containing all the GUI objects
-            # the 1st final path references the start node of the link and the 2nd references the
-            # goal node of the link
-            # the [2] is the 3rd object (starts at 0) in the nodelist dictionary
-            # the +1 allows you to get the next object as it is currently out of the range
+            for a in range(len(finalPath)-1):
+                canvas.itemconfig(GA.nodeList[finalPath[a]][2][finalPath[a+1]][0],fill="red")#final path arrow
+                # nodelist is the dictionary containing all the GUI objects
+                # the 1st final path references the start node of the link and the 2nd references the
+                # goal node of the link
+                # the [2] is the 3rd object (starts at 0) in the nodelist dictionary
+                # the +1 allows you to get the next object as it is currently out of the range
 
     for n in GA.nodeList:
         if n in AL.getVisitedLog()[xTh]:#visited oval
@@ -411,9 +420,26 @@ def display():
         else:
             canvas.itemconfig(GA.nodeList[n][1],fill="")
 
-        if AL.getQsLog()[xTh][0]!=finalPath[-1]:#meet the goal then color the final path
-            for a in GA.nodeList[n][2].values():
-               canvas.itemconfig(a[0],fill="black")#final path arrow
+        if finalPath == None:
+            print("have not found final path yet")
+        else:
+            # AL.getQsLog()[xTh][0]!=finalPath[-1]:#meet the goal then color the final path
+                for a in GA.nodeList[n][2].values():
+                   canvas.itemconfig(a[0],fill="black")#final path arrow
+
+#########################
+#########################
+#########################
+    #need to find a way to just get the end of this and then print info once
+    for i in range(0,len(it.get())):
+        print("bbbb")
+        if i == range.stop:
+            print("aaaaa")
+            if finalPath == None:
+           #need to make a dialog box that says messagebox.showinfo maybe
+                 print("No final path")
+               # nofinal = tkinter.messagebox.showinfo('error','no final path found in this range')
+
 
 def NextStep(e):
     #global variable because otherwise cant be called in new methods as it
