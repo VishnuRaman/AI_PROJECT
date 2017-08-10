@@ -175,9 +175,9 @@ class Test_linking(unittest.TestCase):
         self.assertTrue(3 in gd.grid_dict[4].adjacent.keys())
     def test_gd_physicalNeighbor(self):
         gd=Linking.Grid(3,3)
-        self.assertListEqual(gd.physicalNeighbor(3),[0,6,4])
+        self.assertDictEqual(gd.physicalNeighbor(3),{'upperCell': 0, 'underCell': 6, 'rightCell': 4})
         gd.setWall(3,4)# the result won't be changed by adding a wall
-        self.assertListEqual(gd.physicalNeighbor(3),[0,6,4])
+        self.assertDictEqual(gd.physicalNeighbor(3),{'upperCell': 0, 'underCell': 6, 'rightCell': 4})
     def test_gd_setObstacle(self):
         gd=Linking.Grid(3,3)
         for i in [1,7,3,5]:#before setObstacle, 4 is connecting to 1,7,3,5
