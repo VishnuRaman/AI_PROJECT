@@ -393,13 +393,14 @@ def display():
         result[4]['text']=str(AL.getVisitedLog()[xTh])#visitedValue
 
     if finalPath == None:
-        print("No final path found yet")
+        #need to make a dialog box that says messagebox.showinfo maybe
+        print("No final path")
 
-    elif AL.getQsLog()[xTh][0]==finalPath[-1]:#meet the goal then color the final path
-
-        #if goal isnt met = produce an error message
-        if finalPath == 'NoneType':
-            print("No final path found yet please enter a larger number")
+    # elif AL.getQsLog()[xTh][0]==finalPath[-1]:#meet the goal then color the final path
+    else:
+        # #if goal isnt met = produce an error message
+        # if finalPath == 'NoneType':
+        #     print("No final path found yet please enter a larger number")
 
         # for i in the range of range= number of final path nodes
         for a in range(len(finalPath)-1):
@@ -420,9 +421,12 @@ def display():
         else:
             canvas.itemconfig(GA.nodeList[n][1],fill="")
 
-        if AL.getQsLog()[xTh][0]!=finalPath[-1]:#meet the goal then color the final path
-            for a in GA.nodeList[n][2].values():
-               canvas.itemconfig(a[0],fill="black")#final path arrow
+        if finalPath == None:
+            print("do nothing")
+        else:
+            # AL.getQsLog()[xTh][0]!=finalPath[-1]:#meet the goal then color the final path
+                for a in GA.nodeList[n][2].values():
+                   canvas.itemconfig(a[0],fill="black")#final path arrow
 
 def NextStep(e):
     #global variable because otherwise cant be called in new methods as it
