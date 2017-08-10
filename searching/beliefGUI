@@ -312,7 +312,7 @@ def setTF(e): #change this to run the algorithm too
     elif obsLabel is None:
         print("asassa")
     else:
-        #dont print the labe
+        #dont print the label
         obsError = tkinter.messagebox.showinfo('error','Please only enter either T or F')
 
     return obs
