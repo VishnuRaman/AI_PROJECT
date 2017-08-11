@@ -584,3 +584,49 @@ class Test_algorithm(unittest.TestCase):
                   3: {'rainy': 0.17574678981752645, 'sunny': 0.8242532101824737}}
         # print(al.hiddenMarkov(model,0,obs,states))
         self.assertDictEqual(al.hiddenMarkov(model,0,obs,states),expected)
+
+    def test_valueIteration(self):
+        g=Linking.Grid(2,2)
+        g.grid_dict[0].reward=-4
+        g.grid_dict[1].utility=100
+        g.grid_dict[1].reward=100
+        g.grid_dict[2].utility=-100
+        g.grid_dict[2].reward=-100
+        g.setObstacle(3)
+        al=Algorithms.algorithms(g.grid_dict)
+
+        action={'forward':0.8, 'left':0.1, 'right':0.1}
+        discount=0.9
+
+        expexted={0: 64.83478199000001, 1: 100, 2: -100, 3: 0}
+        # print(al.valueIteration(discount,action,g))
+        self.assertDictEqual(al.valueIteration(discount,action,g),expexted)
+        #another test
+        g=Linking.Grid(4,3)
+        for i in g.grid_dict:
+            if i != 5:
+                g.grid_dict[i].reward=-4
+        g.grid_dict[3].utility=100
+        g.grid_dict[3].reward=100
+        g.grid_dict[7].utility=-100
+        g.grid_dict[7].reward=-100
+        g.setObstacle(5)
+        al=Algorithms.algorithms(g.grid_dict)
+
+        action={'forward':0.8, 'left':0.1, 'right':0.1}
+        discount=0.9
+
+        expexted={0: 50.94115412930875,
+                  1: 64.95855729696827,
+                  2: 79.5362031683467,
+                  3: 100,
+                  4: 39.85041277059019,
+                  5: 0,
+                  6: 48.6439148544741,
+                  7: -100,
+                  8: 29.64382885103273,
+                  9: 25.391792612055916,
+                  10: 34.476553020311734,
+                  11: 12.99228937944113}
+        print(al.valueIteration(discount,action,g))
+        self.assertDictEqual(al.valueIteration(discount,action,g),expexted)

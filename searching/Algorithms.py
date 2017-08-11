@@ -507,3 +507,86 @@ class algorithms:
                         PT[a]=temp
 
         return  PT
+    ##
+    #input: @arg1 discount rate @arg2 dictionary shows how well the hero move {'forward':0.8, 'left'}:0.1, 'right':0.1, 'backward':0} the key with value==0 can be ignored
+    def valueIteration(self,discount,action,grid):
+        self.discount=discount
+        self.action=action
+        self.grid=grid
+        self.utilityDict={}
+        for cell in grid.grid_dict:
+            if grid.grid_dict[cell].utility==None:
+                self.utilityDict[cell]=0
+            else:
+                self.utilityDict[cell]=grid.grid_dict[cell].utility
+        for cell in grid.grid_dict:
+            if self.grid.grid_dict[cell].adjacent:#not empty
+                self.visited=[]
+                self.utilityDict[cell]=self.partOfValueIteration(cell)
+                temp=self.partOfValueIteration(cell)
+                while math.fabs(temp-self.utilityDict[cell])>0.001:
+                    self.utilityDict[cell]=temp
+                    temp=self.partOfValueIteration(cell)
+        return self.utilityDict
+
+    def partOfValueIteration(self,cell):
+        self.visited.append(cell)
+        if self.grid.grid_dict[cell].utility!=None:
+            return self.grid.grid_dict[cell].utility
+        bestEU=-math.inf
+        for a in self.grid.grid_dict[cell].adjacent:
+            temp=self.grid.grid_dict[cell].reward
+            neighborCell=self.grid.physicalNeighbor(cell)
+            redirection={}
+            redirection['forward']=a#0 position is 'forward' in action
+            if a-cell==1:#agent is face to right
+                for n in neighborCell:
+                    if n=='upperCell':
+                        redirection['left']=neighborCell[n]
+                    elif n=='leftCell':
+                        redirection['backward']=neighborCell[n]
+                    elif n=='underCell':
+                        redirection['right']=neighborCell[n]
+            elif a-cell==-1:#agent is face to left
+                for n in neighborCell:
+                    if n=='underCell':
+                        redirection['left']=neighborCell[n]
+                    elif n=='rightCell':
+                        redirection['backward']=neighborCell[n]
+                    elif n=='upperCell':
+                        redirection['right']=neighborCell[n]
+            elif a-cell>1:#agent is face down
+                for n in neighborCell:
+                    if n=='upperCell':
+                        redirection['backward']=neighborCell[n]
+                    elif n=='rightCell':
+                        redirection['left']=neighborCell[n]
+                    elif n=='leftCell':
+                        redirection['right']=neighborCell[n]
+            elif a-cell<-1:#agent is face up
+                for n in neighborCell:
+                    if n=='underCell':
+                        redirection['backward']=neighborCell[n]
+                    elif n=='rightCell':
+                        redirection['right']=neighborCell[n]
+                    elif n=='leftCell':
+                        redirection['left']=neighborCell[n]
+            for i in self.action:#every action that the agent may take
+                if i not in redirection or redirection[i] not in self.grid.grid_dict[cell].adjacent:#which means hit the wall
+                    temp+=self.discount*self.action[i]*self.utilityDict[cell]#discount*chance of moving*self utility
+                elif redirection[i] not in self.visited:#the tending node is not visited
+                    if self.grid.grid_dict[redirection[i]].utility != None:#reach treasure or monster
+                        temp+=self.discount*self.action[i]*self.grid.grid_dict[redirection[i]].utility#discount*chance of moving*setted utility
+                    else:#moving
+                        self.utilityDict[redirection[i]]=self.partOfValueIteration(redirection[i])
+                        t=self.partOfValueIteration(redirection[i])
+                        while math.fabs(self.utilityDict[redirection[i]]-t)>0.001:
+                            self.utilityDict[redirection[i]]=t
+                            t=self.partOfValueIteration(redirection[i])
+                        temp+=self.discount*self.action[i]*self.utilityDict[redirection[i]]
+                else:#in visited
+                    temp+=self.discount*self.action[i]*self.utilityDict[redirection[i]]
+
+            if temp>bestEU:
+                bestEU=temp
+        return bestEU

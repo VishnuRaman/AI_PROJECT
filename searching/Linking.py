@@ -8,10 +8,11 @@ class Vertex:
         # this gives the node a number
         self.id = id
         self.heuristic=0#default value=0
-        self.utility=0#default value=0
+        self.utility=None#default value=None
         self.probability=0.5#default value=0.5, for belief net(prior probability) and Markov(initial probability) algorithm
         self.adjacent = {}
         self.probabilityTable={}#distribution probability table
+        self.reward=0
 
     def __iter__(self):#makes vertex object iterable
         return iter(self.adjacent.keys())
@@ -195,37 +196,40 @@ class Grid:
     ##this is a method finding the physical  neighbors of a unit grid in a x*y grid. The physical neighbor won't be changed by wall
     #input:@arg1  a unit grid id
     def physicalNeighbor(self,id):
-        phycialNeighbor=[]
+        phycialNeighbor={}
         if id>self.x-1:#not on the first row
-            upperGrid=id-self.x
-            phycialNeighbor.append(upperGrid)
+            upperCell=id-self.x
+            phycialNeighbor['upperCell']=upperCell
         if id<self.x*(self.y-1):#not on the last row
-            underGrid=id+self.x
-            phycialNeighbor.append(underGrid)
+            underCell=id+self.x
+            phycialNeighbor['underCell']=underCell
         if id%self.x !=0:#if not on the leftest column
-            leftGrid=id-1
-            phycialNeighbor.append(leftGrid)
+            leftCell=id-1
+            phycialNeighbor['leftCell']=leftCell
         if id%self.x !=self.x-1:#if not on the rightest column
-            rightGrig=id+1
-            phycialNeighbor.append(rightGrig)
+            rightCell=id+1
+            phycialNeighbor['rightCell']=rightCell
         return phycialNeighbor
     ##set the unit grid as an obstacle, means each edge of it becomes a wall
     #input:@arg1  a unit grid id
     def setObstacle(self,id):
-        for n in self.physicalNeighbor(id):
-            self.setWall(id,n)
+        phycialNeighbor=self.physicalNeighbor(id)
+        for n in phycialNeighbor:
+            self.setWall(id,phycialNeighbor[n])
     ##undo setObstacle
     #input:@arg1  a unit grid id
     def removeObstacle(self,id):
-        for n in self.physicalNeighbor(id):
-            self.breakWall(id,n)
+        phycialNeighbor=self.physicalNeighbor(id)
+        for n in phycialNeighbor:
+            self.breakWall(id,phycialNeighbor[n])
     ##set the cost of beging connected by other unit grids.
     #input:@arg1  the id of itself, @arg2  The weight
     def setGridWeight(self,id,weight):
         self.grid_weight[id]=weight
-        for n in self.physicalNeighbor(id):
-            if id in self.grid_dict[n].adjacent.keys():
-                self.grid_dict[n].add_neighbor(id,weight)#add_neighbor can also be used to reset the value
+        phycialNeighbor=self.physicalNeighbor(id)
+        for n in phycialNeighbor:
+            if id in self.grid_dict[phycialNeighbor[n]].adjacent.keys():
+                self.grid_dict[phycialNeighbor[n]].add_neighbor(id,weight)#add_neighbor can also be used to reset the value
     ## generate the Manhattan Distance for every unit grid to the goal
     #input: @arg1 the goal
     def setManhattanDist(self,goal):
