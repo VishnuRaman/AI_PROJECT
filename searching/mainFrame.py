@@ -131,10 +131,13 @@ editMenu.add_command(label="A*", command=chooseIaStar)
 
 # create buttons
 button1 = Button(topFrame,text="Create Node ")
-button2 = Button(topFrame,text="Create Arc")
-button3 = Button(topFrame,text="Move")
-button4 = Button(topFrame,text="Delete")
-button7 = Button(bottomFrame,text="Run")
+button2 = Button(topFrame,text="Create Arrows")
+button3 = Button(topFrame,text="Create Arrows with costs")
+button4 = Button(topFrame,text="Move")
+button5 = Button(topFrame,text="Delete")
+button6 = Button(bottomFrame,text="Run")
+button7 = Button(topFrame2,text="<<",bg="light blue")
+button8 = Button(topFrame2,text=">>",bg="light blue")
 text1=Label(topFrame2,text="Start Node")
 startNode=Entry(topFrame2, width=2)
 text2=Label(topFrame2,text="End Node")
@@ -147,14 +150,13 @@ it = Entry(topFrame2, width=2)
 # itVar = IntVar()
 # it = Checkbutton(topFrame2,text="Iterative",variable=itVar)
 
-button8 = Button(topFrame2,text="<<",bg="light blue")
-button9 = Button(topFrame2,text=">>",bg="light blue")
 
 button1.pack(side=LEFT)
 button2.pack(side=LEFT)
 button3.pack(side=LEFT)
 button4.pack(side=LEFT)
-button7.pack(side=BOTTOM)
+button5.pack(side=LEFT)
+button6.pack(side=BOTTOM)
 text1.pack(side=LEFT)
 startNode.pack(side=LEFT)
 text2.pack(side=LEFT)
@@ -163,8 +165,8 @@ text3.pack(side=LEFT)
 delay.pack(side=LEFT)
 text4.pack(side=LEFT)
 it.pack(side=LEFT)
+button7.pack(side=LEFT)
 button8.pack(side=LEFT)
-button9.pack(side=LEFT)
 
 # methods called by buttons
 node_id_Dic={}
@@ -191,6 +193,11 @@ def CreateNode(event):
     root.config(cursor="")
     canvas.bind("<Button-1>",drawNode)
 # listen to second click and draw the line on the canvas
+
+###############
+################
+################
+#change to remove weight thing to previous one
 def ArcPoint2(e):
     if len(canvas.find_enclosed(e.x-50,e.y-50,e.x+50,e.y+50))==2:
         toNode=node_id_Dic[canvas.find_enclosed(e.x-50,e.y-50,e.x+50,e.y+50)[0]]#the node is created before num so it is at [0]
@@ -200,20 +207,9 @@ def ArcPoint2(e):
             #use -->  canvas.itemconfig(arrow,fill="red") <-- to change color after created
 
             # need to change this so text corresponds to the custom entry made by the user
-            #do like belief net button
-            value = askstring('value', 'Please enter a cost')
 
-            if value == None:
-                value = 0
-
-            weight = int(value)
-
-            if weight is None:
-                print("aaa")
-
-            weightLabel = canvas.create_text(0.5*(x+e.x),0.5*(y+e.y)-10,text=value)
-
-            GA.addArrow(fromNode, toNode, arrow, weightLabel)
+            weight = 1
+            GA.addArrow(fromNode, toNode, arrow, weight)
 
             # #this method produces the connection and provides a cost
 
@@ -240,6 +236,57 @@ def ArcPoint1(e):
 def CreateArc(event):
     root.config(cursor="")
     canvas.bind("<Button-1>",ArcPoint1)
+
+def ArcCostPoint2(e):
+        if len(canvas.find_enclosed(e.x - 50, e.y - 50, e.x + 50, e.y + 50)) == 2:
+            toNode = node_id_Dic[canvas.find_enclosed(e.x - 50, e.y - 50, e.x + 50, e.y + 50)[
+                0]]  # the node is created before num so it is at [0]
+            if (fromNode is not toNode) and (LK.check_edge_existed(fromNode, toNode) == False):
+                root.config(cursor="")
+                arrow = canvas.create_line(x, y, e.x, e.y, arrow="last")
+                # use -->  canvas.itemconfig(arrow,fill="red") <-- to change color after created
+
+                # need to change this so text corresponds to the custom entry made by the user
+                # do like belief net button
+                value = askstring('value', 'Please enter a cost')
+
+                if value == None:
+                    value = 0
+
+                weight = int(value)
+
+                if weight is None:
+                    print("aaa")
+
+                weightLabel = canvas.create_text(0.5 * (x + e.x), 0.5 * (y + e.y) - 10, text=value)
+
+                GA.addArrow(fromNode, toNode, arrow, weightLabel)
+
+                # #this method produces the connection and provides a cost
+
+                LK.add_edge(fromNode, toNode, weight)
+                # inf means infinity so hasnt been assigned a cost/value yet
+                # this one shows the individual costs of travel between nodes (the weight variable in the class)
+
+
+                canvas.bind("<Button-1>", ArcPoint1)
+
+def ArcCostPoint1(e):
+        # ==2 means must only have one node and node number in that range to catch the arrow else cant click
+        # provides 1st number for the method above
+        if len(canvas.find_enclosed(e.x - 50, e.y - 50, e.x + 50, e.y + 50)) == 2:
+            # global equivalent of instance variable
+            # used this so its able to be used by different methods
+            # x,y =location and fromNode = the id of the node you pick up - the one you draw FROM
+            global x, y, fromNode
+            x, y = e.x, e.y
+            fromNode = node_id_Dic[canvas.find_enclosed(e.x - 50, e.y - 50, e.x + 50, e.y + 50)[0]]
+            root.config(cursor="cross")
+            canvas.bind("<Button-1>", ArcCostPoint2)
+
+def CreateCostArc(event):
+    root.config(cursor="")
+    canvas.bind("<Button-1>", ArcCostPoint1)
 
 def moveTo(e):
     #for both lines below so x = location of the node you want to move
@@ -464,11 +511,12 @@ def PreStep(e):
 
 button1.bind("<Button-1>",CreateNode)
 button2.bind("<Button-1>",CreateArc)
-button3.bind("<Button-1>",Move)
-button4.bind("<Button-1>",Delete)
-button7.bind("<Button-1>",Run)
-button8.bind("<Button-1>",PreStep)
-button9.bind("<Button-1>",NextStep)
+button3.bind("<Button-1>",CreateCostArc)
+button4.bind("<Button-1>",Move)
+button5.bind("<Button-1>",Delete)
+button6.bind("<Button-1>",Run)
+button7.bind("<Button-1>",PreStep)
+button8.bind("<Button-1>",NextStep)
 
 
 root.mainloop()

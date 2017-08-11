@@ -125,6 +125,8 @@ def CreateArc(event):
 
 def CreateTable(parent,coordinate):
 
+    #need to handle error that doesnt keep drawing mutiple rows each time you refresh it
+
     #need to change from p to the set part that does parent no.s
     for p in range(2**len(parent)):
         coordinate[1] = coordinate[1] + 30
@@ -137,8 +139,6 @@ def CreateTable(parent,coordinate):
     #
     # v=  bin(rows)[2:].zfill(len(parent))
     # print(v)
-
-
 
 #use a for loop to make the rows for each box as in the box is the for loop
 
@@ -182,6 +182,8 @@ def setTFlabel(e):
 
     valueLab=valueLabel
 
+    labCoord=[valueLabel,[e.x,e.y]]
+    print(labCoord)
     #make a getter
 
   #store this label with the nodeID
