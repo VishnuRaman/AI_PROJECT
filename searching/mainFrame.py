@@ -393,17 +393,16 @@ def display():
         result[3]['text']=str(AL.getQsLog()[xTh][1])#qsValue
         result[4]['text']=str(AL.getVisitedLog()[xTh])#visitedValue
 
-    if finalPath == None:
-        print("No final path found")
+    # if finalPath == None:
+    #     print("No final path found")
 
-    else:
-        if AL.getQsLog()[xTh][0]==finalPath[-1]:#meet the goal then color the final path
-    # else:
-        # #if goal isnt met = produce an error message
-
+    if not finalPath is None:
+        # if AL.getQsLog()[xTh][0]==finalPath[-1]:#meet the goal then color the final path
+            print("ddddddd")
         # for i in the range of range= number of final path nodes
-            for a in range(len(finalPath)-1):
-                canvas.itemconfig(GA.nodeList[finalPath[a]][2][finalPath[a+1]][0],fill="red")#final path arrow
+        #     for a in range(len(finalPath)-1):
+        #         print("hhhhhhh")
+                # canvas.itemconfig(GA.nodeList[finalPath[a]][2][finalPath[a+1]][0],fill="red")#final path arrow
                 # nodelist is the dictionary containing all the GUI objects
                 # the 1st final path references the start node of the link and the 2nd references the
                 # goal node of the link
@@ -422,6 +421,14 @@ def display():
 
         if finalPath == None:
             print("have not found final path yet")
+
+        if AL.getQsLog()[xTh][0] == finalPath[-1]:  # meet the goal then color the final path
+            print("ddddddd")
+            # for i in the range of range= number of final path nodes
+            for a in range(len(finalPath) - 1):
+                print("hhhhhhh")
+                canvas.itemconfig(GA.nodeList[finalPath[a]][2][finalPath[a + 1]][0], fill="red")  # final path arrow
+
         else:
             # AL.getQsLog()[xTh][0]!=finalPath[-1]:#meet the goal then color the final path
                 for a in GA.nodeList[n][2].values():
