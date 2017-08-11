@@ -1,4 +1,5 @@
 from io import TextIOWrapper
+from tkinter.simpledialog import askstring
 
 import ManageNode,Linking,GuiArray,Algorithms
 
@@ -200,19 +201,26 @@ def ArcPoint2(e):
 
             # need to change this so text corresponds to the custom entry made by the user
             #do like belief net button
-            weight = canvas.create_text(0.5*(x+e.x),0.5*(y+e.y)-10,text=1)
+            value = askstring('value', 'Please enter a cost')
 
-            # GA.addArrow(fromNode,toNode,arrow,weight) - inc when sorted weight out
-            GA.addArrow(fromNode, toNode, arrow, weight)
+            if value == None:
+                value = 0
+
+            weight = int(value)
+
+            if weight is None:
+                print("aaa")
+
+            weightLabel = canvas.create_text(0.5*(x+e.x),0.5*(y+e.y)-10,text=value)
+
+            GA.addArrow(fromNode, toNode, arrow, weightLabel)
 
             # #this method produces the connection and provides a cost
 
-            LK.add_edge(fromNode,toNode,1)
+            LK.add_edge(fromNode,toNode,weight)
             #inf means infinity so hasnt been assigned a cost/value yet
             #this one shows the individual costs of travel between nodes (the weight variable in the class)
 
-            # for v in LK.vert_dict:#####
-            # print(str(LK.vert_dict[v].get_id())+' is connected to '+str([g for g in LK.vert_dict[v]]))
 
             canvas.bind("<Button-1>",ArcPoint1)
 # listen to the first click for the line
@@ -393,8 +401,8 @@ def display():
         result[3]['text']=str(AL.getQsLog()[xTh][1])#qsValue
         result[4]['text']=str(AL.getVisitedLog()[xTh])#visitedValue
 
-    # if finalPath == None:
-    #     print("No final path found")
+    if finalPath == None:
+        print("No final path found")
 
     if not finalPath is None:
         # if AL.getQsLog()[xTh][0]==finalPath[-1]:#meet the goal then color the final path
@@ -422,30 +430,17 @@ def display():
         if finalPath == None:
             print("have not found final path yet")
 
-        if AL.getQsLog()[xTh][0] == finalPath[-1]:  # meet the goal then color the final path
-            print("ddddddd")
+        elif AL.getQsLog()[xTh][0] == finalPath[-1]:  # meet the goal then color the final path
+                print("ddddddd")
             # for i in the range of range= number of final path nodes
-            for a in range(len(finalPath) - 1):
-                print("hhhhhhh")
-                canvas.itemconfig(GA.nodeList[finalPath[a]][2][finalPath[a + 1]][0], fill="red")  # final path arrow
+                for a in range(len(finalPath) - 1):
+                    print("hhhhhhh")
+                    canvas.itemconfig(GA.nodeList[finalPath[a]][2][finalPath[a + 1]][0], fill="red")  # final path arrow
 
         else:
             # AL.getQsLog()[xTh][0]!=finalPath[-1]:#meet the goal then color the final path
                 for a in GA.nodeList[n][2].values():
                    canvas.itemconfig(a[0],fill="black")#final path arrow
-
-#########################
-#########################
-#########################
-    #need to find a way to just get the end of this and then print info once
-    for i in range(0,len(it.get())):
-        print("bbbb")
-        if i == range.stop:
-            print("aaaaa")
-            if finalPath == None:
-           #need to make a dialog box that says messagebox.showinfo maybe
-                 print("No final path")
-               # nofinal = tkinter.messagebox.showinfo('error','no final path found in this range')
 
 
 def NextStep(e):

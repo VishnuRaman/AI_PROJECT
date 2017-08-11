@@ -98,8 +98,6 @@ def ArcPoint2(e):
             root.config(cursor="")
             arrow = canvas.create_line(x,y,e.x,e.y,arrow="last")#fill="turquoise" can change color
 
-            # weight = canvas.create_text(0.5 * (x + e.x), 0.5 * (y + e.y) - 10, text=" ")
-
             GA.addBeliefArrow(fromNode, toNode, arrow)
 
             # #this method produces the connection

@@ -28,7 +28,7 @@ class Vertex:
             return False
     ##adds a connection to the given neighbor.  It can also be used to set up the cost again
     #input:@arg1  node needed to be add a connection to, @arg2 the weight of the connection
-    def add_neighbor(self, id, weight=1):
+    def add_neighbor(self, id, weight):
         self.adjacent[id] = weight
     ##Delete the connection
     #input:@arg1 node needed to be delete the connection
