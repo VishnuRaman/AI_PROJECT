@@ -29,9 +29,16 @@ GA=GuiArray.guiArray(canvas)
 MN=ManageNode.manageNode()
 
 #create buttons
+
+############
+###########
+#MAKE A BUTTON FOR CREATING THE BOXES AND ENTER VALUES AND STORE AS A LIST
+############
+############
+
 button1=Button(bottomFrame,text="Run")
 
-button2=Button(topFrame2,text="Enter value")
+button2=Button(topFrame2,text="Create a group of values")
 
 button3=Button(topFrame2,text="Previous Step")
 button4=Button(topFrame2,text="Next Step")
@@ -43,33 +50,49 @@ button4.pack(side=LEFT)
 
 #change these to entry boxes
 
-#set 1
-box1=canvas.create_rectangle(15,490,65,440)
-box2=canvas.create_rectangle(95,490,145,440)
-box3=canvas.create_rectangle(175,490,225,440)
-
-#set 2
-box4=canvas.create_rectangle(275,490,325,440)
-box5=canvas.create_rectangle(355,490,405,440)
-box6=canvas.create_rectangle(435,490,485,440)
-
-#set 3
-box7=canvas.create_rectangle(535,490,585,440)
-box8=canvas.create_rectangle(615,490,665,440)
-box9=canvas.create_rectangle(695,490,745,440)
-
-#set 4
-box10=canvas.create_rectangle(795,490,845,440)
-box11=canvas.create_rectangle(875,490,925,440)
-box12=canvas.create_rectangle(955,490,1005,440)
+# #set 1
+# box1=canvas.create_rectangle(15,490,65,440)
+# box2=canvas.create_rectangle(95,490,145,440)
+# box3=canvas.create_rectangle(175,490,225,440)
+#
+# #set 2
+# box4=canvas.create_rectangle(275,490,325,440)
+# box5=canvas.create_rectangle(355,490,405,440)
+# box6=canvas.create_rectangle(435,490,485,440)
+#
+# #set 3
+# box7=canvas.create_rectangle(535,490,585,440)
+# box8=canvas.create_rectangle(615,490,665,440)
+# box9=canvas.create_rectangle(695,490,745,440)
+#
+# #set 4
+# box10=canvas.create_rectangle(795,490,845,440)
+# box11=canvas.create_rectangle(875,490,925,440)
+# box12=canvas.create_rectangle(955,490,1005,440)
 
 def popupValue(e):
 
     # provides pop up box
-    value = askstring('value', 'Please enter a value')
-    value = int(float(value))
 
-    valueEntry = canvas.create_text(e.x,e.y, text=str(value))
+    # if not canvas.find_enclosed(e.x-105,e.y-105,e.x+105,e.y+105):
+    #     oval=canvas.create_oval(e.x-50,e.y-50,e.x+50,e.y+40)
+    #
+    #     value = askstring('value', 'Please enter a title')
+    #
+    # box12 = canvas.create_rectangle(955, 490, 1005, 440)
+    if not canvas.find_enclosed(e.x-50,e.y-50,e.x+50,e.y+50):
+        box=canvas.create_rectangle(e.x-25,e.y-25,e.x+25,e.y+25)
+
+        value = askstring('value', 'Please enter a value')
+
+        if value == None:
+            valueEntry = canvas.create_text(e.x, e.y, text="")
+        else:
+            value = int(value)
+
+            valueEntry = canvas.create_text(e.x,e.y, text=str(value))
+
+
 
     #need to store all the values entered not just one at a time
 
@@ -82,8 +105,8 @@ def popupValue(e):
 
     print("jjjjj")
 
-        #now need to store entries to use them
-        #
+    #now need to store entries to use them
+    #
 
 def ValueEntry(event):
     print("fffff")
