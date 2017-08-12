@@ -35,8 +35,8 @@ coordinates=[]
 button1 = Button(topFrame,text="Create Node")
 button2 = Button(topFrame,text="Create Link")
 button3 = Button(topFrame,text="Create Probability Tables")
-button4 = Button(topFrame,text="Choose Probability Label")
-button5 = Button(topFrame,text="Set Probability")
+# button4 = Button(topFrame,text="Choose Probability Label")
+button4 = Button(topFrame,text="Set Probability")
 button6 = Button(topFrame,text="Set Observation")
 button7 = Button(bottomFrame,text="Run")
 
@@ -44,7 +44,7 @@ button1.pack(side=LEFT)
 button2.pack(side=LEFT)
 button3.pack(side=LEFT)
 button4.pack(side=LEFT)
-button5.pack(side=LEFT)
+# button5.pack(side=LEFT)
 button6.pack(side=LEFT)
 button7.pack(side=LEFT)
 
@@ -171,7 +171,7 @@ def probTable(event):
 
         CreateTable(parentNodes[x],point)
 
-def setTFlabel(e):
+def setProblabel(e):
 
     global valueLab
 
@@ -184,21 +184,6 @@ def setTFlabel(e):
 
     labCoord=[valueLabel,[e.x,e.y]]
     print(labCoord)
-    #make a getter
-
-  #store this label with the nodeID
-    #then late use this to store in a set
-
-
-def ParentLabel(event):
-    root.config(cursor="cross")
-    canvas.bind("<Button-1>", setTFlabel)
-
-
-def setProb(e):
-
-    x = e.x
-    y = e.y
 
     valueP = askstring('value', 'Please enter a probability value')
 
@@ -206,34 +191,61 @@ def setProb(e):
 
     # if false box is clicked enter value
     if not canvas.find_enclosed(e.x - 20, e.y, e.x + 20, e.y + 30):
-        canvas.create_text(e.x, e.y, text=valueprob)
+        canvas.create_text(e.x+35, e.y, text=valueprob)
 
-    pc = [valueprob,[e.x,e.y]]
+    pc = [valueprob, [e.x+35, e.y]]
     print(pc)
+
+    #make a getter
+
+  #store this label with the nodeID
+    #then late use this to store in a set
+
+
+def ParentProb(event):
+    root.config(cursor="cross")
+    canvas.bind("<Button-1>", setProblabel)
+
+#
+# def setProb(e):
+#
+#     x = e.x
+#     y = e.y
+#
+#     valueP = askstring('value', 'Please enter a probability value')
+#
+#     valueprob = getdouble(valueP)
+#
+#     # if false box is clicked enter value
+#     if not canvas.find_enclosed(e.x - 20, e.y, e.x + 20, e.y + 30):
+#         canvas.create_text(e.x, e.y, text=valueprob)
+#
+#     pc = [valueprob,[e.x,e.y]]
+#     print(pc)
 
         #now use these coordinates to match the range of the nodeid its next to
         #store this with the nodeID and label from above
 
         #atm probset is overwriting unless do each button alternatively
     # probset = [valueLab, valueprob]
-    probset = {}
-
-    checkCoords={}
-
-    for q in GA.coordList:
-        checkCoords[q] = set()
-
-        if x >0:
-            for w in GA.coordList:
-                for t in GA.coordList[w][1]:
-                    if GA.coordList[w][1]:
-                        print("skssksksk")
-                        if x in range(t):
-                            print(w)
-                            probset=[w,valueLab,valueprob]
-                            print(probset)
-
-                            #need to not overwrite probset
+    # probset = {}
+    #
+    # checkCoords={}
+    #
+    # for q in GA.coordList:
+    #     checkCoords[q] = set()
+    #
+    #     if x >0:
+    #         for w in GA.coordList:
+    #             for t in GA.coordList[w][1]:
+    #                 if GA.coordList[w][1]:
+    #                     print("skssksksk")
+    #                     if x in range(t):
+    #                         print(w)
+    #                         probset=[w,valueLab,valueprob]
+    #                         print(probset)
+    #
+    #                         #need to not overwrite probset
 
 
 # parentNodes = {}
@@ -258,10 +270,10 @@ def setProb(e):
         #     print("oooo")
         #     CreateTable(parentNodes[x], point)
 
-
-def ParentProb(event):
-    root.config(cursor="cross")
-    canvas.bind("<Button-1>", setProb)
+#
+# def ParentProb(event):
+#     root.config(cursor="cross")
+#     canvas.bind("<Button-1>", setProb)
 
 
 
@@ -376,8 +388,8 @@ def run(event):
 button1.bind("<Button-1>",CreateNode)
 button2.bind("<Button-1>",CreateArc)
 button3.bind("<Button-1>",probTable)
-button4.bind("<Button-1>",ParentLabel)
-button5.bind("<Button-1>",ParentProb)
+button4.bind("<Button-1>",ParentProb)
+# button5.bind("<Button-1>",ParentProb)
 button6.bind("<Button-1>", SetObs)
 button7.bind("<Button-1>",run)
 

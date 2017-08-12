@@ -71,7 +71,7 @@ button4.pack(side=LEFT)
 # box12=canvas.create_rectangle(955,490,1005,440)
 
 def popupValue(e):
-
+    valueList=[]
     # provides pop up box
 
     # if not canvas.find_enclosed(e.x-105,e.y-105,e.x+105,e.y+105):
@@ -92,24 +92,20 @@ def popupValue(e):
 
             valueEntry = canvas.create_text(e.x,e.y, text=str(value))
 
+  #maybe do a loop so if button click, add to a list
+
+            #neeed to find out how many boxes there are so an ID
+            #then for values in range of that
+            #append into a list
+
+    for values in range(4):
+      valueList.append(int(value))
 
 
-    #need to store all the values entered not just one at a time
-
-    #maybe do a loop so if button click, add to a list
-
-    valueList = [value] #need to add every new click too
     print(valueList)
 
-    #make a list that stores all the entered values
-
-    print("jjjjj")
-
-    #now need to store entries to use them
-    #
-
 def ValueEntry(event):
-    print("fffff")
+
     #select square and click then it opens a pop up value and that value is then placed
     #as a label into the bottom square
     #which is then fetched by the algorithm
