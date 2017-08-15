@@ -29,14 +29,22 @@ AL=Algorithms.algorithms(LK.vert_dict)
 global coordinates
 coordinates=[]
 
+global horizLimit
+horizLimit=(140*140)
+
+global vertLimit
+
+global distsquared
+
+global dist
+
 #drop down list
 
 # create buttons
 button1 = Button(topFrame,text="Create Node")
 button2 = Button(topFrame,text="Create Link")
 button3 = Button(topFrame,text="Create Probability Tables")
-# button4 = Button(topFrame,text="Choose Probability Label")
-button4 = Button(topFrame,text="Set Probability")
+button4 = Button(topFrame,text="Set Probability Label and Value")
 button6 = Button(topFrame,text="Set Observation")
 button7 = Button(bottomFrame,text="Run")
 
@@ -74,7 +82,9 @@ def drawNode(e):
         #nickname given to each node
         nickname=canvas.create_text(e.x,e.y,text=str(value))
 
-    coordinateSet=[nodeName,[e.x,e.y]]
+    coordinateSet=[nodeName,e.x,e.y]
+
+    # xcoordSet = [nodeName,e.x]
 
     GUIset = [nodeName, nodeID, {}]  # number object / oval object / dictionary for linking
 
@@ -82,6 +92,7 @@ def drawNode(e):
     LK.add_vertex(nodeID)
     GA.addNode(GUIset,nodeID)
     GA.addCoords(coordinateSet,nodeID)
+    # GA.addXcoords(xcoordSet,nodeID)
 
 # listen to mouse action
 def CreateNode(event):
@@ -123,17 +134,18 @@ def CreateArc(event):
     root.config(cursor="")
     canvas.bind("<Button-1>",ArcPoint1)
 
-def CreateTable(parent,coordinate):
+def CreateTable(parent,coordinateX,coordinateY):
 
-    #need to handle error that doesnt keep drawing mutiple rows each time you refresh it
+ #need to handle error that doesnt keep drawing mutiple rows each time you refresh it
+    #if not enclosed in this space - distance from nodeid then draw the below
 
     #need to change from p to the set part that does parent no.s
     for p in range(2**len(parent)):
-        coordinate[1] = coordinate[1] + 30
+        coordinateY = coordinateY + 30
         #print box 1&2 again but lower than previous row and do for the same amount of times as p
 
-        box1 = canvas.create_rectangle(coordinate[0] - 140, coordinate[1], coordinate[0] - 100, coordinate[1]-30)
-        box2 = canvas.create_rectangle(coordinate[0] - 60, coordinate[1], coordinate[0] - 100, coordinate[1]-30)
+        box1 = canvas.create_rectangle(coordinateX - 140, coordinateY, coordinateX - 100, coordinateY-30)
+        box2 = canvas.create_rectangle(coordinateX - 60, coordinateY, coordinateX - 100, coordinateY-30)
 
     # rows = 2**len(parent)
     #
@@ -165,11 +177,30 @@ def probTable(event):
                     print(parentNodes)
 
 
+
     for x in parentNodes:
 
-        point=GA.coordList[x][1]
+        pointX=GA.coordList[x][1]
+        pointY=GA.coordList[x][2]
 
-        CreateTable(parentNodes[x],point)
+        CreateTable(parentNodes[x],pointX,pointY)
+
+    #
+        vertLimit = (2 ** len(parentNodes[x]) * 30)
+
+        print(vertLimit)
+
+        vertLimitsquared = vertLimit ** 2
+
+        print(vertLimitsquared)
+
+        distsquared = horizLimit + (vertLimit ** 2)
+
+        dist = distsquared ** 0.5
+
+        print(dist)
+
+
 
 def setProblabel(e):
 
@@ -182,7 +213,7 @@ def setProblabel(e):
 
     valueLab=valueLabel
 
-    labCoord=[valueLabel,[e.x,e.y]]
+    labCoord=[valueLabel,e.x,e.y]
     print(labCoord)
 
     valueP = askstring('value', 'Please enter a probability value')
@@ -193,13 +224,40 @@ def setProblabel(e):
     if not canvas.find_enclosed(e.x - 20, e.y, e.x + 20, e.y + 30):
         canvas.create_text(e.x+35, e.y, text=valueprob)
 
-    pc = [valueprob, [e.x+35, e.y]]
+    pc = [valueprob,e.x+35, e.y]
     print(pc)
+
+    probset = [valueLabel,valueprob]
+    print(probset)
 
     #make a getter
 
   #store this label with the nodeID
     #then late use this to store in a set
+
+
+    checkCoords={}
+
+    for i in GA.coordList:
+        checkCoords[i]=set()
+
+        for n in GA.coordList:
+            for c in GA.coordList[n][1]:
+                if c[0]:
+                    print("test1")
+                    print(c[0]-140)
+                    # if pc[1] in range(d-140,c):
+                    #     print("test2")
+                    #     checkCoords[i].add(n)
+                    #     print(checkCoords)
+
+
+
+            # for x in parentNodes:
+            #     print('yyy')
+            #     point = GA.coordList[x][1]
+            #     print("oooo")
+            #     CreateTable(parentNodes[x], point)
 
 
 def ParentProb(event):
