@@ -38,6 +38,7 @@ global distsquared
 
 global dist
 
+
 #drop down list
 
 # create buttons
@@ -185,7 +186,7 @@ def probTable(event):
 
         CreateTable(parentNodes[x],pointX,pointY)
 
-    #
+    #need to store these in a dict with nodeID and value
         vertLimit = (2 ** len(parentNodes[x]) * 30)
 
         print(vertLimit)
@@ -199,6 +200,13 @@ def probTable(event):
         dist = distsquared ** 0.5
 
         print(dist)
+
+
+        distSet=[x,dist]
+
+        print(distSet)
+
+        GA.addDists(distSet,x)
 
 
 
@@ -230,26 +238,83 @@ def setProblabel(e):
     probset = [valueLabel,valueprob]
     print(probset)
 
-    #make a getter
+    # FOR EVERY PROB VALUE DO THE DISTANCE LIKE METHOD ABOVE
 
-  #store this label with the nodeID
-    #then late use this to store in a set
-
-
-    checkCoords={}
+    # vertLimit = (2 ** len(parentNodes[x]) * 30)
+    #
+    # print(vertLimit)
+    #
+    # vertLimitsquared = vertLimit ** 2
+    #
+    # print(vertLimitsquared)
+    #
+    # distsquared = horizLimit + (vertLimit ** 2)
+    #
+    # dist = distsquared ** 0.5
+    #
+    # print(dist)
+    #
+    # distSet = [x, dist]
+    #
+    # print(distSet)
+    #
+    # GA.addDists(distSet, x)
 
     for i in GA.coordList:
-        checkCoords[i]=set()
 
-        for n in GA.coordList:
-            for c in GA.coordList[n][1]:
-                if c[0]:
-                    print("test1")
-                    print(c[0]-140)
-                    # if pc[1] in range(d-140,c):
-                    #     print("test2")
-                    #     checkCoords[i].add(n)
-                    #     print(checkCoords)
+        if GA.coordList[i]:
+
+            print(GA.coordList[i][1])
+
+            print(pc[1])
+
+            pointHoriz=((GA.coordList[i][1]-pc[1])**2)
+
+            print(pointHoriz)
+
+
+            print(GA.coordList[i][2])
+
+            print(pc[2])
+
+            pointVert=((GA.coordList[i][2]-pc[2])**2)
+
+            print(pointVert)
+
+            pointDistSQ = pointHoriz+pointVert
+
+            print(pointDistSQ)
+
+            pointDist=pointDistSQ**0.5
+
+            print(pointDist)
+
+            for i in GA.distDict:
+                if GA.distDict[i]:
+
+                    if pointDist < GA.distDict[i][1]:
+                        print("nodeID")
+                        #go through dist dictionary and get id
+                        # print(GA.addDists[i])
+
+        #store this label with the nodeID
+    #then late use this to store in a set
+
+    #
+    # checkCoords={}
+    #
+    # for i in GA.coordList:
+    #     checkCoords[i]=set()
+    #
+    #     for n in GA.coordList:
+    #         for c in GA.coordList[n][1]:
+    #             if c[0]:
+    #                 print("test1")
+    #                 print(c[0]-140)
+    #                 # if pc[1] in range(d-140,c):
+    #                 #     print("test2")
+    #                 #     checkCoords[i].add(n)
+    #                 #     print(checkCoords)
 
 
 
