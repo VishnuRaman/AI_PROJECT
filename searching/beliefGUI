@@ -189,22 +189,22 @@ def probTable(event):
     #need to store these in a dict with nodeID and value
         vertLimit = (2 ** len(parentNodes[x]) * 30)
 
-        print(vertLimit)
+        print("vert limit" +str(vertLimit))
 
         vertLimitsquared = vertLimit ** 2
 
-        print(vertLimitsquared)
+        print("vert limited sq" + str(vertLimitsquared))
 
         distsquared = horizLimit + (vertLimit ** 2)
 
         dist = distsquared ** 0.5
 
-        print(dist)
+        print("dist" + str(dist))
 
 
         distSet=[x,dist]
 
-        print(distSet)
+        print("distset "+ str(distSet))
 
         GA.addDists(distSet,x)
 
@@ -264,38 +264,42 @@ def setProblabel(e):
 
         if GA.coordList[i]:
 
-            print(GA.coordList[i][1])
+            print("coordlist X " + str(GA.coordList[i][1]))
 
-            print(pc[1])
+            print("point x " + str(pc[1]))
 
             pointHoriz=((GA.coordList[i][1]-pc[1])**2)
 
-            print(pointHoriz)
+            print("point horiz " + str(pointHoriz))
 
 
-            print(GA.coordList[i][2])
+            print( "coord list Y " + str(GA.coordList[i][2]))
 
-            print(pc[2])
+            print("point y " + str(pc[2]))
 
             pointVert=((GA.coordList[i][2]-pc[2])**2)
 
-            print(pointVert)
+            print("point vert "+str(pointVert))
 
             pointDistSQ = pointHoriz+pointVert
 
-            print(pointDistSQ)
+            print("point dist sq "+str(pointDistSQ))
 
             pointDist=pointDistSQ**0.5
 
-            print(pointDist)
+            print("point dist " + str(pointDist))
 
             for i in GA.distDict:
+                print("test")
                 if GA.distDict[i]:
+                    print("DIstdict[i][1]" + str(GA.distDict[i][1]))
 
                     if pointDist < GA.distDict[i][1]:
+
+                        #reverse it through to find the coordX no. then find node id attached
                         print("nodeID")
-                        #go through dist dictionary and get id
-                        # print(GA.addDists[i])
+                #go through dist dictionary and get id
+                # print(GA.addDists[i])
 
         #store this label with the nodeID
     #then late use this to store in a set
