@@ -305,17 +305,6 @@ def setProblabel(e):
                 #go through dist dictionary and get id
                 # print(GA.addDists[i])
 
-        #store this label with the nodeID
-    #then late use this to store in a set
-
-
-
-            # for x in parentNodes:
-            #     print('yyy')
-            #     point = GA.coordList[x][1]
-            #     print("oooo")
-            #     CreateTable(parentNodes[x], point)
-
 
 def ParentProb(event):
     root.config(cursor="cross")
