@@ -5,6 +5,8 @@ class guiArray:
         self.canvas=canvas
         self.nodeList={}
         self.coordList={}
+        self.distDict={}
+        # self.ycoord={}
 
     def addNode(self,set,nodeID):
         self.nodeList[nodeID]=set
@@ -13,6 +15,10 @@ class guiArray:
     def addCoords(self,set,nodeID):
         self.coordList[nodeID]=set
         print('Coordinates '+str(self.coordList))
+
+    def addDists(self,set,nodeID):
+        self.distDict[nodeID]=set
+        print('dist = '+str(self.distDict))
 
     def addArrow(self,fromNode,toNode,arrow,weight): #include weight after arrow when sorted it out via gui
         #so print will say node you are travelling FROM, it travels DOWN the grid to that node
