@@ -301,6 +301,7 @@ def setProblabel(e):
                         global probset
 
                         #needs to not overwrite multiple rows in child node
+                        #so need to store the row number too and for parents this =1
                         probset = [i,valueLabel, valueprob]
                         # print(probset)
 
