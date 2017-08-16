@@ -33,6 +33,19 @@ class Test_algorithm(unittest.TestCase):
         self.assertEqual(qsExpect,self.AL.getQsLog())#Test DFS qsLog
         visitedExpect=[[0], [0, 2], [0, 2, 6], [0, 2, 6, 5], [0, 2, 6, 5, 1], [0, 2, 6, 5, 1, 4]]
         self.assertEqual(visitedExpect,self.AL.getVisitedLog())#Test DFS visitedLog
+    def test_bdfs_dfs_dif_Cost(self):
+        g=Linking.Graph()
+        for i in range(7):
+            g.add_vertex(i)
+        g.add_edge(0,2,2)
+        g.add_edge(0,1,1)
+        g.add_edge(1,4,4)
+        g.add_edge(1,3,1)
+        g.add_edge(2,6,1)
+        g.add_edge(2,5,1)
+        g.add_edge(2,4,2)
+        al=Algorithms.algorithms(g.vert_dict)
+        self.assertListEqual([0, 2, 4],al.ucsAStar(0,4,'UCS'))
     def test_ucsAStar_ucs(self):
         #UCS
         self.assertEqual([0,1,4],self.AL.ucsAStar(0,4,'UCS'))#Test UCS final path
@@ -628,5 +641,5 @@ class Test_algorithm(unittest.TestCase):
                   9: 25.391792612055916,
                   10: 34.476553020311734,
                   11: 12.99228937944113}
-        print(al.valueIteration(discount,action,g))
+        # print(al.valueIteration(discount,action,g))
         self.assertDictEqual(al.valueIteration(discount,action,g),expexted)

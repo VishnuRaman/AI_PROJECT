@@ -60,26 +60,33 @@ class algorithms:
         while pq.queue:
             # gets the first path in the queue
             (cost, node, path) = pq.get()
+            visited.append(node)
+            self.visitedLog.append(list(visited))
             if node == goal:
                 self.qsLog.append([node,[n[1] for n in pq.queue],[n[0] for n in pq.queue]])#[expanding node,[adj1, adj2, ...], [cost1, cost2, ...]]
-                visited.append(node)
-                self.visitedLog.append(list(visited))
                 return path
             # enumerate all adjacent nodes, construct a new path and push it into the queue
-            elif node not in visited:
-                visited.append(node)
-                self.visitedLog.append(list(visited))
-                if (it!=-1 and self.maxDepth>self.layerDict[node]) or (it==-1):#max layer > current layer
+            else:
+                if (it!=-1 and self.maxDepth>self.layerDict[node]) or (it==-1):#max layer > current layer or not iterative
                     temp=queue.PriorityQueue()
                     for adj in self.graph[node]:
+                        if algorithm=='UCS':
+                           newCost=cost+self.graph[node].get_weight(adj)#cost +weight of adj
+                        elif algorithm=='aStar':#A*
+                            heu=self.graph[adj].heuristic
+                            newCost=cost+self.graph[node].get_weight(adj)+heu# +heuristic of adj
                         if adj not in [n[1] for n in pq.queue] and adj not in visited:#avoid duplicated node, avoid visited node
-                            if algorithm=='UCS':
-                               newCost=cost+self.graph[node].get_weight(adj)#cost +weight of adj
-                            elif algorithm=='aStar':#A*
-                                heu=self.graph[adj].heuristic
-                                newCost=cost+self.graph[node].get_weight(adj)+heu# +heuristic of adj
                             temp.put((newCost,adj,path+[adj]))
                             self.layerDict[adj]=self.layerDict[node]+1#layer of child = layer of parent +1
+                        else:
+                            for i in pq.queue:
+                                if adj==i[1] and newCost<i[0]:
+                                    pq.queue.remove(i)
+                                    pq.queue.append((newCost,adj,path+[adj]))#replace the original cost and path by the new one
+
+
+
+
                     pq.queue.extend(temp.queue)
                 pq.queue.sort()#first sort by cost, then sort by numerical order
                 self.qsLog.append([node,[n[1] for n in pq.queue],[n[0] for n in pq.queue]])#[expanding node,[adj1, adj2, ...], [cost1, cost2, ...]]
@@ -97,7 +104,6 @@ class algorithms:
             self.maxDepth=i+1
             if algorithm in ('BFS','DFS'):
                 rtn = self.bdfs(start,goal,algorithm,it)
-                print('iterative rtn: ', rtn)
             elif algorithm in ('UCS','aStar'):
                 rtn = self.ucsAStar(start,goal,algorithm,it)
             if rtn:
