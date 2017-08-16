@@ -189,22 +189,22 @@ def probTable(event):
     #need to store these in a dict with nodeID and value
         vertLimit = (2 ** len(parentNodes[x]) * 30)
 
-        print("vert limit" +str(vertLimit))
+        # print("vert limit" +str(vertLimit))
 
         vertLimitsquared = vertLimit ** 2
 
-        print("vert limited sq" + str(vertLimitsquared))
+        # print("vert limited sq" + str(vertLimitsquared))
 
         distsquared = horizLimit + (vertLimit ** 2)
 
         dist = distsquared ** 0.5
 
-        print("dist" + str(dist))
+        # print("dist" + str(dist))
 
 
         distSet=[x,dist]
 
-        print("distset "+ str(distSet))
+        # print("distset "+ str(distSet))
 
         GA.addDists(distSet,x)
 
@@ -263,47 +263,52 @@ def setProblabel(e):
 
         if GA.coordList[i]:
 
-            print("coordlist X " + str(GA.coordList[i][1]))
-
-            print("point x " + str(pc[1]))
+            # print("coordlist X " + str(GA.coordList[i][1]))
+            #
+            # print("point x " + str(pc[1]))
 
             pointHoriz=((GA.coordList[i][1]-pc[1])**2)
 
-            print("point horiz " + str(pointHoriz))
-
-
-            print( "coord list Y " + str(GA.coordList[i][2]))
-
-            print("point y " + str(pc[2]))
+            # print("point horiz " + str(pointHoriz))
+            #
+            #
+            # print( "coord list Y " + str(GA.coordList[i][2]))
+            #
+            # print("point y " + str(pc[2]))
 
             pointVert=((GA.coordList[i][2]-pc[2])**2)
 
-            print("point vert "+str(pointVert))
+            # print("point vert "+str(pointVert))
 
             pointDistSQ = pointHoriz+pointVert
 
-            print("point dist sq "+str(pointDistSQ))
+            # print("point dist sq "+str(pointDistSQ))
 
             pointDist=pointDistSQ**0.5
 
-            print("point dist " + str(pointDist))
+            # print("point dist " + str(pointDist))
 
             for j in GA.distDict:
-                print("test")
+                # print("test")
                 if GA.distDict[j]:
-                    print("DIstdict[i][1]" + str(GA.distDict[j][1]))
+                    # print("DIstdict[i][1]" + str(GA.distDict[j][1]))
 
                     if pointDist < GA.distDict[j][1]:
 
                         #reverse it through to find the coordX no. then find node id attached
-                        print("nodeID")
-                        print(i)
+                        # print("nodeID")
+                        # print(i)
                         global probset
-                        probset = [i,valueLabel, valueprob]
-                        print(probset)
 
-                #go through dist dictionary and get id
-                # print(GA.addDists[i])
+                        #needs to not overwrite multiple rows in child node
+                        probset = [i,valueLabel, valueprob]
+                        # print(probset)
+
+                        GA.addProbs(probset,i)
+
+
+
+
 
 
 def ParentProb(event):
