@@ -235,8 +235,7 @@ def setProblabel(e):
     pc = [valueprob,e.x+35, e.y]
     print(pc)
 
-    probset = [valueLabel,valueprob]
-    print(probset)
+
 
     # FOR EVERY PROB VALUE DO THE DISTANCE LIKE METHOD ABOVE
 
@@ -289,36 +288,25 @@ def setProblabel(e):
 
             print("point dist " + str(pointDist))
 
-            for i in GA.distDict:
+            for j in GA.distDict:
                 print("test")
-                if GA.distDict[i]:
-                    print("DIstdict[i][1]" + str(GA.distDict[i][1]))
+                if GA.distDict[j]:
+                    print("DIstdict[i][1]" + str(GA.distDict[j][1]))
 
-                    if pointDist < GA.distDict[i][1]:
+                    if pointDist < GA.distDict[j][1]:
 
                         #reverse it through to find the coordX no. then find node id attached
                         print("nodeID")
+                        print(i)
+                        global probset
+                        probset = [i,valueLabel, valueprob]
+                        print(probset)
+
                 #go through dist dictionary and get id
                 # print(GA.addDists[i])
 
         #store this label with the nodeID
     #then late use this to store in a set
-
-    #
-    # checkCoords={}
-    #
-    # for i in GA.coordList:
-    #     checkCoords[i]=set()
-    #
-    #     for n in GA.coordList:
-    #         for c in GA.coordList[n][1]:
-    #             if c[0]:
-    #                 print("test1")
-    #                 print(c[0]-140)
-    #                 # if pc[1] in range(d-140,c):
-    #                 #     print("test2")
-    #                 #     checkCoords[i].add(n)
-    #                 #     print(checkCoords)
 
 
 
