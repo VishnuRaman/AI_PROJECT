@@ -97,7 +97,6 @@ class algorithms:
             self.maxDepth=i+1
             if algorithm in ('BFS','DFS'):
                 rtn = self.bdfs(start,goal,algorithm,it)
-                print('iterative rtn: ', rtn)
             elif algorithm in ('UCS','aStar'):
                 rtn = self.ucsAStar(start,goal,algorithm,it)
             if rtn:

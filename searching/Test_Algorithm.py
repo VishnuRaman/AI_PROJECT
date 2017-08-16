@@ -628,5 +628,5 @@ class Test_algorithm(unittest.TestCase):
                   9: 25.391792612055916,
                   10: 34.476553020311734,
                   11: 12.99228937944113}
-        print(al.valueIteration(discount,action,g))
+        # print(al.valueIteration(discount,action,g))
         self.assertDictEqual(al.valueIteration(discount,action,g),expexted)
