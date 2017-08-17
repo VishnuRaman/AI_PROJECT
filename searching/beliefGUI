@@ -285,24 +285,11 @@ def setTF(e): #change this to run the algorithm too
 
     obsLabel = askstring('value', 'Please enter either T or F')
 
-    # obsCoord = {}
-    # obs = {}
-    # for h in GA.coordList:
-    #     obsCoord[h] = set()
-    #
-    #     if x>0:
-    #         for f in GA.coordList:
-    #             for d in GA.coordList[f][1]:
-    #                 if GA.coordList[f][1]:
-    #                     print("werterwt")
-    #                     if x ==d:
-    #                         print(f)
-
 
     #need it to not overwrite one another
     if obsLabel == 'T':
-        obs = [obsLabel]
-        print(obs)
+        # obs = [obsLabel]
+        # print(obs)
         for i in GA.coordList:
             if GA.coordList[i]:
                 if x > GA.coordList[i][1] - 50 and x < GA.coordList[i][1] + 50:
@@ -313,9 +300,18 @@ def setTF(e): #change this to run the algorithm too
                         canvas.itemconfig(GA.nodeList[i][3], fill="green")
                         print("y test")
 
+                        for i in GA.probDict:
+                            for j in GA.probDict[i][2]:
+                                if obsLabel == GA.probDict[i][2]:
+                                    obset = [GA.probDict[i][0],obsLabel,GA.probDict[i][3]]
+                                    print(obset)
+                                # elif obsLabel != GA.probDict[i][2]:
+            #     obset = [GA.probDict[i][0],'F',1-GA.probDict[i][3]]
+            #     print(obset)
+
     elif obsLabel == 'F':
-        obs = [obsLabel]
-        print(obs)
+        # obs = [obsLabel]
+        # print(obs)
         for i in GA.coordList:
             if GA.coordList[i]:
                 if x > GA.coordList[i][1] - 50 and x < GA.coordList[i][1] + 50:
@@ -326,14 +322,18 @@ def setTF(e): #change this to run the algorithm too
                         canvas.itemconfig(GA.nodeList[i][3], fill="red")
                         print("y test")
 
+        for i in GA.probDict:
+            if obsLabel == GA.probDict[i][2]:
+                obset = [GA.probDict[i][0],obsLabel,GA.probDict[i][3]]
+                print(obset)
     elif obsLabel is None:
         print("asassa")
     else:
         #dont print the label
         obsError = tkinter.messagebox.showinfo('error','Please only enter either T or F')
 
-    return obs
-    print(obs)
+    # return obs
+    # print(obs)
 
         # trueVar=IntVar()
     # valueObs = tkinter.
