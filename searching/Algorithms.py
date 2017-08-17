@@ -52,8 +52,9 @@ class algorithms:
             self.maxDepth=math.inf
         self.layerDict={}
         self.layerDict[start]=0#initialize root as layer 0
-
         cost=0
+        if algorithm=='aStar':
+            cost=self.graph[start].heuristic
         pq = queue.PriorityQueue()
         pq.put((cost,start,[start]))
         visited=[]
@@ -71,10 +72,10 @@ class algorithms:
                     temp=queue.PriorityQueue()
                     for adj in self.graph[node]:
                         if algorithm=='UCS':
-                           newCost=cost+self.graph[node].get_weight(adj)#cost +weight of adj
+                            newCost=cost+self.graph[node].get_weight(adj)#cost +weight of adj
                         elif algorithm=='aStar':#A*
                             heu=self.graph[adj].heuristic
-                            newCost=cost+self.graph[node].get_weight(adj)+heu# +heuristic of adj
+                            newCost=cost+self.graph[node].get_weight(adj)-self.graph[node].heuristic+heu# -heuristic of current node +heuristic of adj
                         if adj not in [n[1] for n in pq.queue] and adj not in visited:#avoid duplicated node, avoid visited node
                             temp.put((newCost,adj,path+[adj]))
                             self.layerDict[adj]=self.layerDict[node]+1#layer of child = layer of parent +1

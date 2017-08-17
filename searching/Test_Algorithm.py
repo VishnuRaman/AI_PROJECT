@@ -62,9 +62,9 @@ class Test_algorithm(unittest.TestCase):
         self.g.get_vertex(1).heuristic=1
         self.g.get_vertex(3).heuristic=1
         self.assertEqual([0,1,4],self.AL.ucsAStar(0,4,'aStar'))#Test A* final path
-        qsExpect=[[0, [2, 1], [1, 2]], [2, [1, 5, 6], [2, 2, 2]], [1, [5, 6, 4, 3], [2, 2, 3, 4]], [5, [6, 4, 3], [2, 3, 4]], [6, [4, 3], [3, 4]], [4, [3], [4]]]
+        qsExpect=[[0, [2, 1], [1, 2]], [2, [1, 5, 6], [2, 2, 2]], [1, [4, 5, 6, 3], [2, 2, 2, 3]], [4, [5, 3, 6], [2, 3, 2]]]
         self.assertEqual(qsExpect,self.AL.getQsLog())#Test A* qsLog
-        visitedExpect=[[0], [0, 2], [0, 2, 1], [0, 2, 1, 5], [0, 2, 1, 5, 6], [0, 2, 1, 5, 6, 4]]
+        visitedExpect=[[0], [0, 2], [0, 2, 1], [0, 2, 1, 4]]
         self.assertEqual(visitedExpect,self.AL.getVisitedLog())#Test A* visitedLog
         self.g.resetAllHeuristic()
         #A* (default heuristic=0)
@@ -99,9 +99,9 @@ class Test_algorithm(unittest.TestCase):
         self.g.get_vertex(1).heuristic=1
         self.g.get_vertex(3).heuristic=1
         self.assertEqual([0,1,4],self.AL.iterative(0,4,'aStar',3))#Test A* final path
-        qsExpect=[[0, [2, 1], [1, 2]], [2, [1], [2]], [1, [], []], [0, [2, 1], [1, 2]], [2, [1, 5, 6], [2, 2, 2]], [1, [5, 6, 4, 3], [2, 2, 3, 4]], [5, [6, 4, 3], [2, 3, 4]], [6, [4, 3], [3, 4]], [4, [3], [4]]]
+        qsExpect=[[0, [2, 1], [1, 2]], [2, [1], [2]], [1, [], []], [0, [2, 1], [1, 2]], [2, [1, 5, 6], [2, 2, 2]], [1, [4, 5, 6, 3], [2, 2, 2, 3]], [4, [5, 3, 6], [2, 3, 2]]]
         self.assertEqual(qsExpect,self.AL.getQsLog())#Test A* qsLog
-        visitedExpect=[[0], [0, 2], [0, 2, 1], [0], [0, 2], [0, 2, 1], [0, 2, 1, 5], [0, 2, 1, 5, 6], [0, 2, 1, 5, 6, 4]]
+        visitedExpect=[[0], [0, 2], [0, 2, 1], [0], [0, 2], [0, 2, 1], [0, 2, 1, 4]]
         self.assertEqual(visitedExpect,self.AL.getVisitedLog())#Test A* visitedLog
         self.g.resetAllHeuristic()
         #A* (default heuristic=0)
@@ -137,7 +137,7 @@ class Test_algorithm(unittest.TestCase):
         #A* (getManhattanDist)
         self.gd.setManhattanDist(4)
         self.assertEqual([0,1,4],self.AL_gd.ucsAStar(0,4,'aStar'))#Test A* final path
-        qsExpect=[[0, [1, 3], [2, 2]], [1, [3, 4, 2], [2, 3, 5]], [3, [4, 2, 6], [3, 5, 5]], [4, [2, 6], [5, 5]]]
+        qsExpect=[[0, [1, 3], [2, 2]], [1, [3, 4, 2], [2, 2, 4]], [3, [4, 2, 6], [2, 4, 4]], [4, [2, 6], [4, 4]]]
         self.assertEqual(qsExpect,self.AL_gd.getQsLog())#Test A* qsLog
         visitedExpect=[[0], [0, 1], [0, 1, 3], [0, 1, 3, 4]]
         self.assertEqual(visitedExpect,self.AL_gd.getVisitedLog())#Test A* visitedLog
@@ -166,7 +166,7 @@ class Test_algorithm(unittest.TestCase):
         #A* (getManhattanDist)
         self.gd.setManhattanDist(4)
         self.assertEqual([0,1,4],self.AL_gd.iterative(0,4,'aStar',it=3))#Test A* final path
-        qsExpect=[[0, [1, 3], [2, 2]], [1, [3], [2]], [3, [], []], [0, [1, 3], [2, 2]], [1, [3, 4, 2], [2, 3, 5]], [3, [4, 2, 6], [3, 5, 5]], [4, [2, 6], [5, 5]]]
+        qsExpect=[[0, [1, 3], [2, 2]], [1, [3], [2]], [3, [], []], [0, [1, 3], [2, 2]], [1, [3, 4, 2], [2, 2, 4]], [3, [4, 2, 6], [2, 4, 4]], [4, [2, 6], [4, 4]]]
         self.assertEqual(qsExpect,self.AL_gd.getQsLog())#Test A* qsLog
         visitedExpect=[[0], [0, 1], [0, 1, 3], [0], [0, 1], [0, 1, 3], [0, 1, 3, 4]]
         self.assertEqual(visitedExpect,self.AL_gd.getVisitedLog())#Test A* visitedLog
