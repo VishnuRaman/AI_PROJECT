@@ -29,22 +29,6 @@ AL=Algorithms.algorithms(LK.vert_dict)
 global coordinates
 coordinates=[]
 
-global horizLimit
-horizLimit=(100*100)
-
-global righthorizlimit
-righthorizlimit=(60*60)
-
-global vertLimit
-
-global maxdistsquared
-
-global maxdist
-
-global mindistsquared
-
-global mindist
-
 global horizdiff
 
 global vertdiff
@@ -94,17 +78,17 @@ def drawNode(e):
         #nickname given to each node
         nickname=canvas.create_text(e.x,e.y,text=str(value))
 
-    coordinateSet=[nodeName,e.x,e.y]
+        coordinateSet=[nodeName,e.x,e.y]
 
-    # xcoordSet = [nodeName,e.x]
+        # xcoordSet = [nodeName,e.x]
 
-    GUIset = [nodeName, nodeID, {}]  # number object / oval object / dictionary for linking
+        GUIset = [nodeName, nodeID, {},oval]  # number object / oval object / dictionary for linking
 
-    node_id_Dic[oval] = nodeID
-    LK.add_vertex(nodeID)
-    GA.addNode(GUIset,nodeID)
-    GA.addCoords(coordinateSet,nodeID)
-    # GA.addXcoords(xcoordSet,nodeID)
+        node_id_Dic[oval] = nodeID
+        LK.add_vertex(nodeID)
+        GA.addNode(GUIset,nodeID)
+        GA.addCoords(coordinateSet,nodeID)
+        # GA.addXcoords(xcoordSet,nodeID)
 
 # listen to mouse action
 def CreateNode(event):
@@ -195,37 +179,6 @@ def probTable(event):
 
         CreateTable(parentNodes[x],pointX,pointY)
 
-    #need to store these in a dict with nodeID and value
-        vertLimit = (2 ** len(parentNodes[x]) * 30)
-
-        print('vert limit '+ str(vertLimit))
-
-        topvertlimit = ((2** len(parentNodes[x])-1)*30)
-
-        print('topvert limit ' + str(topvertlimit))
-
-        mindistsquared=righthorizlimit+(topvertlimit **2)
-
-        mindist = mindistsquared**0.5
-        # print("vert limit" +str(vertLimit))
-
-        maxdistsquared = horizLimit + (vertLimit ** 2)
-
-        maxdist = maxdistsquared ** 0.5
-
-
-        # print("dist" + str(dist))
-
-        maxdistSet=[x,maxdist]
-
-        mindistSet = [x,mindist]
-
-        # # print("distset "+ str(distSet))
-        #
-        # GA.addmaxDists(maxdistSet,x)
-        # GA.addminDists(mindistSet,x)
-
-
 
 def setProblabel(e):
 
@@ -257,9 +210,6 @@ def setProblabel(e):
 
         if GA.coordList[i]:
 
-            # print("coordlist X " + str(GA.coordList[i][1]))
-            #
-            # print("point x " + str(pc[1]))
 
             print('node x ' + str(GA.coordList[i][1]))
             print('point x ' + str(pc[1]))
@@ -267,30 +217,15 @@ def setProblabel(e):
             horizdiff=(GA.coordList[i][1]-pc[1])
 
             print("point horiz " + str(horizdiff))
-            #
-            #
-            # print( "coord list Y " + str(GA.coordList[i][2]))
-            #
-            # print("point y " + str(pc[2]))
+
 
             vertdiff=abs((GA.coordList[i][2]-pc[2]))
-            # abs(vertdiff)
+
 
             print('node y ' + str(GA.coordList[i][2]))
             print('point y ' + str(pc[2]))
             print("vert diff: " + str(vertdiff))
 
-
-
-            # print("point vert "+str(vertdiff))
-            #
-            # pointDistSQ = pointHoriz+pointVert
-            #
-            # # print("point dist sq "+str(pointDistSQ))
-            #
-            # pointDist=pointDistSQ**0.5
-            #
-            # print("point dist " + str(pointDist))
 
             if horizdiff <100 and horizdiff >60:
 
@@ -320,36 +255,6 @@ def setProblabel(e):
                         print(probset)
                         GA.addProbs(probset, stringID)
 
-######### STORE THIS IN A DICTIONARY THAT DOESNT OVER WRITE
-
-
-
-
-
-            # for j in GA.maxdistDict:
-            #     print("test")
-            #     if GA.maxdistDict[j]:
-            #         print("test1")
-            #
-            #         print('max dict: ' + str(GA.maxdistDict[j]))
-            #         print('min dict: '+ str(GA.mindistDict[j]))
-            #
-            #         if pointDist < GA.maxdistDict[j][1] and pointDist > GA.mindistDict[j][1]:
-            #             print("test2")
-            #
-            #             #reverse it through to find the coordX no. then find node id attached
-            #             # print("nodeID")
-            #             # print(i)
-            #             global probset
-            #
-            #             #needs to not overwrite multiple rows in child node
-            #             #so need to store the row number too and for parents this =1
-            #             probset = [i,valueLabel, valueprob]
-            #             print("test3")
-            #             print(probset)
-            #             print("test4")
-            #             GA.addProbs(probset,j)
-
 
 def ParentProb(event):
     root.config(cursor="cross")
@@ -361,6 +266,7 @@ def setTF(e): #change this to run the algorithm too
     #alternatively do a drop down list of all the nodes from the dictionary
     #instead of an entry box - true false cancel and whichever is selected rpogerss from there
     x = e.x
+    y = e.y
 
     # checkCoords={}
     #
@@ -397,9 +303,29 @@ def setTF(e): #change this to run the algorithm too
     if obsLabel == 'T':
         obs = [obsLabel]
         print(obs)
+        for i in GA.coordList:
+            if GA.coordList[i]:
+                if x > GA.coordList[i][1] - 50 and x < GA.coordList[i][1] + 50:
+                    print("x test")
+
+                    if y < GA.coordList[i][2] + 40 and y > GA.coordList[i][2] - 50:
+                        print("colour test" + str(i))
+                        canvas.itemconfig(GA.nodeList[i][3], fill="green")
+                        print("y test")
+
     elif obsLabel == 'F':
         obs = [obsLabel]
         print(obs)
+        for i in GA.coordList:
+            if GA.coordList[i]:
+                if x > GA.coordList[i][1] - 50 and x < GA.coordList[i][1] + 50:
+                    print("x test")
+
+                    if y < GA.coordList[i][2] + 40 and y > GA.coordList[i][2] - 50:
+                        print("colour test" + str(i))
+                        canvas.itemconfig(GA.nodeList[i][3], fill="red")
+                        print("y test")
+
     elif obsLabel is None:
         print("asassa")
     else:

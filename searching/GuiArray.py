@@ -5,8 +5,6 @@ class guiArray:
         self.canvas=canvas
         self.nodeList={}
         self.coordList={}
-        self.maxdistDict={}
-        self.mindistDict={}
         self.probDict={}
 
     def addNode(self,set,nodeID):
@@ -16,14 +14,6 @@ class guiArray:
     def addCoords(self,set,nodeID):
         self.coordList[nodeID]=set
         print('Coordinates '+str(self.coordList))
-
-    # def addmaxDists(self,set,nodeID):
-    #     self.maxdistDict[nodeID]=set
-    #     print('max dist = '+str(self.maxdistDict))
-    #
-    # def addminDists(self,set,nodeID):
-    #     self.mindistDict[nodeID]=set
-    #     print('min dist = '+str(self.mindistDict))
 
     def addProbs(self,set,nodeID):
         self.probDict[nodeID]=set
