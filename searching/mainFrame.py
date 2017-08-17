@@ -167,6 +167,8 @@ text4.pack(side=LEFT)
 it.pack(side=LEFT)
 button7.pack(side=LEFT)
 button8.pack(side=LEFT)
+#draw grid button - enter row and column no.s
+#then do like belief net so where they clicked to get ask boxes is top left corner
 
 # methods called by buttons
 node_id_Dic={}

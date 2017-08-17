@@ -30,13 +30,24 @@ global coordinates
 coordinates=[]
 
 global horizLimit
-horizLimit=(140*140)
+horizLimit=(100*100)
+
+global righthorizlimit
+righthorizlimit=(60*60)
 
 global vertLimit
 
-global distsquared
+global maxdistsquared
 
-global dist
+global maxdist
+
+global mindistsquared
+
+global mindist
+
+global horizdiff
+
+global vertdiff
 
 
 #drop down list
@@ -160,7 +171,7 @@ def probTable(event):
 #need to store a DICTIONARY not list
 #has nodeID and their links
 #then proceed to make the tables 8
-
+    global parentNodes
     parentNodes={}
     for k in GA.nodeList:
         parentNodes[k]=set()
@@ -177,8 +188,6 @@ def probTable(event):
 
                     print(parentNodes)
 
-
-
     for x in parentNodes:
 
         pointX=GA.coordList[x][1]
@@ -189,24 +198,32 @@ def probTable(event):
     #need to store these in a dict with nodeID and value
         vertLimit = (2 ** len(parentNodes[x]) * 30)
 
+        print('vert limit '+ str(vertLimit))
+
+        topvertlimit = ((2** len(parentNodes[x])-1)*30)
+
+        print('topvert limit ' + str(topvertlimit))
+
+        mindistsquared=righthorizlimit+(topvertlimit **2)
+
+        mindist = mindistsquared**0.5
         # print("vert limit" +str(vertLimit))
 
-        vertLimitsquared = vertLimit ** 2
+        maxdistsquared = horizLimit + (vertLimit ** 2)
 
-        # print("vert limited sq" + str(vertLimitsquared))
+        maxdist = maxdistsquared ** 0.5
 
-        distsquared = horizLimit + (vertLimit ** 2)
-
-        dist = distsquared ** 0.5
 
         # print("dist" + str(dist))
 
+        maxdistSet=[x,maxdist]
 
-        distSet=[x,dist]
+        mindistSet = [x,mindist]
 
-        # print("distset "+ str(distSet))
-
-        GA.addDists(distSet,x)
+        # # print("distset "+ str(distSet))
+        #
+        # GA.addmaxDists(maxdistSet,x)
+        # GA.addminDists(mindistSet,x)
 
 
 
@@ -236,29 +253,6 @@ def setProblabel(e):
     print(pc)
 
 
-
-    # FOR EVERY PROB VALUE DO THE DISTANCE LIKE METHOD ABOVE
-
-    # vertLimit = (2 ** len(parentNodes[x]) * 30)
-    #
-    # print(vertLimit)
-    #
-    # vertLimitsquared = vertLimit ** 2
-    #
-    # print(vertLimitsquared)
-    #
-    # distsquared = horizLimit + (vertLimit ** 2)
-    #
-    # dist = distsquared ** 0.5
-    #
-    # print(dist)
-    #
-    # distSet = [x, dist]
-    #
-    # print(distSet)
-    #
-    # GA.addDists(distSet, x)
-
     for i in GA.coordList:
 
         if GA.coordList[i]:
@@ -267,124 +261,99 @@ def setProblabel(e):
             #
             # print("point x " + str(pc[1]))
 
-            pointHoriz=((GA.coordList[i][1]-pc[1])**2)
+            print('node x ' + str(GA.coordList[i][1]))
+            print('point x ' + str(pc[1]))
 
-            # print("point horiz " + str(pointHoriz))
+            horizdiff=(GA.coordList[i][1]-pc[1])
+
+            print("point horiz " + str(horizdiff))
             #
             #
             # print( "coord list Y " + str(GA.coordList[i][2]))
             #
             # print("point y " + str(pc[2]))
 
-            pointVert=((GA.coordList[i][2]-pc[2])**2)
+            vertdiff=abs((GA.coordList[i][2]-pc[2]))
+            # abs(vertdiff)
 
-            # print("point vert "+str(pointVert))
+            print('node y ' + str(GA.coordList[i][2]))
+            print('point y ' + str(pc[2]))
+            print("vert diff: " + str(vertdiff))
 
-            pointDistSQ = pointHoriz+pointVert
 
-            # print("point dist sq "+str(pointDistSQ))
 
-            pointDist=pointDistSQ**0.5
-
+            # print("point vert "+str(vertdiff))
+            #
+            # pointDistSQ = pointHoriz+pointVert
+            #
+            # # print("point dist sq "+str(pointDistSQ))
+            #
+            # pointDist=pointDistSQ**0.5
+            #
             # print("point dist " + str(pointDist))
 
-            for j in GA.distDict:
-                # print("test")
-                if GA.distDict[j]:
-                    # print("DIstdict[i][1]" + str(GA.distDict[j][1]))
+            if horizdiff <100 and horizdiff >60:
 
-                    if pointDist < GA.distDict[j][1]:
+                #for each row check y
+                #when this becomes true then assign the value to that row
 
-                        #reverse it through to find the coordX no. then find node id attached
-                        # print("nodeID")
-                        # print(i)
-                        global probset
+                print("row test")
 
-                        #needs to not overwrite multiple rows in child node
-                        #so need to store the row number too and for parents this =1
-                        probset = [i,valueLabel, valueprob]
-                        # print(probset)
+                for n in range((2**(len(parentNodes[i])))):
 
-                        GA.addProbs(probset,i)
+                    stringNode = str(i)
+                    stringRow = str(n+1)
+
+                    stringID = str(stringNode+'.'+stringRow)
+
+                    print("test id" +stringID)
+                    # print(n)
+                    # print("nr")
+
+                    if vertdiff > (n*30) and vertdiff < ((n+1)*30):
+                        row = n+1
+                        print('row: ' + str(row))
+
+
+                        global probset #also want row on the end
+                        probset=[i,(2**(len(parentNodes[i]))),valueLabel,valueprob,row]
+                        print(probset)
+                        GA.addProbs(probset, stringID)
+
+######### STORE THIS IN A DICTIONARY THAT DOESNT OVER WRITE
 
 
 
 
+
+            # for j in GA.maxdistDict:
+            #     print("test")
+            #     if GA.maxdistDict[j]:
+            #         print("test1")
+            #
+            #         print('max dict: ' + str(GA.maxdistDict[j]))
+            #         print('min dict: '+ str(GA.mindistDict[j]))
+            #
+            #         if pointDist < GA.maxdistDict[j][1] and pointDist > GA.mindistDict[j][1]:
+            #             print("test2")
+            #
+            #             #reverse it through to find the coordX no. then find node id attached
+            #             # print("nodeID")
+            #             # print(i)
+            #             global probset
+            #
+            #             #needs to not overwrite multiple rows in child node
+            #             #so need to store the row number too and for parents this =1
+            #             probset = [i,valueLabel, valueprob]
+            #             print("test3")
+            #             print(probset)
+            #             print("test4")
+            #             GA.addProbs(probset,j)
 
 
 def ParentProb(event):
     root.config(cursor="cross")
     canvas.bind("<Button-1>", setProblabel)
-
-#
-# def setProb(e):
-#
-#     x = e.x
-#     y = e.y
-#
-#     valueP = askstring('value', 'Please enter a probability value')
-#
-#     valueprob = getdouble(valueP)
-#
-#     # if false box is clicked enter value
-#     if not canvas.find_enclosed(e.x - 20, e.y, e.x + 20, e.y + 30):
-#         canvas.create_text(e.x, e.y, text=valueprob)
-#
-#     pc = [valueprob,[e.x,e.y]]
-#     print(pc)
-
-        #now use these coordinates to match the range of the nodeid its next to
-        #store this with the nodeID and label from above
-
-        #atm probset is overwriting unless do each button alternatively
-    # probset = [valueLab, valueprob]
-    # probset = {}
-    #
-    # checkCoords={}
-    #
-    # for q in GA.coordList:
-    #     checkCoords[q] = set()
-    #
-    #     if x >0:
-    #         for w in GA.coordList:
-    #             for t in GA.coordList[w][1]:
-    #                 if GA.coordList[w][1]:
-    #                     print("skssksksk")
-    #                     if x in range(t):
-    #                         print(w)
-    #                         probset=[w,valueLab,valueprob]
-    #                         print(probset)
-    #
-    #                         #need to not overwrite probset
-
-
-# parentNodes = {}
-        # for k in GA.nodeList:
-        #     parentNodes[k] = set()
-        #
-        # if LK.num_vertices > 0:
-        #     print("bbbb")
-        #     for j in GA.nodeList:
-        #         # go through nodes and check if they have parents
-        #         # then use child id as a key and value as a list and append parent into the list
-        #
-        #         for i in GA.nodeList[j][2]:
-        #             if GA.nodeList[j][2]:
-        #                 parentNodes[i].add(j)
-        #
-        #                 print(parentNodes)
-
-        # for x in parentNodes:
-        #     print('yyy')
-        #     point = GA.coordList[x][1]
-        #     print("oooo")
-        #     CreateTable(parentNodes[x], point)
-
-#
-# def ParentProb(event):
-#     root.config(cursor="cross")
-#     canvas.bind("<Button-1>", setProb)
-
 
 
 def setTF(e): #change this to run the algorithm too
