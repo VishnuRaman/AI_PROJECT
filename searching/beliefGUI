@@ -299,15 +299,20 @@ def setTF(e): #change this to run the algorithm too
                         print("colour test" + str(i))
                         canvas.itemconfig(GA.nodeList[i][3], fill="green")
                         print("y test")
-
-                        for i in GA.probDict:
-                            for j in GA.probDict[i][2]:
-                                if obsLabel == GA.probDict[i][2]:
-                                    obset = [GA.probDict[i][0],obsLabel,GA.probDict[i][3]]
-                                    print(obset)
-                                # elif obsLabel != GA.probDict[i][2]:
-            #     obset = [GA.probDict[i][0],'F',1-GA.probDict[i][3]]
-            #     print(obset)
+############ IN THE PROBS DICT NEED TO DO SO IT ONLY COMPARES THE NODE WE HAVE SELECTED
+            #ISOLATE THE NODEID FROM THE FOR LOOP - SO ITS THE NODEID OF THE NODE WE SELECTED
+            #AND ONLY STORE A SET FOR THAT ID AND NOT CONTINUE LOOP ONCE THAT ONE IS FOUND
+                        for j in GA.probDict:
+                            # print(j)
+                            print(i)
+                            if GA.probDict[j][0]==i:
+                                # for l in GA.probDict[j][2]:
+                                    if obsLabel == GA.probDict[j][2]:
+                                        obset = [GA.probDict[j][0],obsLabel,GA.probDict[j][3]]
+                                        print(obset)
+                                    # elif obsLabel != GA.probDict[i][2]:
+                        #     obset = [GA.probDict[i][0],'F',1-GA.probDict[i][3]]
+                        #     print(obset)
 
     elif obsLabel == 'F':
         # obs = [obsLabel]
@@ -322,10 +327,15 @@ def setTF(e): #change this to run the algorithm too
                         canvas.itemconfig(GA.nodeList[i][3], fill="red")
                         print("y test")
 
-        for i in GA.probDict:
-            if obsLabel == GA.probDict[i][2]:
-                obset = [GA.probDict[i][0],obsLabel,GA.probDict[i][3]]
-                print(obset)
+                    for j in GA.probDict:
+                        # print(j)
+                        print(i)
+                        if GA.probDict[j][0] == i:
+                            # for l in GA.probDict[j][2]:
+                            if obsLabel == GA.probDict[j][2]:
+                                obset = [GA.probDict[j][0], obsLabel, GA.probDict[j][3]]
+                                print(obset)
+
     elif obsLabel is None:
         print("asassa")
     else:
