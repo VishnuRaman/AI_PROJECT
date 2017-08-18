@@ -143,6 +143,8 @@ def CreateTable(parent,coordinateX,coordinateY):
         box1 = canvas.create_rectangle(coordinateX - 140, coordinateY, coordinateX - 100, coordinateY-30)
         box2 = canvas.create_rectangle(coordinateX - 60, coordinateY, coordinateX - 100, coordinateY-30)
 
+    AL.generateProbabilityTable()
+
     # rows = 2**len(parent)
     #
     # v=  bin(rows)[2:].zfill(len(parent))
@@ -254,6 +256,14 @@ def setProblabel(e):
                         probset=[i,(2**(len(parentNodes[i]))),valueLabel,valueprob,row]
                         print(probset)
                         GA.addProbs(probset, stringID)
+                        if probset[2]=='F':
+                            AL.setKnownPT(i, 'T', 1-probset[3])
+                        else:
+                            AL.setKnownPT(i,probset[2],probset[3])
+                            print(probset[2])
+                            print(probset[3])
+
+
 
 
 def ParentProb(event):
@@ -262,6 +272,10 @@ def ParentProb(event):
 
 
 def setTF(e): #change this to run the algorithm too
+
+    global obset
+    obset = []
+
 
     #alternatively do a drop down list of all the nodes from the dictionary
     #instead of an entry box - true false cancel and whichever is selected rpogerss from there
@@ -305,13 +319,13 @@ def setTF(e): #change this to run the algorithm too
                             if GA.probDict[j][0]==i:
                                 # for l in GA.probDict[j][2]:
                                     if obsLabel == GA.probDict[j][2]:
-                                        obset = [GA.probDict[j][0],obsLabel,GA.probDict[j][3]]
+                                        obset = obsLabel
                                         print(obset)
                                         GA.addObs(obset, i)
 
                                     else:
 
-                                        obset = [GA.probDict[j][0],'T',(1-GA.probDict[j][3])]
+                                        obset = 'T'
                                         print(obset)
                                         GA.addObs(obset, i)
 
@@ -336,12 +350,12 @@ def setTF(e): #change this to run the algorithm too
                             if GA.probDict[j][0] == i:
                                 # for l in GA.probDict[j][2]:
                                 if obsLabel == GA.probDict[j][2]:
-                                    obset = [GA.probDict[j][0], obsLabel, GA.probDict[j][3]]
+                                    obset = obsLabel
                                     print(obset)
                                     GA.addObs(obset, i)
                                 else:
 
-                                    obset = [GA.probDict[j][0], 'F', (1 - GA.probDict[j][3])]
+                                    obset = 'F'
                                     print(obset)
 
                                     GA.addObs(obset,i)
@@ -358,19 +372,21 @@ def SetObs(event):
 
 def run(event):   #############call display method in here - see mainframe
     print("asdawdwa")
-    AL.generateProbabilityTable
-    AL.generatePriorProbability
+    AL.generatePriorProbability()
 
-    for i in GA.obsList:
-        refreshP = AL.refreshP(GA.obsList[i])
+    for z in LK.vert_dict:
+        print("PROB VALUE" + str(z) + str(LK.vert_dict[z].probability))
 
-        # query = AL.query(refreshP,)
+    AL.refreshP(GA.obsList)
+    print("AL test: " + str(AL.refreshP(GA.obsList)))
 
-        print(refreshP)
+
 
 def resultsDisplay():
     resultcanvas = Frame(root)
     resultcanvas.pack(side=BOTTOM)
+
+    ########DISPLAY RESULTS
 
 
 

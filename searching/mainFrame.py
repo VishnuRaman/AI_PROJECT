@@ -144,8 +144,8 @@ editMenu.add_command(label="A*", command=chooseIaStar)
 
 ##The following creates all the buttons, entry boxes and text labels seen on the interface
 button1 = Button(topFrame,text="Create Node ")
-button2 = Button(topFrame,text="Create Arrows")
-button3 = Button(topFrame,text="Create Arrows with costs")
+button2 = Button(topFrame,text="Create Individual Arrows")
+button3 = Button(topFrame,text="Create Individual Arrows with costs")
 button9 = Button(topFrame,text="Add Heuristics")
 button4 = Button(topFrame,text="Move")
 button5 = Button(topFrame,text="Delete")
@@ -380,6 +380,8 @@ def AddHeu(e):
 
     heuLabel= askstring('value', 'Please enter a heuristic')
 
+    global heu
+
     heu = int(float(heuLabel)) ############check if this is int or float
 
     print(heu)
@@ -392,7 +394,9 @@ def AddHeu(e):
                 if y < GA.coordList[i][2] + 10 and y > GA.coordList[i][2] - 10:
                     print("colour test" + str(i))
                     heuset=[heu]
-                    GA.addHeu(heuset,i)
+                    LK.vert_dict[i].heuristic=heu
+                    print("heu " + str(LK.vert_dict[i].heuristic))
+
 
 def CreateHeu(event):
     root.config(cursor="")
