@@ -286,7 +286,6 @@ def setTF(e): #change this to run the algorithm too
     obsLabel = askstring('value', 'Please enter either T or F')
 
 
-    #need it to not overwrite one another
     if obsLabel == 'T':
         # obs = [obsLabel]
         # print(obs)
@@ -299,9 +298,7 @@ def setTF(e): #change this to run the algorithm too
                         print("colour test" + str(i))
                         canvas.itemconfig(GA.nodeList[i][3], fill="green")
                         print("y test")
-############ IN THE PROBS DICT NEED TO DO SO IT ONLY COMPARES THE NODE WE HAVE SELECTED
-            #ISOLATE THE NODEID FROM THE FOR LOOP - SO ITS THE NODEID OF THE NODE WE SELECTED
-            #AND ONLY STORE A SET FOR THAT ID AND NOT CONTINUE LOOP ONCE THAT ONE IS FOUND
+
                         for j in GA.probDict:
                             # print(j)
                             print(i)
@@ -310,9 +307,15 @@ def setTF(e): #change this to run the algorithm too
                                     if obsLabel == GA.probDict[j][2]:
                                         obset = [GA.probDict[j][0],obsLabel,GA.probDict[j][3]]
                                         print(obset)
-                                    # elif obsLabel != GA.probDict[i][2]:
-                        #     obset = [GA.probDict[i][0],'F',1-GA.probDict[i][3]]
-                        #     print(obset)
+                                        GA.addObs(obset, i)
+
+                                    else:
+
+                                        obset = [GA.probDict[j][0],'T',(1-GA.probDict[j][3])]
+                                        print(obset)
+                                        GA.addObs(obset, i)
+
+
 
     elif obsLabel == 'F':
         # obs = [obsLabel]
@@ -327,84 +330,59 @@ def setTF(e): #change this to run the algorithm too
                         canvas.itemconfig(GA.nodeList[i][3], fill="red")
                         print("y test")
 
-                    for j in GA.probDict:
-                        # print(j)
-                        print(i)
-                        if GA.probDict[j][0] == i:
-                            # for l in GA.probDict[j][2]:
-                            if obsLabel == GA.probDict[j][2]:
-                                obset = [GA.probDict[j][0], obsLabel, GA.probDict[j][3]]
-                                print(obset)
+                        for j in GA.probDict:
+                            # print(j)
+                            print(i)
+                            if GA.probDict[j][0] == i:
+                                # for l in GA.probDict[j][2]:
+                                if obsLabel == GA.probDict[j][2]:
+                                    obset = [GA.probDict[j][0], obsLabel, GA.probDict[j][3]]
+                                    print(obset)
+                                    GA.addObs(obset, i)
+                                else:
+
+                                    obset = [GA.probDict[j][0], 'F', (1 - GA.probDict[j][3])]
+                                    print(obset)
+
+                                    GA.addObs(obset,i)
 
     elif obsLabel is None:
-        print("asassa")
+        print("ACTION CANCELLED")
     else:
         #dont print the label
         obsError = tkinter.messagebox.showinfo('error','Please only enter either T or F')
-
-    # return obs
-    # print(obs)
-
-        # trueVar=IntVar()
-    # valueObs = tkinter.
-    # obsTrue = Checkbutton(canvas,text="True",variable=trueVar)
-
-
-    # #want a dictionary store nodeID and T/F
-    #
-    # Label(root, text="Select Node:").pack(side=LEFT)
-    #
-    # e1 = Entry(root)
-    #
-    # e1.pack(side=LEFT)
-    #
-    # chosenNode = e1.get()
-    #
-    # #check after input then print
-    # #alt create a button that confirms the input then prints
-    # #store in a list - as order is necessary must be t/f then value
-    #
-    # print("aaaaaa")
-    # print(chosenNode) #not printing????
-    # print("bbbb")
-    #
-    #
-    # global truevar
-    #
-    # truevar = IntVar()
-    #
-    # true = Checkbutton(root, text="True", variable=truevar)
-    # true.pack(side=LEFT)
-    #
-    # falsevar=IntVar()
-    # false = Checkbutton(root, text="False", variable=falsevar)
-    # false.pack(side=LEFT)
-    # falsevar.get()
-    # # print(falsevar.get())
-    #
-    #
-    # print("eeeee")
-    # truevar.get()
-    #
-    # print(truevar.get())
-    #
-    #
-    #
-    # print("ccccc")
 
 def SetObs(event):
     root.config(cursor="cross")
     canvas.bind("<Button-1>", setTF)
 
-def run(event):
+def run(event):   #############call display method in here - see mainframe
     print("asdawdwa")
+    AL.generateProbabilityTable
+    AL.generatePriorProbability
+
+    for i in GA.obsList:
+        refreshP = AL.refreshP(GA.obsList[i])
+
+        # query = AL.query(refreshP,)
+
+        print(refreshP)
+
+def resultsDisplay():
+    resultcanvas = Frame(root)
+    resultcanvas.pack(side=BOTTOM)
+
+
+
+
+
+
 
 
 button1.bind("<Button-1>",CreateNode)
 button2.bind("<Button-1>",CreateArc)
 button3.bind("<Button-1>",probTable)
 button4.bind("<Button-1>",ParentProb)
-# button5.bind("<Button-1>",ParentProb)
 button6.bind("<Button-1>", SetObs)
 button7.bind("<Button-1>",run)
 

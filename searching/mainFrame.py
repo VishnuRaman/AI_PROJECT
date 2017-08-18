@@ -13,60 +13,73 @@ import tkinter.messagebox
 from searching.Algorithms import algorithms
 global iter
 iter = False
-
+##This produces the frame dimensions of the window we are creating.
+#On this window we shall create a canvas where all our visualisations will be drawn.
 root = Tk()
+##This refers to the top frame which the buttons can be viewed on.
 topFrame = Frame(root)
 topFrame.pack(fill=X)
+##This refers to the second frame which the second row of buttons can be viewed on.
 topFrame2 = Frame(root)
 topFrame2.pack(fill=X)
+##This referst to the bottom frame produced to display the results.
 bottomFrame = Frame(root)
 bottomFrame.pack(side=BOTTOM)
-# canvas
+##This is the canvas on which all the visualisations are drawn.
+#The background is set to a different colour to distinguish it from the other frames.
 canvas = Canvas(root, width=800,height=400,bg="light gray")
 canvas.pack(expand=1,fill=BOTH)
 
-#creating objects - link to the classes in the folder
+##These variables are to be used as a reference, when calling methods or objects
+# from these classes.
 GA=GuiArray.guiArray(canvas)
-#node list calls list from the object GA which references Gui Array class
 MN=ManageNode.manageNode()
 LK=Linking.Graph()
 
-#drop down list
+##This creates a drop down menu list
 myMenu = Menu(root)
 root.config(menu=myMenu)
 
+##This method is used to save the graphs produced by the user as a .pkl file to be
+# loaded when the user returns to the interface at a later point.
 def saveFile():
-    #format types to save the file as
     fileFormats = [('Pickle', "*.pkl")]
-    #dialog box
+    ##This produces a dialog box allowing the user to choose where to save the file on their system.
     filename = tkinter.filedialog.asksaveasfilename(filetypes=fileFormats)
 
-    # #saving method
+    ##Everything the user has placed onto the canvas is saved into the GA.nodeList dictionary.
+    #Everything in this dictionary is called into a new dictionary and this new dictionary is used
+    #by pickle.dump and saved into a .pkl file.
+    #Once saved, the method is completed and the dialog box is closed.
     if filename:
-        #LK.saveFile(filename)
         newDict = GA.nodeList
         output = open(filename + '_g.pkl', 'wb')
         pickle.dump(newDict, output)
         output.close()
 
+##This is the method used to open a saved .pkl file onto the canvas.
+
 def loadFile():
     fileFormats = [('Pickle', "*.pkl")]
-
+    ##This produces a dialog box displaying the .pkl files saved, for the user to pick one for loading
     openFilename = tkinter.filedialog.askopenfile(filetypes=fileFormats).name
 
-    #seperate method
+    ##file assigns itself to the filename clicked by the user and is read by the method.
+    #The file is read and the dictionary values which were saved in that file are loaded into the dictionary for the canvas which
+    #is currently open.
+    #Once the method is completed, the reader closes and the dialog box disappears.
     file = open(openFilename, 'rb')
     dict = pickle.load(file)
     file.close()
     GA.nodeList=dict
 
-#drop down file menu
+##This produces a drop down menu titled "File" which allows the user to have access to the save and load options.
 fileMenu = Menu(myMenu)
 myMenu.add_cascade(label="File", menu=fileMenu)
 fileMenu.add_command(label="Save", command=saveFile)
 fileMenu.add_command(label="Load", command=loadFile)
 
-#methods for search drop down menu
+##These are the methods to be called by the drop down menu used for searches.
 def chooseBFS():
     global algorithm
     algorithm='BFS'
@@ -83,7 +96,7 @@ def chooseAstar():
     global algorithm
     algorithm ='aStar'
 
-#search drop down menu
+##This produces a drop down menu titled "Searches" which allows the user to select a particular search algorithm.
 editMenu = Menu(myMenu)
 myMenu.add_cascade(label="Searches", menu=editMenu)
 editMenu.add_command(label="BFS", command=chooseBFS)
@@ -91,7 +104,8 @@ editMenu.add_command(label="DFS", command=chooseDFS)
 editMenu.add_command(label="UCS", command=chooseUCS)
 editMenu.add_command(label="A*", command=chooseAstar)
 
-#iterative search menu methods
+
+##These are the methods to be called by the drop down menu used for iterative searches.
 def chooseIBFS():
     global algorithm
     algorithm='BFS'
@@ -120,8 +134,7 @@ def chooseIaStar():
     global iter
     iter = True
 
-#iterative search drop down menu - see if you can change this to a tick box option
-
+##This produces a drop down menu titled "Iterative Searches" which allows the user to select a particular iterative search algorithm.
 editMenu = Menu(myMenu)
 myMenu.add_cascade(label="Iterative Searches", menu=editMenu)
 editMenu.add_command(label="BFS", command=chooseIBFS)
@@ -129,10 +142,11 @@ editMenu.add_command(label="DFS", command=chooseIDFS)
 editMenu.add_command(label="UCS", command=chooseIUCS)
 editMenu.add_command(label="A*", command=chooseIaStar)
 
-# create buttons
+##The following creates all the buttons, entry boxes and text labels seen on the interface
 button1 = Button(topFrame,text="Create Node ")
 button2 = Button(topFrame,text="Create Arrows")
 button3 = Button(topFrame,text="Create Arrows with costs")
+button9 = Button(topFrame,text="Add Heuristics")
 button4 = Button(topFrame,text="Move")
 button5 = Button(topFrame,text="Delete")
 button6 = Button(bottomFrame,text="Run")
@@ -146,14 +160,12 @@ text3=Label(topFrame2,text="Delay Seconds")
 delay=Entry(topFrame2, width=2)
 text4=Label(topFrame2,text="Maximum Number of Rows to Search")
 it = Entry(topFrame2, width=2)
-# global itVar
-# itVar = IntVar()
-# it = Checkbutton(topFrame2,text="Iterative",variable=itVar)
 
-
+##This positions all the buttons, entry boxes and text labels seen on the interface.
 button1.pack(side=LEFT)
 button2.pack(side=LEFT)
 button3.pack(side=LEFT)
+button9.pack(side=LEFT)
 button4.pack(side=LEFT)
 button5.pack(side=LEFT)
 button6.pack(side=BOTTOM)
@@ -167,48 +179,48 @@ text4.pack(side=LEFT)
 it.pack(side=LEFT)
 button7.pack(side=LEFT)
 button8.pack(side=LEFT)
-#draw grid button - enter row and column no.s
-#then do like belief net so where they clicked to get ask boxes is top left corner
+##########################draw grid button - enter row and column no.s
+##########################then do like belief net so where they clicked to get ask boxes is top left corner
 
-# methods called by buttons
+########################### methods called by buttons
 node_id_Dic={}
-# draw on the canvas
+########################## draw on the canvas
+
+##This method draws the node oval and its ID number onto where the user has clicked on the canvas
 def drawNode(e):
-    #if not means if it's empty then do operation
-    #canvas enclosed creates a space around where you click and checks no other objects are in that area
-    #if objects are present it wont create a node there
-    #if is empty then creates the oval
+
+    ##If the area encircling where the user has clicked, does not contain an object already, then create an oval and store this with an ID value.
     if not canvas.find_enclosed(e.x-50,e.y-50,e.x+50,e.y+50):
         oval=canvas.create_oval(e.x-20,e.y-10,e.x+20,e.y+10)
-      #MN.inc means increase that method by 1 as new node was created
+
         nodeID=MN.inc()
         num=canvas.create_text(e.x,e.y,text=str(nodeID))
-        #num = the number label for the node eg 0,1,2
-        #node = the oval shape
-        GUIset=[num,oval,{},[e.x,e.y]]#number object / oval object / dictionary for linking
+###########num = the number label for the node eg 0,1,2
+###########node = the oval shape
+        GUIset=[num,oval,{}]###################number object / oval object / dictionary for linking
+        coordinateSet=[nodeID,e.x,e.y]
         node_id_Dic[oval]=nodeID
         GA.addNode(GUIset,nodeID)
+##################ADD EXPLANATIONS FOR THESE
+        GA.addCoords(coordinateSet,nodeID)
         LK.add_vertex(nodeID)
 
-# listen to mouse action
+##This method listens for the mouse click and upon this it will call the method to draw the node.
 def CreateNode(event):
     root.config(cursor="")
     canvas.bind("<Button-1>",drawNode)
-# listen to second click and draw the line on the canvas
+
 
 ###############
 ################
 ################
-#change to remove weight thing to previous one
+#EXPLAIN THIS IS WITHOUT COSTS BUT WEIGHT =1 FOR ALGS TO WORK AND UNIFORM COSTS
 def ArcPoint2(e):
     if len(canvas.find_enclosed(e.x-50,e.y-50,e.x+50,e.y+50))==2:
         toNode=node_id_Dic[canvas.find_enclosed(e.x-50,e.y-50,e.x+50,e.y+50)[0]]#the node is created before num so it is at [0]
         if (fromNode is not toNode)and(LK.check_edge_existed(fromNode,toNode)==False):
             root.config(cursor="")
             arrow = canvas.create_line(x,y,e.x,e.y,arrow="last")
-            #use -->  canvas.itemconfig(arrow,fill="red") <-- to change color after created
-
-            # need to change this so text corresponds to the custom entry made by the user
 
             weight = 1
             GA.addArrow(fromNode, toNode, arrow, weight)
@@ -358,6 +370,34 @@ def Delete(event):
 AL=Algorithms.algorithms(LK.vert_dict)
 #result variable default setting = empty so resultcanvas is printed
 result=[]
+
+def AddHeu(e):
+    #find the node it clicked on
+    #add heuristic to this node
+    #store this info somehow
+    x = e.x
+    y = e.y
+
+    heuLabel= askstring('value', 'Please enter a heuristic')
+
+    heu = int(float(heuLabel)) ############check if this is int or float
+
+    print(heu)
+
+    for i in GA.coordList:
+        if GA.coordList[i]:
+            if x > GA.coordList[i][1] - 20 and x < GA.coordList[i][1] + 20:
+
+
+                if y < GA.coordList[i][2] + 10 and y > GA.coordList[i][2] - 10:
+                    print("colour test" + str(i))
+                    heuset=[heu]
+                    GA.addHeu(heuset,i)
+
+def CreateHeu(event):
+    root.config(cursor="")
+    canvas.bind("<Button-1>", AddHeu)
+
 
 def Run(event):
     root.config(cursor="")
@@ -514,6 +554,7 @@ def PreStep(e):
 button1.bind("<Button-1>",CreateNode)
 button2.bind("<Button-1>",CreateArc)
 button3.bind("<Button-1>",CreateCostArc)
+button9.bind("<Button-1>",CreateHeu)
 button4.bind("<Button-1>",Move)
 button5.bind("<Button-1>",Delete)
 button6.bind("<Button-1>",Run)

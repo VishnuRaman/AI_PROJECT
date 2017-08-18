@@ -6,18 +6,28 @@ class guiArray:
         self.nodeList={}
         self.coordList={}
         self.probDict={}
+        self.obsList = {}
+        self.heuristics={}
 
     def addNode(self,set,nodeID):
         self.nodeList[nodeID]=set
-        print('GUI object '+str(self.nodeList))
+        print('GUI object: '+str(self.nodeList))
 
     def addCoords(self,set,nodeID):
         self.coordList[nodeID]=set
-        print('Coordinates '+str(self.coordList))
+        print('Coordinates: '+str(self.coordList))
 
     def addProbs(self,set,nodeID):
         self.probDict[nodeID]=set
-        print('prob values = '+str(self.probDict))
+        print('prob values: '+str(self.probDict))
+
+    def addObs(self,set,nodeID):
+        self.obsList[nodeID]=set
+        print('Observations: ' + str(self.obsList))
+
+    def addHeu(self,set,nodeID):
+        self.heuristics[nodeID]=set
+        print('Heuristics: '+ str(self.heuristics))
 
     def addArrow(self,fromNode,toNode,arrow,weight): #include weight after arrow when sorted it out via gui
         #so print will say node you are travelling FROM, it travels DOWN the grid to that node
