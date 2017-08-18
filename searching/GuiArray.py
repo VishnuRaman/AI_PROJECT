@@ -9,6 +9,8 @@ class guiArray:
         self.obsList = {}
         self.heuristics={}
 
+        #for above {} = dictionary, for below set means setting not the data type
+
     def addNode(self,set,nodeID):
         self.nodeList[nodeID]=set
         print('GUI object: '+str(self.nodeList))
