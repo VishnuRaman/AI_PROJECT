@@ -33,7 +33,7 @@ class Test_algorithm(unittest.TestCase):
         self.assertEqual(qsExpect,self.AL.getQsLog())#Test DFS qsLog
         visitedExpect=[[0], [0, 2], [0, 2, 6], [0, 2, 6, 5], [0, 2, 6, 5, 1], [0, 2, 6, 5, 1, 4]]
         self.assertEqual(visitedExpect,self.AL.getVisitedLog())#Test DFS visitedLog
-    def test_bdfs_dfs_dif_Cost(self):
+    def test_ucsAStar_ucs_dif_Cost(self):
         g=Linking.Graph()
         for i in range(7):
             g.add_vertex(i)
@@ -46,6 +46,8 @@ class Test_algorithm(unittest.TestCase):
         g.add_edge(2,4,2)
         al=Algorithms.algorithms(g.vert_dict)
         self.assertListEqual([0, 2, 4],al.ucsAStar(0,4,'UCS'))
+        expect=[[0], [0, 1], [0, 1, 2], [0, 1, 2, 3], [0, 1, 2, 3, 5], [0, 1, 2, 3, 5, 6], [0, 1, 2, 3, 5, 6, 4]]
+        self.assertListEqual(expect,al.getVisitedLog())
     def test_ucsAStar_ucs(self):
         #UCS
         self.assertEqual([0,1,4],self.AL.ucsAStar(0,4,'UCS'))#Test UCS final path
@@ -427,7 +429,7 @@ class Test_algorithm(unittest.TestCase):
         self.assertTrue(g.get_vertex(2).probability==0.3295)
         self.assertTrue(g.get_vertex(3).probability==0.405)
         self.assertTrue(g.get_vertex(4).probability==0.039655)
-    def test_query_simulating(self):
+    def test_refreshP_simulating(self):
         g=Linking.Graph()
         for i in range(5):
             g.add_vertex(i)
@@ -455,13 +457,13 @@ class Test_algorithm(unittest.TestCase):
         al.simulateData(10000)
 
         obs={3:'T',4:'T'}
-        self.assertTrue(math.fabs(al.query(obs,0)-0.17)<=0.1)
-        self.assertTrue(math.fabs(al.query(obs,1)-1)<=0.1)
-        self.assertTrue(math.fabs(al.query(obs,2)-0.92)<=0.1)
-        self.assertTrue(math.fabs(al.query(obs,3)-1)<=0.1)
-        self.assertTrue(math.fabs(al.query(obs,4)-1)<=0.1)
+        self.assertTrue(math.fabs(al.query(obs,0)-0.17)<=0.05)
+        self.assertTrue(math.fabs(al.query(obs,1)-1)<=0.05)
+        self.assertTrue(math.fabs(al.query(obs,2)-0.92)<=0.05)
+        self.assertTrue(math.fabs(al.query(obs,3)-1)<=0.05)
+        self.assertTrue(math.fabs(al.query(obs,4)-1)<=0.05)
         # print(al.refreshP(obs))
-    def test_query_known(self):
+    def test_refreshP_known(self):
         g=Linking.Graph()
         for i in range(5):
             g.add_vertex(i)
