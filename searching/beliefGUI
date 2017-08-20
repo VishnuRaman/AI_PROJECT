@@ -228,6 +228,7 @@ def setProblabel(e):
     ##This produces a dialog box which asks the user to enter a T or F label.
     valueLabel = askstring('value', 'Please enter either T or F')
 
+##########ERROR SO ONLY T OR F ANF NOTHING ELSE ENTERED
     ##This places the T/F label onto the canvas.
     valueL = canvas.create_text(e.x, e.y, text=str(valueLabel))
 
@@ -239,6 +240,8 @@ def setProblabel(e):
     ##This produces a dialog box which asks the user to enter an initial probability value
     valueP = askstring('value', 'Please enter an initial probability value')
 
+    if valueP == None:
+        valueP=0
     ##This assigns the entered value to a variable which can be stored and called.
     valueprob = getdouble(valueP)
 
@@ -393,21 +396,24 @@ def SetObs(event):
 ##This method is called when the user wants to query the belief net.
 def run(event):
     ##This calls the algorithm to generate all the prior probabilities
-    AL.generatePriorProbability()
+    if not GA.nodeList:
+        tkinter.messagebox.showinfo('error','Please produce a belief net with all the required data')
+    else:
+        AL.generatePriorProbability()
 
-    ##For every node on the graph the prior probability is generated.
-    for z in LK.vert_dict:
-        print("PROB VALUE" + str(z) + str(LK.vert_dict[z].probability))
-    ##This calls the query algorithm
-    AL.refreshP(GA.obsList)
-    print("AL test: " + str(AL.refreshP(GA.obsList)))
+        ##For every node on the graph the prior probability is generated.
+        for z in LK.vert_dict:
+            print("PROB VALUE" + str(z) + str(LK.vert_dict[z].probability))
+        ##This calls the query algorithm
+        AL.refreshP(GA.obsList)
+        print("AL test: " + str(AL.refreshP(GA.obsList)))
 
-    global result
-    ##This assigns the query result to a variable
-    result=AL.refreshP(GA.obsList)
+        global result
+        ##This assigns the query result to a variable
+        result=AL.refreshP(GA.obsList)
 
-    resultsDisplay()
-    root.update()
+        resultsDisplay()
+        root.update()
 
 ##This method displays the results of the query.
 def resultsDisplay():
