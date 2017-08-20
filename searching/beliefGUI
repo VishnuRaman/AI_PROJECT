@@ -17,7 +17,7 @@ bottomFrame = Frame(root)
 bottomFrame.pack(side=BOTTOM)
 
 # canvas
-canvas = Canvas(root, width=1000,height=600,bg="light gray")
+canvas = Canvas(root, width=1000,height=500,bg="light gray")
 canvas.pack(expand=1,fill=BOTH)
 
 #creating objects - link to the classes in the folder
@@ -380,25 +380,51 @@ def run(event):   #############call display method in here - see mainframe
     AL.refreshP(GA.obsList)
     print("AL test: " + str(AL.refreshP(GA.obsList)))
 
+    global result
+    result=AL.refreshP(GA.obsList)
+
     resultsDisplay()
     root.update()
 
 
 
 def resultsDisplay():
-    resultcanvas = Frame(root)
-    resultcanvas.pack(side=BOTTOM)
+    resultcanvas = Canvas(root, width=1000, height=400)
+    resultcanvas.pack(expand=1, fill=BOTH)
+
+
+    for i in result:
+
+        #LABEL FOR THE NODE ID - NEED TO CHANGE THIS TO THE NODE NAME MAYBE
+        nLabel = Label(resultcanvas,text="Node ID: ")
+        nLabel.pack(side=LEFT)
+        # nLabel.grid(column=0,row=0)
+
+###############change to node name
+        nValue = Label(resultcanvas,text=str(i))
+        nValue.pack(side=LEFT)
+        # nLabel.grid(column=0,row=1)
+
+        # if AL.refreshP(GA.obsList[i]):
+        #LABEL FOR THE PROB VALUE
+        pLabel=Label(resultcanvas, text="Probability Value: ")
+        pLabel.pack(side=LEFT)
+        # pLabel.grid(column=1, row=0)
+
+        pValue=Label(resultcanvas,text=str(result[i]))
+        pValue.pack(side=LEFT)
+        # pValue.grid(column=0,row=1)
 
 
 ########DISPLAY RESULTS - literally just call the above print statement
 #and split the results into each node ie relevant labels
 
 #use the below so this makes the result canvas accorsding and change to relevant results
-    finalPathLabel = Label(resultcanvas, bg="red", text="Final path: ")
-    finalPathLabel.grid(column=0, row=0, sticky=W)
-    # final path for the bfs
-    finalPathValue = Label(resultcanvas, text=str(1))
-    finalPathValue.grid(column=1, row=0, sticky=W)
+    # finalPathLabel = Label(resultcanvas, bg="red", text="Final path: ")
+    # finalPathLabel.grid(column=0, row=0, sticky=W)
+    # # final path for the bfs
+    # finalPathValue = Label(resultcanvas, text=str(1))
+    # finalPathValue.grid(column=1, row=0, sticky=W)
 
 
 
