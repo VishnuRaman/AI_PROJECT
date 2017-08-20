@@ -421,21 +421,41 @@ def Run(event): ######error message if no algorithm selected
     global finalPath,xTh,delaytime,iter
     ##This variable is used later for the delay method and has a default of 0 allowing the algorithm to run in realtime.
     xTh=0
+    #
+    if not GA.nodeList:
+        tkinter.messagebox.showinfo('error','Please produce a graph')
 
     ##If an iterative search is selected, the iterative method is called from the algorithms class.
     if iter == True and algorithm in ('BFS', 'DFS', 'UCS', 'aStar'):
         ##If a value to define the maximum rows to search by iteratively is not entered, an error message appears.
         if not it.get():
             tkinter.messagebox.showinfo('error','Please enter a maximum number of rows to search down')
+        if not startNode.get():
+            tkinter.messagebox.showinfo('error','Please enter a start node')
+
+        if not endNode.get():
+            tkinter.messagebox.showinfo('error', 'Please enter a goal node')
         ##Otherwise the iterative algorithm is called and the arguments are entered.
         else:
             finalPath = AL.iterative(int(startNode.get()),int(endNode.get()),algorithm,int(it.get())) #make a box to gain user input from )
     ##If a non iterative UCS or aStar search is selected, the relevant algorithm is called.
     elif iter==False and algorithm in ('UCS','aStar'):
-        finalPath = AL.ucsAStar(int(startNode.get()),int(endNode.get()),algorithm)
+        if not startNode.get():
+            tkinter.messagebox.showinfo('error','Please enter a start node')
+
+        if not endNode.get():
+            tkinter.messagebox.showinfo('error', 'Please enter a goal node')
+        else:
+         finalPath = AL.ucsAStar(int(startNode.get()),int(endNode.get()),algorithm)
     ##If a non iterative BFS or DFS search is selected, the relevant algorithm is called.
     elif iter==False and algorithm in ('BFS', 'DFS'):
-        finalPath = AL.bdfs(int(startNode.get()),int(endNode.get()),algorithm)
+        if not startNode.get():
+            tkinter.messagebox.showinfo('error','Please enter a start node')
+
+        if not endNode.get():
+            tkinter.messagebox.showinfo('error', 'Please enter a goal node')
+        else:
+         finalPath = AL.bdfs(int(startNode.get()),int(endNode.get()),algorithm)
 
     ##If the user does not enter a value for the time delay, an error message is displayed.
     if not delay.get():
@@ -447,10 +467,16 @@ def Run(event): ######error message if no algorithm selected
 
         ##If no algorithm is selected then an error message is displayed to inform the user.
         if algorithm in ('none'):
-         tkinter.messagebox.showinfo('error','Please select a search')
+            tkinter.messagebox.showinfo('error','Please select a search')
 
         if iter == True and not it.get():
             print("it.get not entered")
+        if not startNode.get():
+            print("start node not entered")
+
+        if not endNode.get():
+            print("end node not entered")
+
         # ##Otherwise apply the time delay to the display of the algorithm.
         else:
             for i in range(len(AL.getVisitedLog())):
@@ -554,7 +580,7 @@ def display():
             ##If a final path is found, the arrows change to red.
             elif AL.getQsLog()[xTh][0] == finalPath[-1]:
                     for a in range(len(finalPath) - 1):
-                        print("hhhhhhh")
+
                         canvas.itemconfig(GA.nodeList[finalPath[a]][2][finalPath[a + 1]][0], fill="red")  # final path arrow
 
             else:
