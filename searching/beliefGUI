@@ -449,5 +449,4 @@ button4.bind("<Button-1>",ParentProb)
 button5.bind("<Button-1>", SetObs)
 button6.bind("<Button-1>",run)
 
-
 root.mainloop()
