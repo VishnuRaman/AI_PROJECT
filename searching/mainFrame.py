@@ -392,6 +392,9 @@ def AddHeu(e):
     ##This produces the dialog box asking for custom heuristics to be entered.
     heuAskBox= askstring('value', 'Please enter a heuristic')
 
+    if heuAskBox==None:
+        heuAskBox=0
+
     global heu
     ##This is the value entered by the user.
     heu = int(float(heuAskBox))
@@ -427,14 +430,13 @@ def Run(event): ######error message if no algorithm selected
 
     ##If an iterative search is selected, the iterative method is called from the algorithms class.
     if iter == True and algorithm in ('BFS', 'DFS', 'UCS', 'aStar'):
+        if not startNode.get():
+            tkinter.messagebox.showinfo('error','Please enter a start node')
+        if not endNode.get():
+            tkinter.messagebox.showinfo('error', 'Please enter a goal node')
         ##If a value to define the maximum rows to search by iteratively is not entered, an error message appears.
         if not it.get():
             tkinter.messagebox.showinfo('error','Please enter a maximum number of rows to search down')
-        if not startNode.get():
-            tkinter.messagebox.showinfo('error','Please enter a start node')
-
-        if not endNode.get():
-            tkinter.messagebox.showinfo('error', 'Please enter a goal node')
         ##Otherwise the iterative algorithm is called and the arguments are entered.
         else:
             finalPath = AL.iterative(int(startNode.get()),int(endNode.get()),algorithm,int(it.get())) #make a box to gain user input from )
@@ -469,14 +471,15 @@ def Run(event): ######error message if no algorithm selected
         if algorithm in ('none'):
             tkinter.messagebox.showinfo('error','Please select a search')
 
-        if iter == True and not it.get():
-            print("it.get not entered")
         if not startNode.get():
             print("start node not entered")
 
         if not endNode.get():
             print("end node not entered")
 
+
+        if iter == True and not it.get():
+            print("it.get not entered")
         # ##Otherwise apply the time delay to the display of the algorithm.
         else:
             for i in range(len(AL.getVisitedLog())):
