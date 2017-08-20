@@ -372,7 +372,6 @@ class algorithms:
     #input: @arg1 the node, @arg2  key of the row as a string ie. 'TT', @arg3 probability
     def setProbabilityTable(self,id,key,value):
         self.graph[id].probabilityTable[key][3]=value
-        print("value: " + str(value))
     ##after setProbabilityTable, simulateData needs to be called in order to have the prior probabilities
     #input: @arg1 how many data
     def simulateData(self,times):
