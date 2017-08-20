@@ -8,24 +8,31 @@ import tkinter.filedialog
 from tkinter.simpledialog import askstring
 from tkinter import messagebox
 
+##This produces the frame dimensions of the window we are creating.
+#On this window we shall create a canvas where all our visualisations will be drawn.
 root = Tk()
+##This refers to the top frame which the buttons can be viewed on.
 topFrame = Frame(root)
 topFrame.pack(fill=X)
+##This refers to the second frame which the second row of buttons can be viewed on.
 topFrame2 = Frame(root)
 topFrame2.pack(fill=X)
+##This referst to the bottom frame produced to display the results.
 bottomFrame = Frame(root)
 bottomFrame.pack(side=BOTTOM)
-
-# canvas
-canvas = Canvas(root, width=1000,height=500,bg="light gray")
+##This is the canvas on which all the visualisations are drawn.
+#The background is set to a different colour to distinguish it from the other frames.
+canvas = Canvas(root, width=1000,height=600,bg="old lace")
 canvas.pack(expand=1,fill=BOTH)
 
-#creating objects - link to the classes in the folder
+##These variables are to be used as a reference, when calling methods or objects
+# from these classes.
 GA=GuiArray.guiArray(canvas)
 MN=ManageNode.manageNode()
 LK=Linking.Graph()
 AL=Algorithms.algorithms(LK.vert_dict)
 
+##These variables will be called later on by various methods
 global coordinates
 coordinates=[]
 
@@ -33,147 +40,180 @@ global horizdiff
 
 global vertdiff
 
+##This creates a drop down menu list
+myMenu = Menu(root)
+root.config(menu=myMenu)
 
-#drop down list
+##This method is used to save the graphs produced by the user as a .pkl file to be
+# loaded when the user returns to the interface at a later point.
+def saveFile():
+    fileFormats = [('Pickle', "*.pkl")]
+    ##This produces a dialog box allowing the user to choose where to save the file on their system.
+    filename = tkinter.filedialog.asksaveasfilename(filetypes=fileFormats)
 
-# create buttons
+    ##Everything the user has placed onto the canvas is saved into the GA.nodeList dictionary.
+    #Everything in this dictionary is called into a new dictionary and this new dictionary is used
+    #by pickle.dump and saved into a .pkl file.
+    #Once saved, the method is completed and the dialog box is closed.
+    if filename:
+        newDict = GA.nodeList
+        output = open(filename + '_g.pkl', 'wb')
+        pickle.dump(newDict, output)
+        output.close()
+
+##This is the method used to open a saved .pkl file onto the canvas.
+
+def loadFile():
+    fileFormats = [('Pickle', "*.pkl")]
+    ##This produces a dialog box displaying the .pkl files saved, for the user to pick one for loading
+    openFilename = tkinter.filedialog.askopenfile(filetypes=fileFormats).name
+
+    ##file assigns itself to the filename clicked by the user and is read by the method.
+    #The file is read and the dictionary values which were saved in that file are loaded into the dictionary for the canvas which
+    #is currently open.
+    #Once the method is completed, the reader closes and the dialog box disappears.
+    file = open(openFilename, 'rb')
+    dict = pickle.load(file)
+    file.close()
+    GA.nodeList=dict
+
+##This produces a drop down menu titled "File" which allows the user to have access to the save and load options.
+fileMenu = Menu(myMenu)
+myMenu.add_cascade(label="File", menu=fileMenu)
+fileMenu.add_command(label="Save", command=saveFile)
+fileMenu.add_command(label="Load", command=loadFile)
+
+##The following creates all the buttons seen on the interface.
 button1 = Button(topFrame,text="Create Node")
 button2 = Button(topFrame,text="Create Link")
 button3 = Button(topFrame,text="Create Probability Tables")
 button4 = Button(topFrame,text="Set Probability Label and Value")
-button6 = Button(topFrame,text="Set Observation")
-button7 = Button(bottomFrame,text="Run")
+button5 = Button(topFrame,text="Set Observation")
+button6 = Button(bottomFrame,text="Run")
 
 button1.pack(side=LEFT)
 button2.pack(side=LEFT)
 button3.pack(side=LEFT)
 button4.pack(side=LEFT)
-# button5.pack(side=LEFT)
+button5.pack(side=LEFT)
 button6.pack(side=LEFT)
-button7.pack(side=LEFT)
 
-# methods called by buttons
+##This dictionary stores the nodes and their associated nodeID values.
 node_id_Dic={}
+##This dictionary stores the probability labels and their associated values.
 prob_table_id={}
-# draw on the canvas
+
+##This method draws the node oval and its ID number onto where the user has clicked on the canvas.
 def drawNode(e):
-    #if not means if it's empty then do operation
-
-    #canvas enclosed creates a space around where you click and checks no other objects are in that area
-    #if objects are present it wont create a node there
-
-    #if is empty then creates the oval
-
+    ##If the area encircling where the user has clicked, does not contain an object already, then create an oval and store this with an ID value.
     if not canvas.find_enclosed(e.x-105,e.y-105,e.x+105,e.y+105):
         oval=canvas.create_oval(e.x-50,e.y-50,e.x+50,e.y+40)
 
+        ##This creates the dialog box for the user to enter a label
         value = askstring('value', 'Please enter a title')
-
-      #MN.inc means increase that method by 1 as new node was created
-
+        ##The node ID is assigned to each object drawn and increases by 1 for each object.
         nodeID=MN.inc()
 
+        ##This is the value the user entered into the dialog box.
         nodeName=value
 
-        #nickname given to each node
+        ##This places that value as a label displayed on the node.
         nickname=canvas.create_text(e.x,e.y,text=str(value))
 
+        ##coordinateSet contains the nodeID and the coordinates clicked by the user when creating the node on the canvas.
         coordinateSet=[nodeName,e.x,e.y]
 
-        # xcoordSet = [nodeName,e.x]
-
+        ##GUIset contains the label given to the node, nodeID, the oval it's associated to and the dictionary of nodeIDs it has any connections to.
         GUIset = [nodeName, nodeID, {},oval]  # number object / oval object / dictionary for linking
 
+        ##This adds the nodeID and its associated node to the dictionary to store it
         node_id_Dic[oval] = nodeID
+        ##This calls the method to store the GUIset data into a dictionary next to its relevant nodeID
+        GA.addNode(GUIset, nodeID)
+        ##This calls the method to store the coordinateSet data into a dictioanry next to its relevajt
+        GA.addCoords(coordinateSet, nodeID)
         LK.add_vertex(nodeID)
-        GA.addNode(GUIset,nodeID)
-        GA.addCoords(coordinateSet,nodeID)
-        # GA.addXcoords(xcoordSet,nodeID)
 
-# listen to mouse action
+##This method listens for the mouse click and upon this it will call the method to draw the node.
 def CreateNode(event):
     root.config(cursor="")
     canvas.bind("<Button-1>",drawNode)
 
-# need to change these values so it includes table try a smaller size
-#try another method so it connects to the edge of the oval
-#alt try it adds a weight but just doesnt show it
+##This method allows the user draw connections between each node.
 def ArcPoint2(e):
+    ##This statement checks if a node is within a 50 coordinate radius of where the user has clicked.
     if len(canvas.find_enclosed(e.x-105,e.y-105,e.x+105,e.y+105))==2:
+        ##This tells us the nodeID of the node we want to draw the arrow towards.
         toNode=node_id_Dic[canvas.find_enclosed(e.x-105,e.y-105,e.x+105,e.y+105)[0]]#the node is created before num so it is at [0]
+        ##This checks that the two node arguments entered are not the same node and if so, a connection is created.
         if (fromNode is not toNode)and(LK.check_edge_existed(fromNode,toNode)==False):
             root.config(cursor="")
+            ##This produces the arrow showing the connection where the four arguments taken in are:
+            # the x and y coordinates of the start node (stored from the ArcPoint1 method) and the x and y coordinates of
+            # where the user has clicked for this method.
             arrow = canvas.create_line(x,y,e.x,e.y,arrow="last")#fill="turquoise" can change color
 
+            ##This adds the arrow into a dictionary to store which nodes have connections and to which nodes they are connected to.
             GA.addBeliefArrow(fromNode, toNode, arrow)
 
-            # #this method produces the connection
-
+            ##This method produces the cost for each connection.
             LK.add_edge(fromNode,toNode)
-
             canvas.bind("<Button-1>",ArcPoint1)
 
-# listen to the first click for the line
+##This method listens for the first mouse click from the user making the connection.
 def ArcPoint1(e):
-    #==2 need to change this to == length of string input +1
+    ##if within a 50coordinate radius from where the user clicks only one node is found, then that node is stored
+    #as the start node for the connection.
     if len(canvas.find_enclosed(e.x-105,e.y-105,e.x+105,e.y+105))==2:
-    #global equivalent of instance variable
-    #used this so its able to be used by different methods
-    #x,y =location and fromNode = the id of the node you pick up - the one you draw FROM
-        global x,y,fromNode
+        ##global is equivalent of an instance variable and means this variable can be used/called by different methods.
+        global x, y, fromNode
+        ##These are the coordinates of where the user has clicked to begin their connection.
+        # Using these coordinates, the nodeID is obtained.
         x,y=e.x,e.y
         fromNode=node_id_Dic[canvas.find_enclosed(e.x-105,e.y-105,e.x+105,e.y+105)[0]]
         root.config(cursor="cross")
         canvas.bind("<Button-1>",ArcPoint2)
-# listen to the mouse action
+
+##This method listens for the users mouse click and then proceeds to begin method ArcPoint1.
 def CreateArc(event):
     root.config(cursor="")
     canvas.bind("<Button-1>",ArcPoint1)
 
+##This method creates the tables to display the intial probability values.
+#This method takes in 3 arguments: the number of parents a node has, the x coordinate of the node and the y coordinate of the node.
 def CreateTable(parent,coordinateX,coordinateY):
-
- #need to handle error that doesnt keep drawing mutiple rows each time you refresh it
-    #if not enclosed in this space - distance from nodeid then draw the below
-
-    #need to change from p to the set part that does parent no.s
+    ##The number of boxes created for each node if 2^number of parents.
     for p in range(2**len(parent)):
+        ##This sets the y coordinate for the next row down to be created.
         coordinateY = coordinateY + 30
-        #print box 1&2 again but lower than previous row and do for the same amount of times as p
-
         box1 = canvas.create_rectangle(coordinateX - 140, coordinateY, coordinateX - 100, coordinateY-30)
         box2 = canvas.create_rectangle(coordinateX - 60, coordinateY, coordinateX - 100, coordinateY-30)
 
+    ##This calls the algorithm which generates the probability tale
     AL.generateProbabilityTable()
 
-    # rows = 2**len(parent)
-    #
-    # v=  bin(rows)[2:].zfill(len(parent))
-    # print(v)
-
-#use a for loop to make the rows for each box as in the box is the for loop
-
+##This method is called when the button to create tables is clicked.
 def probTable(event):
 
-#need to store a DICTIONARY not list
-#has nodeID and their links
-#then proceed to make the tables 8
     global parentNodes
     parentNodes={}
+    ##For every node on the canvas, the nodeID is initialised with an empty set.
     for k in GA.nodeList:
         parentNodes[k]=set()
 
     if LK.num_vertices>0:
-
+        ##For every node on the canvas this for loop checks how many parents it has.
+        #The child nodeID is then stored as a dictionary key and a list of its parents is appended as its value.
         for j in GA.nodeList:
-            #go through nodes and check if they have parents
-            #then use child id as a key and value as a list and append parent into the list
 
-            for i in GA.nodeList[j][2]:
+             for i in GA.nodeList[j][2]:
                 if GA.nodeList[j][2]:
                     parentNodes[i].add(j)
 
-                    print(parentNodes)
+                    print('parent dictionary: '+str(parentNodes))
 
+    ##For every node in the parentNodes dictionary, the x and y coordinates are stored as variables.
+    #These arguments are then passsed into the CreateTable() method.
     for x in parentNodes:
 
         pointX=GA.coordList[x][1]
@@ -181,61 +221,60 @@ def probTable(event):
 
         CreateTable(parentNodes[x],pointX,pointY)
 
-
+##This method is called when the user wants to set the initial probability values.
 def setProblabel(e):
 
     global valueLab
-
-
+    ##This produces a dialog box which asks the user to enter a T or F label.
     valueLabel = askstring('value', 'Please enter either T or F')
 
+    ##This places the T/F label onto the canvas.
     valueL = canvas.create_text(e.x, e.y, text=str(valueLabel))
 
+    ##This stores the label as a variable and this variable is stored in a set alongside its coordinates.
     valueLab=valueLabel
-
     labCoord=[valueLabel,e.x,e.y]
     print(labCoord)
 
-    valueP = askstring('value', 'Please enter a probability value')
+    ##This produces a dialog box which asks the user to enter an initial probability value
+    valueP = askstring('value', 'Please enter an initial probability value')
 
+    ##This assigns the entered value to a variable which can be stored and called.
     valueprob = getdouble(valueP)
 
-    # if false box is clicked enter value
+    ##This places the value alongside the T/F label entered by the user
     if not canvas.find_enclosed(e.x - 20, e.y, e.x + 20, e.y + 30):
         canvas.create_text(e.x+35, e.y, text=valueprob)
 
+    ##The probability value is stored in a set alongside its coordinates.
     pc = [valueprob,e.x+35, e.y]
     print(pc)
 
-
+    ##For every node in the coordinate dictionary its coordinates are called.
     for i in GA.coordList:
 
         if GA.coordList[i]:
-
-
             print('node x ' + str(GA.coordList[i][1]))
             print('point x ' + str(pc[1]))
-
+            ##This calculates the horizontal difference between each node in the coordinate
+            #dictionary and the probability value entered.
             horizdiff=(GA.coordList[i][1]-pc[1])
-
             print("point horiz " + str(horizdiff))
 
-
+            ##This calculates the vertical difference between each node in the coordinate
+            # dictionary and the probability value entered.
             vertdiff=abs((GA.coordList[i][2]-pc[2]))
-
-
             print('node y ' + str(GA.coordList[i][2]))
             print('point y ' + str(pc[2]))
             print("vert diff: " + str(vertdiff))
 
-
+            ##This checks if the horizontal difference calculated is within the range of the distance between the
+            #node and the box structure containing the probability value.
             if horizdiff <100 and horizdiff >60:
-
-                #for each row check y
-                #when this becomes true then assign the value to that row
-
                 print("row test")
 
+                ##For each row in each table a unique ID is created which is the specific row number attached onto
+                #the nodeID the table is associated to.
                 for n in range((2**(len(parentNodes[i])))):
 
                     stringNode = str(i)
@@ -244,65 +283,50 @@ def setProblabel(e):
                     stringID = str(stringNode+'.'+stringRow)
 
                     print("test id" +stringID)
-                    # print(n)
-                    # print("nr")
 
+                    ##This checks if the vertical difference calculated is within the range of the distance between the
+                    # node and the box structure containing the probability value.
                     if vertdiff > (n*30) and vertdiff < ((n+1)*30):
                         row = n+1
                         print('row: ' + str(row))
 
-
-                        global probset #also want row on the end
+                        ##This stores the nodeID, the total number of rows in its associated table, the initial T/F labels and probability
+                        #values entered and the row its entered in.
+                        global probset
                         probset=[i,(2**(len(parentNodes[i]))),valueLabel,valueprob,row]
                         print(probset)
+                        ##This calls the method which adds this information into a dictionary.
                         GA.addProbs(probset, stringID)
+                        ##If the user enters F this calculates the corresponding T value and passes it through to the algorithm.
+                        #The algorithm called sets the probability table with values.
                         if probset[2]=='F':
                             AL.setKnownPT(i, 'T', 1-probset[3])
                         else:
                             AL.setKnownPT(i,probset[2],probset[3])
                             print(probset[2])
                             print(probset[3])
-
-
-
-
+##This listens out for mouse clicks for when the user wishes to set the initial probability values.
 def ParentProb(event):
     root.config(cursor="cross")
     canvas.bind("<Button-1>", setProblabel)
 
-
-def setTF(e): #change this to run the algorithm too
+##This method is used to set the observations of the node.
+def setTF(e):
 
     global obset
     obset = []
 
-
-    #alternatively do a drop down list of all the nodes from the dictionary
-    #instead of an entry box - true false cancel and whichever is selected rpogerss from there
+    ##This stores the x and y coordinates of where the user has clicked.
     x = e.x
     y = e.y
 
-    # checkCoords={}
-    #
-    # for q in GA.coordList:
-    #     checkCoords[q] = set()
-    #
-    #     if x >0:
-    #         for w in GA.coordList:
-    #             for t in GA.coordList[w][1]:
-    #                 if GA.coordList[w][1]:
-    #                     print("skssksksk")
-    #                     if x in range(0,t):
-    #                         print(w)
-    #                         probset=[w,valueLab,valueprob]
-    #                         print(probset)
-
+    ##This produces the dialog box asking the user to set an observation
     obsLabel = askstring('value', 'Please enter either T or F')
 
-
+    ##If the observation is true then the node clicked on by the user turns green and the nodeID
+    #and 'T' is passed onto the algorithm.
     if obsLabel == 'T':
-        # obs = [obsLabel]
-        # print(obs)
+
         for i in GA.coordList:
             if GA.coordList[i]:
                 if x > GA.coordList[i][1] - 50 and x < GA.coordList[i][1] + 50:
@@ -314,10 +338,8 @@ def setTF(e): #change this to run the algorithm too
                         print("y test")
 
                         for j in GA.probDict:
-                            # print(j)
                             print(i)
                             if GA.probDict[j][0]==i:
-                                # for l in GA.probDict[j][2]:
                                     if obsLabel == GA.probDict[j][2]:
                                         obset = obsLabel
                                         print(obset)
@@ -329,11 +351,9 @@ def setTF(e): #change this to run the algorithm too
                                         print(obset)
                                         GA.addObs(obset, i)
 
-
-
+    ##If the observation is false then the node clicked on by the user turns red and the nodeID
+    # and 'F' is passed onto the algorithm.
     elif obsLabel == 'F':
-        # obs = [obsLabel]
-        # print(obs)
         for i in GA.coordList:
             if GA.coordList[i]:
                 if x > GA.coordList[i][1] - 50 and x < GA.coordList[i][1] + 50:
@@ -345,10 +365,8 @@ def setTF(e): #change this to run the algorithm too
                         print("y test")
 
                         for j in GA.probDict:
-                            # print(j)
                             print(i)
                             if GA.probDict[j][0] == i:
-                                # for l in GA.probDict[j][2]:
                                 if obsLabel == GA.probDict[j][2]:
                                     obset = obsLabel
                                     print(obset)
@@ -360,42 +378,46 @@ def setTF(e): #change this to run the algorithm too
 
                                     GA.addObs(obset,i)
 
+    ##If no observation is made/the method is cancelled, a message will be printed.
     elif obsLabel is None:
         print("ACTION CANCELLED")
     else:
-        #dont print the label
+        ##If anything other than T or F is entered, an error message will appear.
         obsError = tkinter.messagebox.showinfo('error','Please only enter either T or F')
 
+##This listens out for the mouse click for when the user wants to set observations.
 def SetObs(event):
     root.config(cursor="cross")
     canvas.bind("<Button-1>", setTF)
 
-def run(event):   #############call display method in here - see mainframe
-    print("asdawdwa")
+##This method is called when the user wants to query the belief net.
+def run(event):
+    ##This calls the algorithm to generate all the prior probabilities
     AL.generatePriorProbability()
 
+    ##For every node on the graph the prior probability is generated.
     for z in LK.vert_dict:
         print("PROB VALUE" + str(z) + str(LK.vert_dict[z].probability))
-
+    ##This calls the query algorithm
     AL.refreshP(GA.obsList)
     print("AL test: " + str(AL.refreshP(GA.obsList)))
 
     global result
+    ##This assigns the query result to a variable
     result=AL.refreshP(GA.obsList)
 
     resultsDisplay()
     root.update()
 
-
-
+##This method displays the results of the query.
 def resultsDisplay():
+    ##This produces the canvas to display the results
     resultcanvas = Canvas(root, width=1000, height=400)
     resultcanvas.pack(expand=1, fill=BOTH)
 
-
+    ##For every node in the queried belief net the resulting probability is displayed next to its node name and ID.
     for i in result:
 
-        #LABEL FOR THE NODE ID - NEED TO CHANGE THIS TO THE NODE NAME MAYBE
         nLabel = Label(resultcanvas,text="Node ID: ")
         nLabel.pack(side=LEFT)
         # nLabel.grid(column=0,row=0)
@@ -419,28 +441,13 @@ def resultsDisplay():
 ########DISPLAY RESULTS - literally just call the above print statement
 #and split the results into each node ie relevant labels
 
-#use the below so this makes the result canvas accorsding and change to relevant results
-    # finalPathLabel = Label(resultcanvas, bg="red", text="Final path: ")
-    # finalPathLabel.grid(column=0, row=0, sticky=W)
-    # # final path for the bfs
-    # finalPathValue = Label(resultcanvas, text=str(1))
-    # finalPathValue.grid(column=1, row=0, sticky=W)
-
-
-
-
-
-
-
-
-
-
+##This binds all the buttons to their actions, so the correct methods are ran when a mouse button is clicked.
 button1.bind("<Button-1>",CreateNode)
 button2.bind("<Button-1>",CreateArc)
 button3.bind("<Button-1>",probTable)
 button4.bind("<Button-1>",ParentProb)
-button6.bind("<Button-1>", SetObs)
-button7.bind("<Button-1>",run)
+button5.bind("<Button-1>", SetObs)
+button6.bind("<Button-1>",run)
 
 
 root.mainloop()

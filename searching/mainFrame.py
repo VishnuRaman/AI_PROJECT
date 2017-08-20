@@ -8,9 +8,9 @@ from tkinter import *
 # import Tkinter
 import tkinter.filedialog
 import tkinter.messagebox
-
-
 from searching.Algorithms import algorithms
+
+##This variable distinguishes if the user has selected an iterative search and is false by default.
 global iter
 iter = False
 ##This produces the frame dimensions of the window we are creating.
@@ -410,7 +410,6 @@ def AddHeu(e):
                     LK.vert_dict[i].heuristic=heu
                     ##A label is produced on the interface to show the user which nodes have heuristic values.
                     heuLabel = canvas.create_text(GA.coordList[i][1] + 35,GA.coordList[i][2],text="+ " + str(heu),fill='dark orange')
-
 
 def CreateHeu(event):
     root.config(cursor="")
