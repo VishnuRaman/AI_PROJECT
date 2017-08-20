@@ -334,7 +334,7 @@ def setTF(e):
 
                     if y < GA.coordList[i][2] + 40 and y > GA.coordList[i][2] - 50:
                         print("colour test" + str(i))
-                        canvas.itemconfig(GA.nodeList[i][3], fill="green")
+                        canvas.itemconfig(GA.nodeList[i][3], fill="lawn green")
                         print("y test")
 
                         for j in GA.probDict:
@@ -361,7 +361,7 @@ def setTF(e):
 
                     if y < GA.coordList[i][2] + 40 and y > GA.coordList[i][2] - 50:
                         print("colour test" + str(i))
-                        canvas.itemconfig(GA.nodeList[i][3], fill="red")
+                        canvas.itemconfig(GA.nodeList[i][3], fill="red2")
                         print("y test")
 
                         for j in GA.probDict:
@@ -415,15 +415,14 @@ def resultsDisplay():
     resultcanvas = Canvas(root, width=1000, height=400)
     resultcanvas.pack(expand=1, fill=BOTH)
 
-    ##For every node in the queried belief net the resulting probability is displayed next to its node name and ID.
+    ##For every node in the queried belief net the resulting probability is displayed next to its node name.
     for i in result:
 
-        nLabel = Label(resultcanvas,text="Node ID: ")
+        nLabel = Label(resultcanvas,text="Node: ")
         nLabel.pack(side=LEFT)
         # nLabel.grid(column=0,row=0)
 
-###############change to node name
-        nValue = Label(resultcanvas,text=str(i))
+        nValue = Label(resultcanvas,text=str(GA.nodeList[i][0]))
         nValue.pack(side=LEFT)
         # nLabel.grid(column=0,row=1)
 
