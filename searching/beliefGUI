@@ -22,7 +22,7 @@ bottomFrame = Frame(root)
 bottomFrame.pack(side=BOTTOM)
 ##This is the canvas on which all the visualisations are drawn.
 #The background is set to a different colour to distinguish it from the other frames.
-canvas = Canvas(root, width=1000,height=600,bg="old lace")
+canvas = Canvas(root, width=1000,height=500,bg="old lace")
 canvas.pack(expand=1,fill=BOTH)
 
 ##These variables are to be used as a reference, when calling methods or objects
@@ -228,7 +228,6 @@ def setProblabel(e):
     ##This produces a dialog box which asks the user to enter a T or F label.
     valueLabel = askstring('value', 'Please enter either T or F')
 
-##########ERROR SO ONLY T OR F ANF NOTHING ELSE ENTERED
     ##This places the T/F label onto the canvas.
     valueL = canvas.create_text(e.x, e.y, text=str(valueLabel))
 
@@ -418,7 +417,7 @@ def run(event):
 ##This method displays the results of the query.
 def resultsDisplay():
     ##This produces the canvas to display the results
-    resultcanvas = Canvas(root, width=1000, height=400)
+    resultcanvas = Canvas(root, width=1000, height=500)
     resultcanvas.pack(expand=1, fill=BOTH)
 
     ##For every node in the queried belief net the resulting probability is displayed next to its node name.

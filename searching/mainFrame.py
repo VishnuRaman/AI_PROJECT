@@ -467,20 +467,28 @@ def Run(event): ######error message if no algorithm selected
     else:
         delaytime=int(delay.get())
 
-        ##If no algorithm is selected then an error message is displayed to inform the user.
-        if algorithm in ('none'):
-            tkinter.messagebox.showinfo('error','Please select a search')
+    ##If no algorithm is selected then an error message is displayed to inform the user.
+    if algorithm in ('none'):
+        tkinter.messagebox.showinfo('error','Please select a search')
 
-        if not startNode.get():
-            print("start node not entered")
+    if not startNode.get():
+        print("start node not entered")
 
-        if not endNode.get():
-            print("end node not entered")
+    if not endNode.get():
+        print("end node not entered")
 
+    if iter == True and not it.get():
+        print("it.get not entered")
 
-        if iter == True and not it.get():
-            print("it.get not entered")
-        # ##Otherwise apply the time delay to the display of the algorithm.
+    if not startNode.get():
+        tkinter.messagebox.showinfo('error', 'Please enter a start node')
+    if not endNode.get():
+        tkinter.messagebox.showinfo('error', 'Please enter a goal node')
+
+    # ##Otherwise apply the time delay to the display of the algorithm.
+    else:
+        if not AL.getVisitedLog():
+            print("AL.getVisited not found")
         else:
             for i in range(len(AL.getVisitedLog())):
                 xTh=i
